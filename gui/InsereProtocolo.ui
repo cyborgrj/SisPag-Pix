@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog_Protocolo</class>
+ <widget class="QDialog" name="Dialog_Protocolo">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>647</width>
+    <height>450</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Dialog</string>
+  </property>
+  <widget class="QFrame" name="frame">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>30</y>
+     <width>581</width>
+     <height>361</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QTextEdit {
+	color: rgb(248, 248, 252);
+	font: 16pt &quot;MS Shell Dlg 2&quot;
+}
+
+QPushButton {
+	color: rgb(248, 248, 242);
+	background-color: rgb(35,35,35);
+	background-color: rgb(29, 30, 40);
+	border: 0px solid;
+	padding: 6px 9px;
+	text-align:center;
+	border-radius:5px;
+	font: 16pt &quot;MS Shell Dlg 2&quot;
+}
+
+QPushButton:hover {
+	color: rgb(35,35,35);
+	background-color: rgb(98, 114, 164);
+	text-align:center;
+	padding: 6px 9px;
+	border-radius:5px;
+	font: 16pt &quot;MS Shell Dlg 2&quot;
+}
+
+QPushButton:pressed {
+	color: rgb(25,26,33);
+	background-color: rgb(180, 140, 237);
+	text-align:center;
+	padding: 5px 7px;
+	border-radius:5px;
+	font: 15pt &quot;MS Shell Dlg 2&quot;
+}
+
+QFrame {
+border-radius: 20px;
+background-color: rgb(40, 42, 54);
+}
+</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QLabel" name="forma_4_protocolo">
+    <property name="geometry">
+     <rect>
+      <x>-40</x>
+      <y>0</y>
+      <width>231</width>
+      <height>361</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 400pt &quot;Wingdings 3&quot;;
+color: rgba(248, 248, 248, 10);
+background: transparent;
+</string>
+    </property>
+    <property name="text">
+     <string>z</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="forma_1_protocolo">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>581</width>
+      <height>351</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">font: 57 200pt &quot;Marlett&quot;;
+color: rgba(248, 248, 248, 3);</string>
+    </property>
+    <property name="text">
+     <string>y</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_cancelar_protocolo">
+    <property name="geometry">
+     <rect>
+      <x>360</x>
+      <y>290</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Cancelar</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btn_gravar_protocolo">
+    <property name="geometry">
+     <rect>
+      <x>80</x>
+      <y>290</y>
+      <width>131</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
+    <property name="text">
+     <string>Gravar</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_id_pix_protocolo">
+    <property name="geometry">
+     <rect>
+      <x>100</x>
+      <y>80</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: transparent;
+color: rgb(248, 248, 252);
+border: transparent;
+font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+    </property>
+    <property name="text">
+     <string>ID Pix:</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_titulo_protocolo">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>0</y>
+      <width>581</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: transparent;
+color: rgb(248, 248, 252);
+border: transparent;
+font: 75 18pt &quot;MS Shell Dlg 2&quot;;
+text-decoration: underline
+</string>
+    </property>
+    <property name="text">
+     <string>Inserir o protocolo/certidão</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_nome_protocolo">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>120</y>
+      <width>561</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: transparent;
+color: rgb(248, 248, 252);
+border: transparent;
+font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Nome:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_valor_protocolo">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>170</y>
+      <width>561</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: transparent;
+color: rgb(248, 248, 252);
+border: transparent;
+font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Valor:</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_caixa_protocolo">
+    <property name="geometry">
+     <rect>
+      <x>350</x>
+      <y>80</y>
+      <width>131</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background: transparent;
+color: rgb(248, 248, 252);
+border: transparent;
+font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
+    </property>
+    <property name="text">
+     <string>Caixa: ADM</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="campo_protocolo">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>230</y>
+      <width>521</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgba(0,0,0,0);
+border:none;
+border-bottom:2px solid rgba(105,118,132,255);
+color:rgba(255,255,255,230);
+padding-bottom:7px;</string>
+    </property>
+    <property name="maxLength">
+     <number>64</number>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Normal</enum>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+    <property name="placeholderText">
+     <string>protocolo/certidão nºs</string>
+    </property>
+   </widget>
+   <zorder>forma_1_protocolo</zorder>
+   <zorder>forma_4_protocolo</zorder>
+   <zorder>btn_cancelar_protocolo</zorder>
+   <zorder>btn_gravar_protocolo</zorder>
+   <zorder>label_id_pix_protocolo</zorder>
+   <zorder>label_titulo_protocolo</zorder>
+   <zorder>label_nome_protocolo</zorder>
+   <zorder>label_valor_protocolo</zorder>
+   <zorder>label_caixa_protocolo</zorder>
+   <zorder>campo_protocolo</zorder>
+  </widget>
+  <widget class="QFrame" name="frame_2">
+   <property name="geometry">
+    <rect>
+     <x>28</x>
+     <y>28</y>
+     <width>585</width>
+     <height>365</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame {
+border-radius: 21px;
+border: 2px solid rgb(189, 147, 249);
+background: transparent;
+}</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+  </widget>
+  <zorder>frame_2</zorder>
+  <zorder>frame</zorder>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
