@@ -28,10 +28,6 @@ from gui.ui_InsereProtocolo import *
 
 ########################################################################
 # Carregar configurações do arquivo config.ini
-with open ('config.ini') as f:   
-    ## here you get an exception when file not exists.
-    s = f.read()
-
 config = configparser.ConfigParser()
 config.read('config.ini')
 
