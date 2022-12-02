@@ -1248,12 +1248,12 @@ class MainWindow(QMainWindow):
                             item_atual.setFont(self.fontTable)
                         else:
                             item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                        item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                            self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
-                        item_atual.setFont(self.fontTable)
-                        self.ui.tableBuscaEAutorizaPix.setItem(0, 
-                            coluna, item_atual)
-                        item_atual.setFont(self.fontTable)
+                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                            item_atual.setFont(self.fontTable)
+                            self.ui.tableBuscaEAutorizaPix.setItem(0, 
+                                coluna, item_atual)
+                            item_atual.setFont(self.fontTable)
             self.ui.tableBuscaEAutorizaPix.resizeColumnsToContents()
             self.ui.tableBuscaEAutorizaPix.resizeRowsToContents()
         elif name != '' and id == '':
@@ -1350,12 +1350,12 @@ class MainWindow(QMainWindow):
                                 item_atual.setFont(self.fontTable)
                             else:
                                 item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
-                            item_atual.setFont(self.fontTable)
-                            self.ui.tableBuscaEAutorizaPix.setItem(linha, 
-                                coluna, item_atual)
-                            item_atual.setFont(self.fontTable)
+                                item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                                    self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                                item_atual.setFont(self.fontTable)
+                                self.ui.tableBuscaEAutorizaPix.setItem(linha, 
+                                    coluna, item_atual)
+                                item_atual.setFont(self.fontTable)
                     linha += 1
             self.ui.tableBuscaEAutorizaPix.resizeColumnsToContents()
             self.ui.tableBuscaEAutorizaPix.resizeRowsToContents()
@@ -1452,12 +1452,12 @@ class MainWindow(QMainWindow):
                                 item_atual.setFont(self.fontTable)
                             else:
                                 item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
-                            item_atual.setFont(self.fontTable)
-                            self.ui.tableBuscaEAutorizaPix.setItem(linha, 
-                                coluna, item_atual)
-                            item_atual.setFont(self.fontTable)
+                                item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                                    self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                                item_atual.setFont(self.fontTable)
+                                self.ui.tableBuscaEAutorizaPix.setItem(linha, 
+                                    coluna, item_atual)
+                                item_atual.setFont(self.fontTable)
 
                     linha += 1
             self.ui.tableBuscaEAutorizaPix.resizeColumnsToContents()
