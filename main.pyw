@@ -182,7 +182,7 @@ class PDF(FPDF):
     def chapter_body(self, apresentante, valor, id, copiaCola):
         # Times 12
         self.set_font('Times', '', 26)
-        self.image('pixqrcode.png', 60, 140, 100)
+        self.image(r'C:\SisPag Pix\src\pixqrcode.png', 60, 140, 100)
         # Line break
         self.ln()
         self.cell(50, 14, f"Identificador nº: {id}", align='center')

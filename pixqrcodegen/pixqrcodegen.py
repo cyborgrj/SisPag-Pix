@@ -77,7 +77,7 @@ class Payload():
     
     def gerarQrCode(self, payload):
         self.qrcode = qrcode.make(payload)
-        self.qrcode.save('pixqrcode.png')
+        self.qrcode.save(r'C:\SisPag Pix\src\pixqrcode.png')
         return payload
 
 
