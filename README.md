@@ -47,8 +47,8 @@ armazenados. Já o banco de dados Postgre é utilizado para armazenar os pagamen
 cadastrando e alterando os pagamentos cadastrados bem como pelo servidor que será desenvolvido para consumir diretamente da API
 Bradesco e gravar os dados no banco.
 
-# Falta fazer...
 
+## Falta fazer...
 Passar os dados de rgi.py para config.ini
 criar um arquivo configer que utiliza variáveis de ambiente para login, evitando a necessidade de 
 ter armazenado no arquivo config.ini as credenciais de login no banco de dados.
