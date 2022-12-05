@@ -13,8 +13,8 @@ liberação manual de cada Pix cadastrado, mediante consulta de extrato, saldo n
 Num segundo passo agora, está sendo desenvolvido um servidor que irá consumir automaticamente
 da API de Pix do Bradesco, as informações dos pagamentos cadastrados.
 
-Utiliza para criação da chave PIX, como base, o módulo criado por 
-Alexsussa (https://github.com/Alexsussa/pixqrcodegen), porém foram feitas algumas modificações
+Utiliza para criação da chave PIX, como base, o módulo criado por Alexsussa 
+(https://github.com/Alexsussa/pixqrcodegen), porém foram feitas algumas modificações
 para ficar de acordo com a necessidade de geração de pagamentos pelo manual PIX Bradesco,
 versão 2.0.0: https://exclusive.bradesco/pix/assets/docs/api_pix_200.pdf
 
