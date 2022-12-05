@@ -853,7 +853,7 @@ background-color: rgb(29, 30, 40);
            <string notr="true"/>
           </property>
           <property name="currentIndex">
-           <number>4</number>
+           <number>5</number>
           </property>
           <widget class="QWidget" name="page_gerar">
            <property name="styleSheet">
@@ -863,7 +863,7 @@ background-color: rgb(29, 30, 40);
             <property name="geometry">
              <rect>
               <x>230</x>
-              <y>80</y>
+              <y>50</y>
               <width>531</width>
               <height>41</height>
              </rect>
@@ -886,12 +886,15 @@ background-color: rgb(29, 30, 40);
             <property name="placeholderText">
              <string>Apresentante</string>
             </property>
+            <property name="clearButtonEnabled">
+             <bool>true</bool>
+            </property>
            </widget>
            <widget class="QLineEdit" name="campo_valor">
             <property name="geometry">
              <rect>
               <x>270</x>
-              <y>168</y>
+              <y>178</y>
               <width>301</width>
               <height>41</height>
              </rect>
@@ -913,6 +916,9 @@ background-color: rgb(29, 30, 40);
             </property>
             <property name="placeholderText">
              <string>Valor do título</string>
+            </property>
+            <property name="clearButtonEnabled">
+             <bool>true</bool>
             </property>
            </widget>
            <widget class="QLabel" name="txt_id_pix">
@@ -945,7 +951,7 @@ padding: 5px;</string>
             <property name="geometry">
              <rect>
               <x>221</x>
-              <y>170</y>
+              <y>180</y>
               <width>55</width>
               <height>43</height>
              </rect>
@@ -1099,6 +1105,69 @@ background: transparent;</string>
              <string>a</string>
             </property>
            </widget>
+           <widget class="QLineEdit" name="campo_cpf_apresentante">
+            <property name="geometry">
+             <rect>
+              <x>230</x>
+              <y>110</y>
+              <width>211</width>
+              <height>41</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>MS Shell Dlg 2</family>
+              <pointsize>16</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">padding: 5px;</string>
+            </property>
+            <property name="inputMask">
+             <string/>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="maxLength">
+             <number>11</number>
+            </property>
+            <property name="placeholderText">
+             <string>CPF</string>
+            </property>
+            <property name="clearButtonEnabled">
+             <bool>true</bool>
+            </property>
+           </widget>
+           <widget class="QLabel" name="somente_numeros">
+            <property name="geometry">
+             <rect>
+              <x>450</x>
+              <y>110</y>
+              <width>201</width>
+              <height>43</height>
+             </rect>
+            </property>
+            <property name="font">
+             <font>
+              <family>MS Shell Dlg 2</family>
+              <pointsize>15</pointsize>
+              <weight>50</weight>
+              <italic>false</italic>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="styleSheet">
+             <string notr="true">background-color: transparent;
+padding: 5px;</string>
+            </property>
+            <property name="text">
+             <string>(Somente números)</string>
+            </property>
+           </widget>
            <zorder>forma_1</zorder>
            <zorder>forma_4</zorder>
            <zorder>forma_3</zorder>
@@ -1110,6 +1179,8 @@ background: transparent;</string>
            <zorder>forma_2</zorder>
            <zorder>campo_valor</zorder>
            <zorder>campo_apresentante</zorder>
+           <zorder>campo_cpf_apresentante</zorder>
+           <zorder>somente_numeros</zorder>
           </widget>
           <widget class="QWidget" name="page_imprimir">
            <widget class="QFrame" name="frame_10">
@@ -1662,6 +1733,9 @@ font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
             <property name="placeholderText">
              <string>Buscar ID:</string>
             </property>
+            <property name="clearButtonEnabled">
+             <bool>true</bool>
+            </property>
            </widget>
            <widget class="QLineEdit" name="campo_buscar_apresentante_consulta_pix">
             <property name="geometry">
@@ -1689,6 +1763,9 @@ font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
             </property>
             <property name="placeholderText">
              <string>Buscar por apresentante</string>
+            </property>
+            <property name="clearButtonEnabled">
+             <bool>true</bool>
             </property>
            </widget>
            <widget class="QDateEdit" name="filtro_data_consultapix">
@@ -1770,6 +1847,9 @@ font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
              <property name="placeholderText">
               <string>Repetir Senha</string>
              </property>
+             <property name="clearButtonEnabled">
+              <bool>true</bool>
+             </property>
             </widget>
             <widget class="QLineEdit" name="campo_nome_completo">
              <property name="geometry">
@@ -1797,6 +1877,9 @@ font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
              </property>
              <property name="placeholderText">
               <string>Nome Completo</string>
+             </property>
+             <property name="clearButtonEnabled">
+              <bool>true</bool>
              </property>
             </widget>
             <widget class="QLineEdit" name="campo_senha">
@@ -1828,6 +1911,9 @@ font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
              </property>
              <property name="placeholderText">
               <string>Senha</string>
+             </property>
+             <property name="clearButtonEnabled">
+              <bool>true</bool>
              </property>
             </widget>
             <widget class="QLineEdit" name="campo_usuario">
@@ -1862,6 +1948,9 @@ font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
              </property>
              <property name="placeholderText">
               <string>Usuário</string>
+             </property>
+             <property name="clearButtonEnabled">
+              <bool>true</bool>
              </property>
             </widget>
            </widget>
@@ -2039,6 +2128,9 @@ font: 15pt &quot;MS Shell Dlg 2&quot;</string>
               <property name="placeholderText">
                <string>Buscar ID:</string>
               </property>
+              <property name="clearButtonEnabled">
+               <bool>true</bool>
+              </property>
              </widget>
              <widget class="QPushButton" name="btn_buscar_alteraPix">
               <property name="geometry">
@@ -2090,6 +2182,9 @@ font: 15pt &quot;MS Shell Dlg 2&quot;</string>
               </property>
               <property name="placeholderText">
                <string>Buscar por apresentante</string>
+              </property>
+              <property name="clearButtonEnabled">
+               <bool>true</bool>
               </property>
              </widget>
              <widget class="QComboBox" name="combo_limite_altera">
@@ -2739,13 +2834,23 @@ background:transparent</string>
  </widget>
  <tabstops>
   <tabstop>campo_apresentante</tabstop>
+  <tabstop>campo_cpf_apresentante</tabstop>
   <tabstop>campo_valor</tabstop>
   <tabstop>btn_gerar_qrcode</tabstop>
   <tabstop>btn_limpar_campos</tabstop>
+  <tabstop>Settings</tabstop>
   <tabstop>Sair</tabstop>
   <tabstop>btn_imprimir</tabstop>
   <tabstop>campo_txt_id</tabstop>
   <tabstop>btn_buscar_imprimir</tabstop>
+  <tabstop>campo_buscar_id_consulta_pix</tabstop>
+  <tabstop>campo_buscar_apresentante_consulta_pix</tabstop>
+  <tabstop>combo_filtro_consultapix</tabstop>
+  <tabstop>combo_limite_consultapix</tabstop>
+  <tabstop>combo_filtro_data_consultapix</tabstop>
+  <tabstop>filtro_data_consultapix</tabstop>
+  <tabstop>tableConsultaPix</tabstop>
+  <tabstop>btn_inser_num_interno_consulta_pix</tabstop>
   <tabstop>combo_tipo_usuario</tabstop>
   <tabstop>campo_usuario</tabstop>
   <tabstop>campo_nome_completo</tabstop>
@@ -2753,6 +2858,16 @@ background:transparent</string>
   <tabstop>campo_repetir_senha</tabstop>
   <tabstop>btn_cadastrar</tabstop>
   <tabstop>btn_cancelar</tabstop>
+  <tabstop>campo_buscar_id</tabstop>
+  <tabstop>campo_buscar_apresentante</tabstop>
+  <tabstop>combo_filtro_alterapix</tabstop>
+  <tabstop>combo_limite_altera</tabstop>
+  <tabstop>combo_filtro_data_alterapix</tabstop>
+  <tabstop>filtro_dia_alterapix</tabstop>
+  <tabstop>tableBuscaEAutorizaPix</tabstop>
+  <tabstop>combo_tema</tabstop>
+  <tabstop>btn_aplicar_tema</tabstop>
+  <tabstop>btn_aplicar_tema_2</tabstop>
  </tabstops>
  <resources>
   <include location="resources.qrc"/>

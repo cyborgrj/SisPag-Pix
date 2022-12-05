@@ -106,12 +106,12 @@ class DataBasePix():
             print(error)
 
 
-    def insertPix(self, txtID, nomeApresentante, valor, createdBy, status):
+    def insertPix(self, txtID, nomeApresentante, valor, createdBy, status, cpf):
         cursor = self.conn.cursor()
-        insert_query = """INSERT INTO pix(txtid, name, valor, createdby, status, createdat) 
-                        VALUES(%s,%s,%s,%s,%s,now())"""
+        insert_query = """INSERT INTO pix(txtid, name, valor, createdby, status, createdat, cpf) 
+                        VALUES(%s,%s,%s,%s,%s,now(),%s)"""
         try:
-            cursor.execute(insert_query,(txtID, nomeApresentante, valor, createdBy, status))
+            cursor.execute(insert_query,(txtID, nomeApresentante, valor, createdBy, status, cpf))
         except Exception as error:
             print(f'Erro ao inserir o pix: {error}')
         else:

@@ -421,9 +421,8 @@ class MainWindow(QMainWindow):
         # Ações da tela de gerar QrCode
         self.ui.btn_gerar_qrcode.clicked.connect(
             lambda: self.geraQrCode(self.ui.campo_apresentante.text(), 
-            self.ui.campo_valor.text()))
+            self.ui.campo_valor.text(), self.ui.campo_cpf_apresentante.text()))
         self.ui.btn_limpar_campos.clicked.connect(lambda: self.limparCamposQrCode())
-
 
         # Ações da tela de cadastro
         self.ui.btn_cadastrar.clicked.connect(lambda: self.cadastraUsuario())
@@ -1729,6 +1728,7 @@ class MainWindow(QMainWindow):
     def limparCamposQrCode(self):
         print("Limpar campos")
         self.ui.campo_apresentante.setText('')
+        self.ui.campo_cpf_apresentante.setText('')
         self.ui.campo_valor.setText('')
         self.ui.txt_id_pix.setText('ID Pix: ')
 
@@ -1740,7 +1740,7 @@ class MainWindow(QMainWindow):
         self.ui.campo_senha.setText('')
         self.ui.campo_repetir_senha.setText('')
 
-    def geraQrCode(self, apresentante, valor):
+    def geraQrCode(self, apresentante, valor, cpf):
         erroPix = False
         print("Gerar QrCode")
         identificador = uuid.uuid4()
@@ -1785,7 +1785,7 @@ class MainWindow(QMainWindow):
             # Gravar pix no banco de dados PostgreSQL
             try:
                 self.dbPix.insertPix(txtID=pgto.idTx, nomeApresentante=pgto.nome, valor=valorPix,
-                                createdBy=self.sigla, status='aguardando')
+                                createdBy=self.sigla, status='aguardando', cpf=cpf)
             except Exception as error:
                 self.erroDadosPix(error)
 

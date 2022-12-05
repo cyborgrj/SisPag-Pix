@@ -5,7 +5,7 @@ db = sqlite3.connect('banco.db')
 acessos = ['administrador', 'caixa', 'contabil']
 cursor = db.cursor()
 sigla = 'edu'
-password = '3m193mRJA@'
+password = ''
 acesso = 'administrador'
 nomeusuario = 'Eduardo Rossini Xavier'
 
