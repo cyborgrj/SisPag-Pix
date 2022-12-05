@@ -10,8 +10,8 @@ Inicialmente (enquanto aguardava-se a autorização do cartório para utilizaç�
 foi desenvolvido para funcionar de modo manual, onde o setor de contabilidade iria efetuar
 liberação manual de cada Pix cadastrado, mediante consulta de extrato, saldo na conta bancária
 
-Num segundo passo agora, está sendo desenvolvido um servidor que irá consumir automaticamente
-da API de Pix do Bradesco, as informações dos pagamentos cadastrados.
+Num segundo passo, atualmente, estou desenvolvendo um servidor que irá consumir automaticamente
+da API de Pix do Bradesco, as informações e status dos pagamentos cadastrados.
 
 Utiliza para criação da chave PIX, como base, o módulo criado por Alexsussa 
 (https://github.com/Alexsussa/pixqrcodegen), porém foram feitas algumas modificações
