@@ -23,13 +23,26 @@ versão 2.0.0: https://exclusive.bradesco/pix/assets/docs/api_pix_200.pdf
 É necessário utilizar as seguintes bibliotecas em python para rodar o sistema:
 
 BCrypt (pip install bcrypt)
+
 PsychoPG (pip install psycopg2)
+
 PySide2 (pip install PySide2)
+
 QrCode (pip install qrcode)
+
 PyFPDF2 (pip install fpdf2)
+
 uuid (pip install uuid) (Ka-Ping Yee's uuid)
 
 
 ## Modificações na GUI (interface gráfica de usuário)
 Caso queira fazer alterações na GUI, basta instalar e utilizar o aplicativo QtDesigner 5
 abrir os arquivos ".ui" dentro da pasta GUI e efetuar as modificações desejadas.
+
+## Banco de dados
+Neste projeto, utilizo o banco de dados sqlite (biblioteca já inclusa por padrão no python3), e Postres (psychopg2).
+No banco de dados sqlite armazeno informações de login de usuários, nome, sigla, nível de acesso e senha.
+Tanto a senha quanto o nível de acesso, são armazenados em hash utilizando o Bcrypt, para maior segurança dos dados
+armazenados. Já o banco de dados Postgre é utilizado para armazenar os pagamentos pix em si, será acessado tanto pelos usuários,
+cadastrando e alterando os pagamentos cadastrados bem como pelo servidor que será desenvolvido para consumir diretamente da API
+Bradesco e gravar os dados no banco.
