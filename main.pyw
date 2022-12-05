@@ -4,9 +4,7 @@
 import sys
 from PySide2 import *
 from datetime import datetime
-import time
 from random import randint
-from pytesseract import Output
 from pixqrcodegen import Payload
 from fpdf import FPDF
 import uuid
