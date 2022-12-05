@@ -1,7 +1,7 @@
 
 # inicialização de constantes necessárias para a geração do código pix
-## Nome = 'CARTORIO DE OFICIO DE IMOVEIS'
-## ChavePix = '+5521555522222'
+Nome = 'CARTORIO DE OFICIO DE IMOVEIS'
+ChavePix = '+5521555522222'
 Cidade = 'RIO DE JANEIRO'
 TxtId = ''
 
