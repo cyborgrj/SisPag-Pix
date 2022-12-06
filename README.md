@@ -49,7 +49,6 @@ Bradesco e gravar os dados no banco.
 
 
 ## Falta fazer...
-- Passar os dados de rgi.py para config.ini
 - Criar um arquivo configer que utiliza variáveis de ambiente para login, evitando a necessidade de 
 ter armazenado no arquivo config.ini as credenciais de login no banco de dados.
 - Desenvolver servidor de consumo da API Bradesco, agora que o contrato de serviços com o Bradesco

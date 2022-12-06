@@ -9,7 +9,6 @@ from pixqrcodegen import Payload
 from fpdf import FPDF
 import uuid
 import subprocess
-import rgi
 from db.db import *
 import locale
 import configparser
