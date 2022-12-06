@@ -436,6 +436,13 @@ class MainWindow(QMainWindow):
             self.ui.campo_valor.text(), self.ui.campo_cpf_apresentante.text()))
         self.ui.btn_limpar_campos.clicked.connect(lambda: self.limparCamposQrCode())
 
+        # Ações da tela de imprimir QrCode
+        self.ui.btn_buscar_imprimir.clicked.connect(
+            lambda: self.buscarImprimirPix(self.ui.campo_txt_id_imprimir_pix.text()))
+        self.ui.btn_imprimir.clicked.connect(
+            lambda: self.imprimirPix()
+        )
+
         # Ações da tela de cadastro
         self.ui.btn_cadastrar.clicked.connect(lambda: self.cadastraUsuario())
         self.ui.btn_cancelar.clicked.connect(lambda: self.limparCamposCadastro())
@@ -483,7 +490,56 @@ class MainWindow(QMainWindow):
         if TEMA != 'Drcl Night':
             self.temaAtual.escolherTema(TEMA)
             self.aplicaTema(self.temaAtual)
-    
+
+
+    def buscarImprimirPix(self, txtId):
+        pix = self.dbPix.searchPixByID(txtId)
+        if pix != None:
+            nomeApresentante = pix[1]
+            valor = (pix[2])
+            erroPix = False
+            print("Gerar QrCode para impressão")
+            pgto = Pagamento(idTx=txtId,
+                        nome=nomeApresentante,
+                        valor=valor,
+                        copiaCola='')
+            valor_str = str(pgto.valor)
+            reais = self.converterFloatReais(pgto.valor)
+            # Validar dados antes de gerar QRCode/PDF e gravar no banco
+            if len(pgto.idTx) < 8:
+                erroPix = True
+                self.erroDadosPix('Não foi possível gerar o ID do Pix.')
+            
+            if len(pgto.nome) < 8:
+                erroPix = True
+                self.erroDadosPix('Informar pelo menos um nome e sobrenome.')
+            
+            if not erroPix:
+                # Gerar QrCode com os dados preenchidos.
+                self.ui.txt_id_pix.setText(f"ID Pix: {pgto.idTx}")
+
+                #print(rgi.Nome, pgto.nome, rgi.ChavePix, pgto.valor, rgi.Cidade, pgto.idTx)
+                payload = Payload(RGI_NOME, pgto.nome, RGI_CHAVE_PIX, valor_str, RGI_CIDADE, pgto.idTx)
+                pixCopiaCola = payload.gerarPayload()
+                pgto.copiaCola = pixCopiaCola
+
+                # Gerar Arquivo PDF com os dados + QrCode
+                pdf = PDF()
+                pdf.print_chapter(pgto.nome, reais, pgto.idTx, pgto.copiaCola)
+                pdf.output(ADOBE_PDF_FILE, 'F')
+
+                # Abrir qrquivo PDF para impressão
+                cmd = '"{}" /p "{}"'.format(ADOBE_READER, ADOBE_PDF_FILE)
+                subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        else:
+            self.erroDadosPix('O Código IDPix informado, não foi encontrado.')
+
+
+    def imprimirPix(self):
+        # Abrir qrquivo PDF para conferência dos dados
+        cmd = '"{}" /p "{}"'.format(ADOBE_READER, ADOBE_PDF_FILE)
+        subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
 
     def insereProtocoloPixSelecionado(self):
         colunaId = self.ui.tableConsultaPix.selectedIndexes()[0]

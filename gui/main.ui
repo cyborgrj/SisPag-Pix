@@ -853,7 +853,7 @@ background-color: rgb(29, 30, 40);
            <string notr="true"/>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>2</number>
           </property>
           <widget class="QWidget" name="page_gerar">
            <property name="styleSheet">
@@ -1278,7 +1278,7 @@ background:transparent;</string>
               <string>Obs.: Respeitar maíusculas e minúsculas</string>
              </property>
             </widget>
-            <widget class="QLineEdit" name="campo_txt_id">
+            <widget class="QLineEdit" name="campo_txt_id_imprimir_pix">
              <property name="geometry">
               <rect>
                <x>220</x>
@@ -1304,6 +1304,9 @@ background:transparent;</string>
              </property>
              <property name="placeholderText">
               <string>TxT ID: </string>
+             </property>
+             <property name="clearButtonEnabled">
+              <bool>true</bool>
              </property>
             </widget>
             <widget class="QPushButton" name="btn_imprimir">
@@ -1434,7 +1437,7 @@ background: transparent;</string>
             <zorder>forma_6</zorder>
             <zorder>txt_buscar</zorder>
             <zorder>btn_buscar_imprimir</zorder>
-            <zorder>campo_txt_id</zorder>
+            <zorder>campo_txt_id_imprimir_pix</zorder>
             <zorder>txt_obs</zorder>
             <zorder>txt_obs_2</zorder>
             <zorder>btn_imprimir</zorder>
@@ -1463,7 +1466,16 @@ background: transparent;</string>
              <string notr="true"/>
             </property>
             <property name="editTriggers">
-             <set>QAbstractItemView::NoEditTriggers</set>
+             <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
+            </property>
+            <property name="tabKeyNavigation">
+             <bool>false</bool>
+            </property>
+            <property name="showDropIndicator" stdset="0">
+             <bool>false</bool>
+            </property>
+            <property name="dragDropOverwriteMode">
+             <bool>false</bool>
             </property>
             <property name="alternatingRowColors">
              <bool>true</bool>
@@ -2844,7 +2856,7 @@ background:transparent</string>
   <tabstop>Settings</tabstop>
   <tabstop>Sair</tabstop>
   <tabstop>btn_imprimir</tabstop>
-  <tabstop>campo_txt_id</tabstop>
+  <tabstop>campo_txt_id_imprimir_pix</tabstop>
   <tabstop>btn_buscar_imprimir</tabstop>
   <tabstop>campo_buscar_id_consulta_pix</tabstop>
   <tabstop>campo_buscar_apresentante_consulta_pix</tabstop>
