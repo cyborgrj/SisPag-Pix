@@ -1748,6 +1748,36 @@ class MainWindow(QMainWindow):
         self.ui.campo_senha.setText('')
         self.ui.campo_repetir_senha.setText('')
 
+
+    def verificaCPF(self, cpf: str):
+        cpf_digitos = ''
+        erro = True
+        # Obtém apenas os números do CPF, ignorando pontuações
+        numbers = [int(digit) for digit in cpf if digit.isdigit()]
+
+        # Verifica se o CPF possui 11 números
+        if len(numbers) != 11:
+            return erro, ''
+
+        # Validação do primeiro dígito verificador:
+        sum_of_products = sum(a*b for a, b in zip(numbers[0:9], range(10, 1, -1)))
+        expected_digit = (sum_of_products * 10 % 11) % 10
+        if numbers[9] != expected_digit:
+            return erro, ''
+
+        # Validação do segundo dígito verificador:
+        sum_of_products = sum(a*b for a, b in zip(numbers[0:10], range(11, 1, -1)))
+        expected_digit = (sum_of_products * 10 % 11) % 10
+        if numbers[10] != expected_digit:
+            return erro, ''
+
+        for n in numbers:
+            cpf_digitos = cpf_digitos + str(n)
+        erro = False
+
+        return erro, cpf_digitos
+
+
     def geraQrCode(self, apresentante, valor, cpf):
         erroPix = False
         print("Gerar QrCode")
@@ -1770,7 +1800,13 @@ class MainWindow(QMainWindow):
         if len(pgto.nome) < 8:
             erroPix = True
             self.erroDadosPix('Informar pelo menos um nome e sobrenome.')
-        
+
+        cpf_informado = self.ui.campo_cpf_apresentante.text()
+        err, cpf = self.verificaCPF(cpf_informado)
+        if err:
+            erroPix = True
+            self.erroDadosPix('O CPF informado está incorreto.')
+
         try:
             valorPix=float(valor_decimal)
         except Exception as error:

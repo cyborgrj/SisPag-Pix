@@ -491,8 +491,9 @@ class Ui_MainWindow(object):
         self.campo_cpf_apresentante.setObjectName(u"campo_cpf_apresentante")
         self.campo_cpf_apresentante.setGeometry(QRect(230, 110, 211, 41))
         self.campo_cpf_apresentante.setFont(font3)
+        self.campo_cpf_apresentante.setAutoFillBackground(False)
         self.campo_cpf_apresentante.setStyleSheet(u"padding: 5px;")
-        self.campo_cpf_apresentante.setMaxLength(11)
+        self.campo_cpf_apresentante.setMaxLength(14)
         self.campo_cpf_apresentante.setClearButtonEnabled(True)
         self.somente_numeros = QLabel(self.page_gerar)
         self.somente_numeros.setObjectName(u"somente_numeros")
@@ -1065,7 +1066,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.Sair.clicked.connect(MainWindow.close)
 
-        self.stackedWidget.setCurrentIndex(5)
+        self.stackedWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
