@@ -159,6 +159,7 @@ class Tema:
             self.stop1 = (25, 26, 33, 255)
             self.stop2 = (40, 42, 54, 255)
 
+
 class Pagamento:
     def __init__(self, idTx, nome, valor, copiaCola):
         self.valor = valor
@@ -169,10 +170,12 @@ class Pagamento:
     def insertUser(self):
         return 'QrCode Gerado com sucesso!'
 
+
 def dividePixCopiaCola(copiaCola):
     parte1, parte2 = copiaCola.split('5802BR')
     parte2 = '5802BR' + parte2
     return parte1, parte2
+
 
 class PDF(FPDF):
     def header(self):
@@ -215,6 +218,7 @@ class PDF(FPDF):
         self.add_page()
         self.chapter_title()
         self.chapter_body(apresentante, valor, id, copiaCola)
+
 
 def geradorID(stringId: str) -> str:
     ''' 
@@ -551,6 +555,7 @@ class MainWindow(QMainWindow):
         self.ui.resultado_busca_autoriza.clear()
         self.ui.tableBuscaEAutorizaPix.setSortingEnabled(False)
 
+
     def verificaAcesso(self):
         if self.acesso.lower() == 'administrador':
             # Inicializar a MainWindow do App na tela de autorizar pix.
@@ -819,6 +824,7 @@ class MainWindow(QMainWindow):
                                         }
                                         ''')
 
+
     def telaGerarQrCode(self):
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_gerar)
 
@@ -903,6 +909,7 @@ class MainWindow(QMainWindow):
                                         }
                                         ''')
 
+
     def telaImprimir(self):
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_imprimir)
 
@@ -986,6 +993,7 @@ class MainWindow(QMainWindow):
                                             border-radius:6px;
                                         }
                                         ''')
+
 
     def telaConsultar(self):
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_consultar)
@@ -1075,6 +1083,7 @@ class MainWindow(QMainWindow):
                                             border-radius:6px;
                                         }
                                         ''')
+
 
     def telaSettings(self):
             self.ui.stackedWidget.setCurrentWidget(self.ui.page_settings)
@@ -1475,7 +1484,6 @@ class MainWindow(QMainWindow):
         self.ui.tableBuscaEAutorizaPix.setSortingEnabled(True)
 
 
-    # Falta Criar método de pesquisa por caixa.
     def carregarConsulta(self, caixa):
         # Inicializa limpando a tabela
         print('Carrega consulta pix')
@@ -1635,6 +1643,7 @@ class MainWindow(QMainWindow):
                 self.ui.tableConsultaPix.resizeRowsToContents()
         self.ui.tableConsultaPix.setSortingEnabled(True)
 
+
     def telaCadastrarUsuario(self):
         self.ui.stackedWidget.setCurrentWidget(self.ui.page_cadastrar)
         self.ui.CadastrarUsuario.setStyleSheet('''QPushButton {color: rgb'''+f'{(self.temaAtual.leftMenuTextColor)}'+''';
@@ -1704,6 +1713,7 @@ class MainWindow(QMainWindow):
                                         }
                                         ''')
 
+
     def cadastraUsuario(self):
         if self.ui.campo_senha.text() != self.ui.campo_repetir_senha.text():
             msg = QMessageBox()
@@ -1733,12 +1743,14 @@ class MainWindow(QMainWindow):
             msg_erro.exec_()
         return None
 
+
     def limparCamposQrCode(self):
         print("Limpar campos")
         self.ui.campo_apresentante.setText('')
         self.ui.campo_cpf_apresentante.setText('')
         self.ui.campo_valor.setText('')
         self.ui.txt_id_pix.setText('ID Pix: ')
+
 
     def limparCamposCadastro(self):
         print("Limpar campos")
@@ -1870,6 +1882,7 @@ class MainWindow(QMainWindow):
         self.animation2.setEasingCurve(QEasingCurve.InOutQuart)
         self.animation1.start()
         self.animation2.start()
+
 
 if __name__ == "__main__":
     import sys
