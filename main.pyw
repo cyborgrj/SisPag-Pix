@@ -45,6 +45,16 @@ PORT_ID = config['DATABASE PIX']['PORT_ID']
 
 # Configurações de localização
 LOCALE = config['LOCALIZACAO']['LOCALE']
+
+# Configurações de RGI
+RGI_NOME = config['RGI']['NOME']
+RGI_CHAVE_PIX = config['RGI']['CHAVEPIX']
+RGI_CIDADE = config['RGI']['CIDADE']
+
+# Configurações de Aplicativos Adobe e caminho do PDF
+ADOBE_READER = config['ADOBE']['ACROBAT']
+ADOBE_PDF_FILE = config['ADOBE']['PDFFILE']
+
 ########################################################################
 
 
@@ -1772,13 +1782,13 @@ class MainWindow(QMainWindow):
             self.ui.txt_id_pix.setText(f"ID Pix: {pgto.idTx}")
 
             #print(rgi.Nome, pgto.nome, rgi.ChavePix, pgto.valor, rgi.Cidade, pgto.idTx)
-            payload = Payload(rgi.Nome, pgto.nome, rgi.ChavePix, valor_decimal, rgi.Cidade, pgto.idTx)
+            payload = Payload(RGI_NOME, pgto.nome, RGI_CHAVE_PIX, valor_decimal, RGI_CIDADE, pgto.idTx)
             pixCopiaCola = payload.gerarPayload()
             pgto.copiaCola = pixCopiaCola
             # Gerar Arquivo PDF com os dados + QrCode
             pdf = PDF()
             pdf.print_chapter(pgto.nome, pgto.valor, pgto.idTx, pgto.copiaCola)
-            pdf.output(rgi.Pdffile, 'F')
+            pdf.output(ADOBE_PDF_FILE, 'F')
 
             # Gravar pix no banco de dados PostgreSQL
             try:
@@ -1788,8 +1798,8 @@ class MainWindow(QMainWindow):
                 self.erroDadosPix(error)
 
             # Abrir qrquivo PDF para conferência dos dados
-            cmd = '"{}" "{}"'.format(rgi.Acrobat, rgi.Pdffile)
-            proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            cmd = '"{}" "{}"'.format(ADOBE_READER, ADOBE_PDF_FILE)
+            subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
 
     def erroDadosPix(self, texto):
