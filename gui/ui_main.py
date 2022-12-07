@@ -324,6 +324,7 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QPushButton:pressed {\n"
+"	border: 2px solid rgb(248,248,252);\n"
 "	color: rgb(25,26,33);\n"
 "	background-color: rgb(180, 140, 237);\n"
 "	text-align:center;\n"
@@ -333,10 +334,10 @@ class Ui_MainWindow(object):
 "}\n"
 "\n"
 "QLineEdit{\n"
-"background: transparent;\n"
+"backgroun"
+                        "d: transparent;\n"
 "border: none;\n"
-"bor"
-                        "der-bottom:3px solid rgba(248,248,252,150);\n"
+"border-bottom:3px solid rgba(248,248,252,150);\n"
 "padding: 5px;\n"
 "font: 16pt \"MS Shell Dlg 2\";\n"
 "color: rgb(248, 248, 252);\n"
@@ -349,6 +350,7 @@ class Ui_MainWindow(object):
 "\n"
 "QTableWidget{\n"
 "font: 11pt \"MS Shell Dlg 2\";\n"
+"color: rgb(248,248,242);\n"
 "background-color: rgb(25, 26, 33);\n"
 "alternate-background-color: rgb(40, 42, 54);\n"
 "}\n"
@@ -379,12 +381,12 @@ class Ui_MainWindow(object):
 "font: 13pt \"MS Shell Dlg 2\";\n"
 "border: 1px solid rgba(0,0,0,10%);\n"
 "padding: 5px;\n"
-"background-color: rgb(40, 42, 54);\n"
+"background-colo"
+                        "r: rgb(40, 42, 54);\n"
 "}\n"
 "\n"
 "QComboBox QListView:item{\n"
-"paddi"
-                        "ng-left: 10px;\n"
+"padding-left: 10px;\n"
 "background-color: rgb(40, 42, 54);\n"
 "}\n"
 "\n"
@@ -670,7 +672,6 @@ class Ui_MainWindow(object):
         self.btn_set_small_font_consulta.setGeometry(QRect(860, 419, 31, 31))
         self.btn_set_small_font_consulta.setFocusPolicy(Qt.NoFocus)
         self.btn_set_small_font_consulta.setStyleSheet(u"background: transparent;\n"
-"color: rgb(255, 255, 255);\n"
 "font: 10pt \"MS Shell Dlg 2\";")
         self.btn_set_big_font_consulta = QPushButton(self.page_consultar)
         self.btn_set_big_font_consulta.setObjectName(u"btn_set_big_font_consulta")
@@ -684,7 +685,6 @@ class Ui_MainWindow(object):
         self.btn_set_big_font_consulta.setFont(font8)
         self.btn_set_big_font_consulta.setFocusPolicy(Qt.NoFocus)
         self.btn_set_big_font_consulta.setStyleSheet(u"background: transparent;\n"
-"color: rgb(255, 255, 255);\n"
 "font: 18pt \"MS Shell Dlg 2\";")
         self.combo_filtro_data_consultapix = QComboBox(self.page_consultar)
         self.combo_filtro_data_consultapix.addItem("")
@@ -777,13 +777,11 @@ class Ui_MainWindow(object):
         font9.setItalic(False)
         font9.setWeight(50)
         self.combo_tipo_usuario.setFont(font9)
-        self.combo_tipo_usuario.setStyleSheet(u"color:rgb(255, 255, 255);\n"
-"font: 13pt \"MS Shell Dlg 2\";")
+        self.combo_tipo_usuario.setStyleSheet(u"font: 13pt \"MS Shell Dlg 2\";")
         self.label = QLabel(self.frame_2)
         self.label.setObjectName(u"label")
         self.label.setGeometry(QRect(12, 12, 154, 25))
-        self.label.setStyleSheet(u"color:rgb(255, 255, 255);\n"
-"font: 15pt \"MS Shell Dlg 2\"")
+        self.label.setStyleSheet(u"font: 15pt \"MS Shell Dlg 2\"")
         self.frame_3 = QFrame(self.page_cadastrar)
         self.frame_3.setObjectName(u"frame_3")
         self.frame_3.setGeometry(QRect(30, 379, 391, 57))
@@ -932,14 +930,12 @@ class Ui_MainWindow(object):
         self.resultado_busca_autoriza = QLabel(self.frame_4)
         self.resultado_busca_autoriza.setObjectName(u"resultado_busca_autoriza")
         self.resultado_busca_autoriza.setGeometry(QRect(380, 350, 371, 31))
-        self.resultado_busca_autoriza.setStyleSheet(u"font: 75 12pt \"MS Shell Dlg 2\";\n"
-"color: rgb(255, 255, 255);")
+        self.resultado_busca_autoriza.setStyleSheet(u"font: 75 12pt \"MS Shell Dlg 2\";")
         self.btn_set_small_font = QPushButton(self.frame_4)
         self.btn_set_small_font.setObjectName(u"btn_set_small_font")
         self.btn_set_small_font.setGeometry(QRect(774, 379, 31, 31))
         self.btn_set_small_font.setFocusPolicy(Qt.NoFocus)
         self.btn_set_small_font.setStyleSheet(u"background: transparent;\n"
-"color: rgb(255, 255, 255);\n"
 "font: 10pt \"MS Shell Dlg 2\";")
         self.btn_set_big_font = QPushButton(self.frame_4)
         self.btn_set_big_font.setObjectName(u"btn_set_big_font")
@@ -947,7 +943,6 @@ class Ui_MainWindow(object):
         self.btn_set_big_font.setFont(font8)
         self.btn_set_big_font.setFocusPolicy(Qt.NoFocus)
         self.btn_set_big_font.setStyleSheet(u"background: transparent;\n"
-"color: rgb(255, 255, 255);\n"
 "font: 18pt \"MS Shell Dlg 2\";")
         self.stackedWidget.addWidget(self.page_autorizar)
         self.page_settings = QWidget()
@@ -968,12 +963,12 @@ class Ui_MainWindow(object):
         self.combo_tema.setStyleSheet(u"")
         self.btn_aplicar_tema = QPushButton(self.frame_5)
         self.btn_aplicar_tema.setObjectName(u"btn_aplicar_tema")
-        self.btn_aplicar_tema.setGeometry(QRect(370, 80, 141, 33))
-        self.btn_aplicar_tema.setStyleSheet(u"font: 14pt \"MS Shell Dlg 2\";")
+        self.btn_aplicar_tema.setGeometry(QRect(370, 78, 171, 37))
+        self.btn_aplicar_tema.setStyleSheet(u"")
         self.btn_aplicar_tema_2 = QPushButton(self.frame_5)
         self.btn_aplicar_tema_2.setObjectName(u"btn_aplicar_tema_2")
-        self.btn_aplicar_tema_2.setGeometry(QRect(280, 140, 151, 33))
-        self.btn_aplicar_tema_2.setStyleSheet(u"font: 14pt \"MS Shell Dlg 2\";")
+        self.btn_aplicar_tema_2.setGeometry(QRect(280, 139, 171, 37))
+        self.btn_aplicar_tema_2.setStyleSheet(u"")
         self.label_2 = QLabel(self.frame_5)
         self.label_2.setObjectName(u"label_2")
         self.label_2.setGeometry(QRect(10, 70, 171, 51))
@@ -987,10 +982,10 @@ class Ui_MainWindow(object):
         self.label_4 = QLabel(self.frame_5)
         self.label_4.setObjectName(u"label_4")
         self.label_4.setGeometry(QRect(10, 130, 251, 51))
-        self.label_7 = QLabel(self.frame_5)
-        self.label_7.setObjectName(u"label_7")
-        self.label_7.setGeometry(QRect(358, 0, 114, 51))
-        self.label_7.setStyleSheet(u"font: 18pt \"MS Shell Dlg 2\";\n"
+        self.label_aparencia = QLabel(self.frame_5)
+        self.label_aparencia.setObjectName(u"label_aparencia")
+        self.label_aparencia.setGeometry(QRect(358, 0, 114, 51))
+        self.label_aparencia.setStyleSheet(u"font: 18pt \"MS Shell Dlg 2\";\n"
 "text-decoration: underline;\n"
 "background:transparent")
         self.frame_9 = QFrame(self.page_settings)
@@ -1011,10 +1006,10 @@ class Ui_MainWindow(object):
         self.label_8 = QLabel(self.frame_9)
         self.label_8.setObjectName(u"label_8")
         self.label_8.setGeometry(QRect(10, 130, 251, 51))
-        self.label_3 = QLabel(self.frame_9)
-        self.label_3.setObjectName(u"label_3")
-        self.label_3.setGeometry(QRect(298, 1, 250, 51))
-        self.label_3.setStyleSheet(u"font: 18pt \"MS Shell Dlg 2\";\n"
+        self.label_configuracoes = QLabel(self.frame_9)
+        self.label_configuracoes.setObjectName(u"label_configuracoes")
+        self.label_configuracoes.setGeometry(QRect(298, 1, 250, 51))
+        self.label_configuracoes.setStyleSheet(u"font: 18pt \"MS Shell Dlg 2\";\n"
 "text-decoration: underline;\n"
 "background:transparent")
         self.stackedWidget.addWidget(self.page_settings)
@@ -1070,7 +1065,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.Sair.clicked.connect(MainWindow.close)
 
-        self.stackedWidget.setCurrentIndex(2)
+        self.stackedWidget.setCurrentIndex(5)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1203,11 +1198,11 @@ class Ui_MainWindow(object):
         self.label_2.setText(QCoreApplication.translate("MainWindow", u"Esquema de cores:", None))
         self.aparencia_bg.setText("")
         self.label_4.setText(QCoreApplication.translate("MainWindow", u"Tamanho da fonte (tabelas)", None))
-        self.label_7.setText(QCoreApplication.translate("MainWindow", u"Apar\u00eancia", None))
+        self.label_aparencia.setText(QCoreApplication.translate("MainWindow", u"Apar\u00eancia", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"Espa\u00e7o reservado, em desevolvimento", None))
         self.general_settings_bg.setText("")
         self.label_8.setText(QCoreApplication.translate("MainWindow", u"Em desenvolvimento...", None))
-        self.label_3.setText(QCoreApplication.translate("MainWindow", u"Configura\u00e7\u00f5es gerais", None))
+        self.label_configuracoes.setText(QCoreApplication.translate("MainWindow", u"Configura\u00e7\u00f5es gerais", None))
         self.label_creditos.setText(QCoreApplication.translate("MainWindow", u"Sistema de gerenciamento de Pix, desenvolvido por Eduardo Rossini - 2022.", None))
     # retranslateUi
 

@@ -72,14 +72,25 @@ class Tema:
             self.sideMenuBgColor = (35, 35, 35)
             self.sideAltMenurBgColor = (100, 100, 100)
             self.rightSideMenuBgColor = (70, 70, 70)
-            self.tableItemBgColor = (50, 50, 50)
+            
+            # Cores dos botões
+            self.btnTextColor = (248, 248, 242)
             self.btnBgColor = (45, 45, 45)
+            self.btnPressColor = (170, 170, 170)
+            self.btnBgColorHover = (120, 120, 120)
+            self.btnPressText = (45, 45, 45)
+
+            # Cores da tabela
+            self.tableItemBgColor = (50, 50, 50)
+            self.tableItemAltBgColor = (60, 60, 60)
+            self.tableItemTextColor = (248, 248, 242)
 
             # Cores das fontes
             self.leftMenuTextColor = (248, 248, 242)
-            self.mainTextColor = (255, 255, 255)
+            self.mainTextColor = (248, 248, 242)
+
+            # Cores chaves
             self.keyColor1 = (255, 255, 200)
-            self.keyColor2 = (120, 120, 120)
             self.corDestaque1 = (170, 170, 170)
             self.corDestaque2 = (120, 120, 120)
             self.inputTextBgColor = (255,255,255,150)
@@ -95,16 +106,27 @@ class Tema:
             self.sideMenuBgColor = (70, 70, 70)
             self.sideAltMenurBgColor = (130, 130, 130)
             self.rightSideMenuBgColor = (200, 200, 200)
-            self.tableItemBgColor = (50, 50, 50)
-            self.btnBgColor = (70, 70, 70)
+            
+            # Cores dos botões
+            self.btnTextColor = (40, 40, 40)
+            self.btnBgColor = (120, 120, 120)
+            self.btnPressColor = (95, 95, 95)
+            self.btnPressText = (230, 230, 230)
+            self.btnBgColorHover = (70, 70, 70)
+
+            # Cores da tabela
+            self.tableItemBgColor = (230, 230, 230)
+            self.tableItemAltBgColor = (190, 190, 190)
+            self.tableItemTextColor = (40, 40, 40)
 
             # Cores das fontes
-            self.leftMenuTextColor = (248, 248, 242)
-            self.mainTextColor = (10, 10, 10)
-            self.keyColor1 = (255, 255, 200)
-            self.keyColor2 = (120, 120, 120)
-            self.corDestaque1 = (170, 170, 170)
-            self.corDestaque2 = (120, 120, 120)
+            self.leftMenuTextColor = (248, 248, 248)
+            self.mainTextColor = (40, 40, 40)
+
+            # Cores chaves
+            self.keyColor1 = (255, 255, 255)
+            self.corDestaque1 = (220, 220, 220)
+            self.corDestaque2 = (190, 190, 190)
             self.inputTextBgColor = (10, 10, 10, 250)
 
             # Stops do gradiente RGBA
@@ -119,14 +141,26 @@ class Tema:
             self.sideMenuBgColor = (25, 26, 33)
             self.sideAltMenurBgColor = (49, 51, 65)
             self.rightSideMenuBgColor = (40, 42, 54)
-            self.tableItemBgColor = (33, 34, 44)
+            
+            # Cores dos botões
+            self.btnTextColor = (248, 248, 242)            
             self.btnBgColor = (29, 30, 40)
+            self.btnPressColor = (189, 147, 249)
+            self.btnBgColorHover = (96, 114, 164)
+            self.btnPressText = (29, 30, 40)
+
+            # Cores da tabela
+            self.tableItemBgColor = (33, 34, 44)
+            self.tableItemAltBgColor = (40, 42, 54)
+            self.tableItemTextColor = (248, 248, 242)
 
             # Cores das fontes
             self.leftMenuTextColor = (248, 248, 242)
             self.mainTextColor = (248, 248, 242)
+
+            # Cores chaves
             self.keyColor1 = (98, 114, 139)
-            self.keyColor2 = (96, 114, 164)
+            
             self.corDestaque1 = (189, 147, 249)
             self.corDestaque2 = (239, 113, 159)
             self.inputTextBgColor = (255,255,255,150)
@@ -143,14 +177,25 @@ class Tema:
             self.sideMenuBgColor = (50, 52, 66)
             self.sideAltMenurBgColor = (49, 51, 65)
             self.rightSideMenuBgColor = (248, 248, 242)
-            self.tableItemBgColor = (66, 68, 88)
-            self.btnBgColor = (58, 60, 80)
+            
+            # Cores dos botões
+            self.btnTextColor = (248, 248, 242)            
+            self.btnBgColor = (98, 114, 164)
+            self.btnPressColor = (98, 114, 164)
+            self.btnBgColorHover = (189, 147, 249)
+            self.btnPressText = (248, 248, 242)
+            
+            # Cores da tabela
+            self.tableItemBgColor = (248, 248, 242)
+            self.tableItemAltBgColor = (218, 218, 212)
+            self.tableItemTextColor = (50, 52, 66)
 
             # Cores das fontes
             self.leftMenuTextColor = (248, 248, 242)
             self.mainTextColor = (40, 42, 54)
+            
+            # Cores chaves
             self.keyColor1 = (98, 114, 139)
-            self.keyColor2 = (96, 114, 164)
             self.corDestaque1 = (189, 147, 249)
             self.corDestaque2 = (239, 113, 159)
             self.inputTextBgColor = (40, 42, 54, 150)
@@ -648,7 +693,7 @@ class MainWindow(QMainWindow):
         }
 
         QPushButton {
-            color: rgb'''+f'{(temaAtual.mainTextColor)}'+''';
+            color: rgb'''+f'{(temaAtual.btnTextColor)}'+''';
             background-color: rgb'''+f'{(temaAtual.btnBgColor)}'+''';
             border: 0px solid;
             padding: 6px 9px;
@@ -658,8 +703,8 @@ class MainWindow(QMainWindow):
         }
 
         QPushButton:hover {
-            color: rgb'''+f'{(temaAtual.mainTextColor)}'+''';
-            background-color: rgb'''+f'{(temaAtual.keyColor2)}'+''';
+            color: rgb'''+f'{(temaAtual.leftMenuTextColor)}'+''';
+            background-color: rgb'''+f'{(temaAtual.btnBgColorHover)}'+''';
             text-align:center;
             padding: 6px 9px;
             border-radius:5px;
@@ -667,8 +712,9 @@ class MainWindow(QMainWindow):
         }
 
         QPushButton:pressed {
-            background-color: rgb'''+f'{(temaAtual.corDestaque1)}'+''';
-            color: rgb'''+f'{(temaAtual.btnBgColor)}'+''';
+            border: 2px solid rgb'''+f'{(temaAtual.rightSideMenuBgColor)}'+''';
+            background-color: rgb'''+f'{(temaAtual.btnPressColor)}'+''';
+            color: rgb'''+f'{(temaAtual.btnPressText)}'+''';
             text-align:center;
             padding: 5px 7px;
             border-radius:5px;
@@ -690,52 +736,67 @@ class MainWindow(QMainWindow):
         }
         
         QTableWidget{
-        font: 11pt "MS Shell Dlg 2";
-        background-color: rgb'''+f'{(temaAtual.tableItemBgColor)}'+''';
-        alternate-background-color: rgb'''+f'{(temaAtual.sideMenuHoverBgColor)}'+''';
+            font: 11pt "MS Shell Dlg 2";
+            background-color: rgb'''+f'{(temaAtual.tableItemBgColor)}'+''';
+            alternate-background-color: rgb'''+f'{(temaAtual.tableItemAltBgColor)}'+''';
+            color: rgb'''+f'{(temaAtual.tableItemTextColor)}'+''';
         }
 
         QComboBox{
-        border: 2px solid rgb'''+f'{(temaAtual.corDestaque1)}'+''';
-        color: rgb'''+f'{(temaAtual.mainTextColor)}'+''';
-        font: 13pt "MS Shell Dlg 2";
-        padding: 5px;
-        border-radius: 5px
+            border: 2px solid rgb'''+f'{(temaAtual.corDestaque1)}'+''';
+            color: rgb'''+f'{(temaAtual.mainTextColor)}'+''';
+            font: 13pt "MS Shell Dlg 2";
+            padding: 5px;
+            border-radius: 5px
         }
 
         QComboBox:drop-down {
-        border: 0px	
+            border: 0px	
         }
 
         QComboBox:down-arrow {
-        image: url(:/icons/icons/chevron-down.svg);
-        margin-right:10
+            image: url(:/icons/icons/chevron-down.svg);
+            margin-right:10
         }
 
         QComboBox:on {
-        border: 2px solid rgb'''+f'{(temaAtual.mainTextColor)}'+''';
+            border: 2px solid rgb'''+f'{(temaAtual.mainTextColor)}'+''';
         }
 
         QComboBox QListView {
-        color: rgb'''+f'{(temaAtual.mainTextColor)}'+''';
-        font: 13pt "MS Shell Dlg 2";
-        border: 1px solid rgba(0,0,0,10%);
-        padding: 5px;
-        background-color: rgb'''+f'{(temaAtual.sideMenuHoverBgColor)}'+''';
+            color: rgb'''+f'{(temaAtual.mainTextColor)}'+''';
+            font: 13pt "MS Shell Dlg 2";
+            border: 1px solid rgba(0,0,0,10%);
+            padding: 5px;
+            background-color: rgb'''+f'{(temaAtual.sideMenuHoverBgColor)}'+''';
         }
 
         QComboBox QListView:item{
-        padding-left: 10px;
-        background-color: rgb'''+f'{(temaAtual.sideMenuHoverBgColor)}'+''';
+            padding-left: 10px;
+            background-color: rgb'''+f'{(temaAtual.sideMenuHoverBgColor)}'+''';
         }
 
         QComboBox QListView:item:hover{
-        background-color: rgb'''+f'{(temaAtual.btnBgColor)}'+''';
+            background-color: rgb'''+f'{(temaAtual.btnBgColor)}'+''';
         }
 
         QComboBox QListView:item:selected{
-        background-color: rgb'''+f'{(temaAtual.btnBgColor)}'+''';
+            background-color: rgb'''+f'{(temaAtual.btnBgColor)}'+''';
         }
+        ''')
+
+        self.ui.label_aparencia.setStyleSheet('''
+            color: rgb'''+f'{(temaAtual.btnTextColor)}'+''';
+            font: 18pt "MS Shell Dlg 2";
+            text-decoration: underline;
+            background:transparent
+        ''')
+
+        self.ui.label_configuracoes.setStyleSheet('''
+            color: rgb'''+f'{(temaAtual.btnTextColor)}'+''';
+            font: 18pt "MS Shell Dlg 2";
+            text-decoration: underline;
+            background:transparent  
         ''')
 
         self.ui.frame_left_base.setStyleSheet('''*{
@@ -758,20 +819,20 @@ class MainWindow(QMainWindow):
         }''')
 
         self.ui.top_center_frame.setStyleSheet('''
-        background-color: rgb'''+f'{(temaAtual.sideMenuBgColor)}'+''';
+            background-color: rgb'''+f'{(temaAtual.sideMenuBgColor)}'+''';
         ''')
 
         self.ui.label_titulo.setStyleSheet('''
-        color: rgb'''+f'{(temaAtual.leftMenuTextColor)}'+''';
+            color: rgb'''+f'{(temaAtual.leftMenuTextColor)}'+''';
         ''')
 
         self.ui.top_left_frame.setStyleSheet('''
-        background-color: rgb'''+f'{(temaAtual.sideMenuBgColor)}'+''';
+            background-color: rgb'''+f'{(temaAtual.sideMenuBgColor)}'+''';
         ''')
 
         self.ui.label_creditos.setStyleSheet('''
-        color: rgb'''+f'{(temaAtual.mainTextColor)}'+''';
-        font: 10pt "MS Shell Dlg 2";
+            color: rgb'''+f'{(temaAtual.mainTextColor)}'+''';
+            font: 10pt "MS Shell Dlg 2";
         ''')
         
         config['APARENCIA']['TEMA'] = temaAtual.nomeTema
@@ -1281,15 +1342,11 @@ class MainWindow(QMainWindow):
                 for coluna in range(0,9,1):
                     if coluna == 2:
                         item_atual = QTableWidgetItem(reais)
-                        item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                            self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                         item_atual.setFont(self.fontTable)
                         self.ui.tableBuscaEAutorizaPix.setItem(0, 
                             coluna, item_atual)
                     elif coluna == 4:
                         item_atual = QTableWidgetItem(diaHora)
-                        item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                            self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                         item_atual.setFont(self.fontTable)
                         self.ui.tableBuscaEAutorizaPix.setItem(0, 
                             coluna, item_atual)
@@ -1301,6 +1358,8 @@ class MainWindow(QMainWindow):
                                 item_atual = QTableWidgetItem('')
                             else:
                                 item_atual = QTableWidgetItem(str(pagamento[coluna]).upper())
+                            item_atual.setFont(self.fontTable)
+                            self.ui.tableBuscaEAutorizaPix.setItem(0, coluna, item_atual)
                         elif coluna == 8:
                             # Se for a última coluna, verifica se o valor é none pra retornar ''
                             # Se não for none, aplica a sigla do usuário em maiúsculas
@@ -1308,16 +1367,12 @@ class MainWindow(QMainWindow):
                                 item_atual = QTableWidgetItem('')
                             else:
                                 item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                            self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                             item_atual.setFont(self.fontTable)
                             self.ui.tableBuscaEAutorizaPix.setItem(0, 
                                 coluna - 1, item_atual)
                             item_atual.setFont(self.fontTable)
                         else:
                             item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                             item_atual.setFont(self.fontTable)
                             self.ui.tableBuscaEAutorizaPix.setItem(0, 
                                 coluna, item_atual)
@@ -1330,7 +1385,7 @@ class MainWindow(QMainWindow):
                 limite = 10
             elif self.ui.combo_limite_altera.currentIndex() == 1:
                 limite = 30
-            elif self.ui.combo_limite_altera.currentIndex() == 1:
+            elif self.ui.combo_limite_altera.currentIndex() == 2:
                 limite = 50
             else:
                 limite = 100 
@@ -1382,15 +1437,11 @@ class MainWindow(QMainWindow):
                     for coluna in range(0,9,1):
                         if coluna == 2:
                             item_atual = QTableWidgetItem(reais)
-                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                            self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                             item_atual.setFont(self.fontTable)
                             self.ui.tableBuscaEAutorizaPix.setItem(linha, 
                             coluna, item_atual)
                         elif coluna == 4:
                             item_atual = QTableWidgetItem(diaHora)
-                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                            self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                             item_atual.setFont(self.fontTable)
                             self.ui.tableBuscaEAutorizaPix.setItem(linha, 
                             coluna, item_atual)
@@ -1403,6 +1454,8 @@ class MainWindow(QMainWindow):
                                     item_atual = QTableWidgetItem('')
                                 else:
                                     item_atual = QTableWidgetItem(str(pagamento[coluna]).upper())
+                                item_atual.setFont(self.fontTable)
+                                self.ui.tableBuscaEAutorizaPix.setItem(linha, coluna, item_atual)
                             elif coluna == 8:
                                 # Se for a última coluna, verifica se o valor é none pra retornar ''
                                 # Se não for none, aplica a sigla do usuário em maiúsculas
@@ -1410,16 +1463,12 @@ class MainWindow(QMainWindow):
                                     item_atual = QTableWidgetItem('')
                                 else:
                                     item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                                item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                                 item_atual.setFont(self.fontTable)
                                 self.ui.tableBuscaEAutorizaPix.setItem(linha, 
                                     coluna - 1, item_atual)
                                 item_atual.setFont(self.fontTable)
                             else:
                                 item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                                item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                    self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                                 item_atual.setFont(self.fontTable)
                                 self.ui.tableBuscaEAutorizaPix.setItem(linha, 
                                     coluna, item_atual)
@@ -1433,7 +1482,7 @@ class MainWindow(QMainWindow):
                 limite = 10
             elif self.ui.combo_limite_altera.currentIndex() == 1:
                 limite = 30
-            elif self.ui.combo_limite_altera.currentIndex() == 1:
+            elif self.ui.combo_limite_altera.currentIndex() == 2:
                 limite = 50
             else:
                 limite = 100 
@@ -1484,15 +1533,11 @@ class MainWindow(QMainWindow):
                     for coluna in range(0,9,1):
                         if coluna == 2:
                             item_atual = QTableWidgetItem(reais)
-                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                             item_atual.setFont(self.fontTable)
                             self.ui.tableBuscaEAutorizaPix.setItem(linha, 
                                 coluna, item_atual)
                         elif coluna == 4:
                             item_atual = QTableWidgetItem(diaHora)
-                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                             item_atual.setFont(self.fontTable)
                             self.ui.tableBuscaEAutorizaPix.setItem(linha, 
                                 coluna, item_atual)
@@ -1505,6 +1550,8 @@ class MainWindow(QMainWindow):
                                     item_atual = QTableWidgetItem('')
                                 else:
                                     item_atual = QTableWidgetItem(str(pagamento[coluna]).upper())
+                                item_atual.setFont(self.fontTable)
+                                self.ui.tableBuscaEAutorizaPix.setItem(linha, coluna, item_atual)
                             elif coluna == 8:
                                 # Se for a última coluna, verifica se o valor é none pra retornar ''
                                 # Se não for none, aplica a sigla do usuário em maiúsculas
@@ -1512,16 +1559,12 @@ class MainWindow(QMainWindow):
                                     item_atual = QTableWidgetItem('')
                                 else:
                                     item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                                item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                                 item_atual.setFont(self.fontTable)
                                 self.ui.tableBuscaEAutorizaPix.setItem(linha, 
                                     coluna - 1, item_atual)
                                 item_atual.setFont(self.fontTable)
                             else:
                                 item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                                item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                    self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                                 item_atual.setFont(self.fontTable)
                                 self.ui.tableBuscaEAutorizaPix.setItem(linha, 
                                     coluna, item_atual)
@@ -1560,7 +1603,7 @@ class MainWindow(QMainWindow):
             limite = 10
         elif self.ui.combo_limite_consultapix.currentIndex() == 1:
             limite = 30
-        elif self.ui.combo_limite_consultapix.currentIndex() == 1:
+        elif self.ui.combo_limite_consultapix.currentIndex() == 2:
             limite = 50
         else:
             limite = 100 

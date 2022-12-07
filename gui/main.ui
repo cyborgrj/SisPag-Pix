@@ -755,6 +755,7 @@ QPushButton:hover {
 }
 
 QPushButton:pressed {
+	border: 2px solid rgb(248,248,252);
 	color: rgb(25,26,33);
 	background-color: rgb(180, 140, 237);
 	text-align:center;
@@ -779,6 +780,7 @@ font: 15pt &quot;MS Shell Dlg 2&quot;;
 
 QTableWidget{
 font: 11pt &quot;MS Shell Dlg 2&quot;;
+color: rgb(248,248,242);
 background-color: rgb(25, 26, 33);
 alternate-background-color: rgb(40, 42, 54);
 }
@@ -853,7 +855,7 @@ background-color: rgb(29, 30, 40);
            <string notr="true"/>
           </property>
           <property name="currentIndex">
-           <number>2</number>
+           <number>5</number>
           </property>
           <widget class="QWidget" name="page_gerar">
            <property name="styleSheet">
@@ -1637,7 +1639,6 @@ color: rgb(255, 255, 255);</string>
             </property>
             <property name="styleSheet">
              <string notr="true">background: transparent;
-color: rgb(255, 255, 255);
 font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
             </property>
             <property name="text">
@@ -1667,7 +1668,6 @@ font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
             </property>
             <property name="styleSheet">
              <string notr="true">background: transparent;
-color: rgb(255, 255, 255);
 font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
             </property>
             <property name="text">
@@ -2003,8 +2003,7 @@ font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
               </font>
              </property>
              <property name="styleSheet">
-              <string notr="true">color:rgb(255, 255, 255);
-font: 13pt &quot;MS Shell Dlg 2&quot;;</string>
+              <string notr="true">font: 13pt &quot;MS Shell Dlg 2&quot;;</string>
              </property>
              <item>
               <property name="text">
@@ -2032,8 +2031,7 @@ font: 13pt &quot;MS Shell Dlg 2&quot;;</string>
               </rect>
              </property>
              <property name="styleSheet">
-              <string notr="true">color:rgb(255, 255, 255);
-font: 15pt &quot;MS Shell Dlg 2&quot;</string>
+              <string notr="true">font: 15pt &quot;MS Shell Dlg 2&quot;</string>
              </property>
              <property name="text">
               <string>Tipo de Usuário:</string>
@@ -2518,8 +2516,7 @@ font: 15pt &quot;MS Shell Dlg 2&quot;</string>
                </rect>
               </property>
               <property name="styleSheet">
-               <string notr="true">font: 75 12pt &quot;MS Shell Dlg 2&quot;;
-color: rgb(255, 255, 255);</string>
+               <string notr="true">font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
               </property>
               <property name="text">
                <string/>
@@ -2539,7 +2536,6 @@ color: rgb(255, 255, 255);</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background: transparent;
-color: rgb(255, 255, 255);
 font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
               </property>
               <property name="text">
@@ -2569,7 +2565,6 @@ font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
               </property>
               <property name="styleSheet">
                <string notr="true">background: transparent;
-color: rgb(255, 255, 255);
 font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
               </property>
               <property name="text">
@@ -2637,13 +2632,13 @@ font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
              <property name="geometry">
               <rect>
                <x>370</x>
-               <y>80</y>
-               <width>141</width>
-               <height>33</height>
+               <y>78</y>
+               <width>171</width>
+               <height>37</height>
               </rect>
              </property>
              <property name="styleSheet">
-              <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>Aplicar Tema</string>
@@ -2653,13 +2648,13 @@ font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
              <property name="geometry">
               <rect>
                <x>280</x>
-               <y>140</y>
-               <width>151</width>
-               <height>33</height>
+               <y>139</y>
+               <width>171</width>
+               <height>37</height>
               </rect>
              </property>
              <property name="styleSheet">
-              <string notr="true">font: 14pt &quot;MS Shell Dlg 2&quot;;</string>
+              <string notr="true"/>
              </property>
              <property name="text">
               <string>Escolher fonte...</string>
@@ -2714,7 +2709,7 @@ text-decoration: underline;</string>
               <string>Tamanho da fonte (tabelas)</string>
              </property>
             </widget>
-            <widget class="QLabel" name="label_7">
+            <widget class="QLabel" name="label_aparencia">
              <property name="geometry">
               <rect>
                <x>358</x>
@@ -2797,7 +2792,7 @@ text-decoration: underline;</string>
               <string>Em desenvolvimento...</string>
              </property>
             </widget>
-            <widget class="QLabel" name="label_3">
+            <widget class="QLabel" name="label_configuracoes">
              <property name="geometry">
               <rect>
                <x>298</x>
