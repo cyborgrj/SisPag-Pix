@@ -16,10 +16,7 @@ import re
 
 ########################################################################
 # IMPORT GUI FILE
-from gui.ui_main import *
-from gui.ui_LoginUI import *
-from gui.ui_ConfirmaPix import *
-from gui.ui_InsereProtocolo import *
+from gui import *
 ########################################################################
 
 
@@ -690,6 +687,14 @@ class MainWindow(QMainWindow):
         self.ui.right_panel.setStyleSheet('''*{
         background-color: rgb'''+f'{(temaAtual.rightSideMenuBgColor)}'+''';
         font: 14pt "MS Shell Dlg 2";
+        }
+
+        QDateEdit {
+            border: 2px solid rgb'''+f'{(temaAtual.corDestaque1)}'+''';
+            color: rgb'''+f'{(temaAtual.mainTextColor)}'+''';
+            font: 13pt "MS Shell Dlg 2";
+            padding: 5px;
+            border-radius: 5px
         }
 
         QPushButton {
