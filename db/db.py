@@ -1,7 +1,6 @@
 import psycopg2
 import sqlite3
 import bcrypt
-import re
 
 class DataBaseUsers():
     def __init__(self, dbname):
