@@ -1,4 +1,4 @@
-# SisPag-Pix
+# SisPag-Pix por Eduardo Rossini Xavier
 
 ## Programa para geração de pagamentos Pix para o cartório onde trabalho, como desenvolvedor em Python.
 
@@ -54,3 +54,5 @@ ter armazenado no arquivo config.ini as credenciais de login no banco de dados.
 - Desenvolver servidor de consumo da API Bradesco, agora que o contrato de serviços com o Bradesco
 já foi liberado pelo cartório.
 - Criar executável.
+
+Em desenvolvimento e criado por Eduardo Rossini Xavier da Silva em dezembro de 2023.
