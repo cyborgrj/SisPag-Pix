@@ -597,6 +597,14 @@ class MainWindow(QMainWindow):
         valor = self.ui.tableConsultaPix.model().data(colunaValor)
         status = self.ui.tableConsultaPix.model().data(colunaStatus)
 
+        pix_selecionado = self.dbPix.searchPixByID(id)
+        
+        if pix_selecionado[8] != '':
+            msg_pix = QMessageBox()
+            msg_pix.setWindowTitle(f'Protocolo/Certidão já informado: {pix_selecionado[0]}')
+            msg_pix.setText(f'Atenção o Pix informado já tem o número: {pix_selecionado[8]}, favor confirmar o pix selecionado!')
+            msg_pix.exec_()
+
         if status == 'pago':
             self.dialog = InsereProtocolo(pixID=id, nome=apresentante, valor=valor, caixa=self.sigla)
             confirmaProtocolo = self.dialog.exec_()
@@ -624,27 +632,34 @@ class MainWindow(QMainWindow):
         id = self.ui.tableBuscaEAutorizaPix.model().data(colunaId)
         apresentante = self.ui.tableBuscaEAutorizaPix.model().data(colunaNome)
         valor = self.ui.tableBuscaEAutorizaPix.model().data(colunaValor)
+        pix_selecionado = self.dbPix.searchPixByID(id)
 
-        self.dialog = ConfirmaPix(pixID=id, nome=apresentante, valor=valor, caixa=self.sigla)
-        senhaAutorizaPixOk = self.dialog.exec_()
-        self.dialog.close()
-        if senhaAutorizaPixOk == 1:
-            try:
-                self.dbPix.updatePix(txtID=id, updatedBy=self.sigla, status='pago')
-            except Exception as error:
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Warning)
-                msg.setWindowTitle('Erro ao liberar o Pix')
-                msg.setText(f'O Pix de ID: {id} não foi liberado!')
-                print(error)
-                msg.exec_()
-            else:
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Information)
-                msg.setWindowTitle('Pix Liberado!')
-                msg.setText(f'O Pix de ID: {id} foi liberado com sucesso!')
-                msg.exec_()
-                self.carregarAlteraPix('','')
+        if pix_selecionado[5] == 'pago':
+            msg_pix = QMessageBox()
+            msg_pix.setWindowTitle(f'Pix selecionado: {pix_selecionado[0]}')
+            msg_pix.setText('O pix informado já está pago!')
+            msg_pix.exec_()
+        else:         
+            self.dialog = ConfirmaPix(pixID=id, nome=apresentante, valor=valor, caixa=self.sigla)
+            senhaAutorizaPixOk = self.dialog.exec_()
+            self.dialog.close()
+            if senhaAutorizaPixOk == 1:
+                try:
+                    self.dbPix.updatePix(txtID=id, updatedBy=self.sigla, status='pago')
+                except Exception as error:
+                    msg = QMessageBox()
+                    msg.setIcon(QMessageBox.Warning)
+                    msg.setWindowTitle('Erro ao liberar o Pix')
+                    msg.setText(f'O Pix de ID: {id} não foi liberado!')
+                    print(error)
+                    msg.exec_()
+                else:
+                    msg = QMessageBox()
+                    msg.setIcon(QMessageBox.Information)
+                    msg.setWindowTitle('Pix Liberado!')
+                    msg.setText(f'O Pix de ID: {id} foi liberado com sucesso!')
+                    msg.exec_()
+                    self.carregarAlteraPix('','')
         
 
     def limpaCamposAlteraPix(self):
