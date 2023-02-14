@@ -176,6 +176,31 @@ class DataBasePix():
             return nomesEncontrados
 
 
+    def searchPixAguardando(self, data):
+        pix_aguardando = []
+        cursor = self.conn.cursor()
+
+        dia, mes, ano = data.split('/')
+        inicioDia = f"{ano}-{mes}-{dia} 00:00:00"
+        fimDia = f"{ano}-{mes}-{dia} 23:59:59"
+        
+        filtro = 'aguardando'
+        limite = 50
+        search_query = f"""SELECT * FROM pix WHERE status = '{filtro}'
+                        AND createdat >= '{inicioDia}'
+                        AND createdat <= '{fimDia}'
+                        ORDER BY createdat DESC LIMIT {limite}"""
+        try:
+            cursor.execute(search_query)
+        except Exception as error:
+            print(f"Erro ao buscar pagamentos pix com estatus aguardando")
+        else:
+            pix_aguardando = cursor.fetchall()
+            self.conn.commit()
+        finally:
+            cursor.close()
+        return(len(pix_aguardando))
+
     def searchPixByCaixa(self, caixa, limite, filtro, apresentante, filtroData, data) -> list:
         pgtosEncontrados = []
         cursor = self.conn.cursor()

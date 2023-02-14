@@ -453,11 +453,18 @@ class MainWindow(QMainWindow):
             dd = 1
         finally:
             dia.setDate(aa, mm, dd)
+            self.data_pix_padrão = str(dd)+'/'+str(mm)+'/'+str(aa)
         
         # Definir o dia base para ser exibido no filtro de consulta/libera pix
         self.ui.filtro_dia_alterapix.setDate(dia)
         self.ui.filtro_data_consultapix.setDate(dia)
         
+        # Timer que irá verificar recursivamente por novos pagamentos pix 
+        self.pix_counter = self.dbPix.searchPixAguardando(self.data_pix_padrão)
+        self.timer = QTimer()
+        self.timer.timeout.connect(lambda: self.sendMessage('Pix aguardando pagamento'))
+        self.timer.start(1000)
+
         # Verificar o nível de acesso do usuário para definir quais telas serão exibidas.
         self.verificaAcesso()
         
@@ -535,6 +542,21 @@ class MainWindow(QMainWindow):
         if TEMA != 'Drcl Night':
             self.temaAtual.escolherTema(TEMA)
             self.aplicaTema(self.temaAtual)
+
+
+    def sendMessage(self, message: str):
+        quant_pix_atual = self.dbPix.searchPixAguardando(self.data_pix_padrão)
+        if self.ui.AutorizarPix.isVisible():
+            if quant_pix_atual > self.pix_counter:
+                self.pix_counter = quant_pix_atual
+                self.timer.stop()
+                msg_pix = QMessageBox()
+                msg_pix.setIcon(QMessageBox.Warning)
+                msg_pix.setWindowTitle('Novo pix pra ser consultado.')
+                msg_pix.setText(f'Mensagem: {message}')
+                msg_pix.exec_()
+                self.carregarAlteraPix('','')
+                self.timer.start(1000)
 
 
     def buscarImprimirPix(self, txtId):
