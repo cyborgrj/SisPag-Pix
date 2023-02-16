@@ -16,6 +16,7 @@ from db.db import *
 import locale
 import configparser
 import re
+from xlsx import xlsx
 
 ########################################################################
 # IMPORT GUI FILE
@@ -536,13 +537,33 @@ class MainWindow(QMainWindow):
         self.ui.combo_tema.activated.connect(lambda: 
                 self.temaAtual.escolherTema(self.ui.combo_tema.currentText()))
         self.ui.btn_aplicar_tema.clicked.connect(lambda: self.aplicaTema(self.temaAtual))
-
+        self.ui.btn_gera_excel.clicked.connect(lambda: self.gravarPlanilhaExcel())
         self.show()
 
         if TEMA != 'Drcl Night':
             self.temaAtual.escolherTema(TEMA)
             self.aplicaTema(self.temaAtual)
 
+    def gravarPlanilhaExcel(self):
+        colunas = ['TxtID', 'Nome', 'Valor', 'Caixa', 'Numero Interno']
+        self.planilha = xlsx.Planilha('relatorio-teste.xlsx')
+        self.planilha.criarTitulo('Relatório de Pagamentos pix do dia: ' + self.planilha.diaCorrente())
+        self.planilha.criarCabecalho(colunas)
+        relatorio = self.dbPix.searchPixByName( nome='', 
+                                                limite=100, 
+                                                estado='', 
+                                                filtroData='Data',
+                                                data=self.planilha.diaCorrente()
+                                                )
+        linha_inicial = 4
+        for pgto in relatorio:
+            self.planilha.escrever(f'A{linha_inicial}', pgto[0], False, False)
+            self.planilha.escrever(f'B{linha_inicial}', pgto[1], False, False)
+            self.planilha.escrever(f'C{linha_inicial}', pgto[2], False, valor=True)
+            self.planilha.escrever(f'D{linha_inicial}', pgto[3], False, False)
+            self.planilha.escrever(f'E{linha_inicial}', pgto[8], False, False)
+            linha_inicial += 1
+        self.planilha.fechaPlanilha()
 
     def sendMessage(self, message: str):
         quant_pix_atual = self.dbPix.searchPixAguardando(self.data_pix_padrão)
