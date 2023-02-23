@@ -459,6 +459,7 @@ class MainWindow(QMainWindow):
         # Definir o dia base para ser exibido no filtro de consulta/libera pix
         self.ui.filtro_dia_alterapix.setDate(dia)
         self.ui.filtro_data_consultapix.setDate(dia)
+        self.ui.filtro_dia_gera_excel.setDate(dia)
         
         # Timer que irá verificar recursivamente por novos pagamentos pix 
         self.pix_counter = self.dbPix.searchPixAguardando(self.data_pix_padrão)
@@ -544,26 +545,38 @@ class MainWindow(QMainWindow):
             self.temaAtual.escolherTema(TEMA)
             self.aplicaTema(self.temaAtual)
 
+
     def gravarPlanilhaExcel(self):
         colunas = ['TxtID', 'Nome', 'Valor', 'Caixa', 'Numero Interno']
         self.planilha = xlsx.Planilha('relatorio-teste.xlsx')
-        self.planilha.criarTitulo('Relatório de Pagamentos pix do dia: ' + self.planilha.diaCorrente())
         self.planilha.criarCabecalho(colunas)
+        
+        if self.ui.combo_filtro_gera_excel.currentIndex() == 0:
+            estado_gera_excel = ''
+            self.planilha.criarTitulo('Relatório de Pagamentos pix do dia: ' + self.ui.filtro_dia_gera_excel.text() + ' - (Todos)')
+        elif self.ui.combo_filtro_gera_excel.currentIndex() == 1:
+            estado_gera_excel = 'aguardando'
+            self.planilha.criarTitulo('Relatório de Pagamentos pix do dia: ' + self.ui.filtro_dia_gera_excel.text() + ' - (Aguardando)')
+        else:
+            self.planilha.criarTitulo('Relatório de Pagamentos pix do dia: ' + self.ui.filtro_dia_gera_excel.text() + ' - (Pagos)')
+            estado_gera_excel = 'pago'
+        
         relatorio = self.dbPix.searchPixByName( nome='', 
                                                 limite=100, 
-                                                estado='', 
+                                                estado=estado_gera_excel, 
                                                 filtroData='Data',
-                                                data=self.planilha.diaCorrente()
+                                                data=self.ui.filtro_dia_gera_excel.text()
                                                 )
-        linha_inicial = 4
+        linha_atual = 4
         for pgto in relatorio:
-            self.planilha.escrever(f'A{linha_inicial}', pgto[0], False, False)
-            self.planilha.escrever(f'B{linha_inicial}', pgto[1], False, False)
-            self.planilha.escrever(f'C{linha_inicial}', pgto[2], False, valor=True)
-            self.planilha.escrever(f'D{linha_inicial}', pgto[3], False, False)
-            self.planilha.escrever(f'E{linha_inicial}', pgto[8], False, False)
-            linha_inicial += 1
+            self.planilha.escrever(f'A{linha_atual}', pgto[0], False, False)
+            self.planilha.escrever(f'B{linha_atual}', pgto[1], False, False)
+            self.planilha.escrever(f'C{linha_atual}', pgto[2], False, valor=True)
+            self.planilha.escrever(f'D{linha_atual}', pgto[3], False, False)
+            self.planilha.escrever(f'E{linha_atual}', pgto[8], False, False)
+            linha_atual += 1
         self.planilha.fechaPlanilha()
+
 
     def sendMessage(self, message: str):
         quant_pix_atual = self.dbPix.searchPixAguardando(self.data_pix_padrão)
