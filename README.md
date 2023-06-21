@@ -2,6 +2,22 @@
 
 ## Programa para geração de pagamentos Pix para o cartório onde trabalho, como desenvolvedor em Python.
 
+Versão 2.0
+Na versão atual, não mais é necessário criar o códico copia e cola com as 750 posições, em vez disso
+as informações do pagamento são enviadas pela API do Bradesco em uma chamada PUT e a API retorna
+com o código copia e cola, para que seja gerado o QRCode para pagamento.
+
+Um app "servidor" foi desenvolvido que roda no servidor do cartório e fica fazendo consultas 
+na API bradesco e atualizando o banco de dados interno, para que este sistema "cliente" que
+roda nas computadores cliente do cartório possa acessar essas informações no banco de dados.
+Funcionando assim é desnecessária a conexão dos clientes com a rede de internet, evitando
+brechas de segurança e também necessidade de certificado para acesso em todas as máquinas.
+
+Também foi criada uma nova estrutura de banco de dados, visando colocá-lo pelo menos na 
+2ª forma normal, evitando campo multivalorados e trabalhando com tabelas relacionais, separando
+as entidades (solicitante, pagamento, certidao e protocolo) em tabelas separadas.
+
+Versão 1.0
 O programa consiste em criar um pagamento utilizando o layout de 750 posições do bradesco, 
 repassando esse pagamento para o Bradesco e consumindo da API as informações de status do 
 pagamento (aguardando, cancelado, pago etc.)
@@ -17,6 +33,8 @@ Utiliza para criação da chave PIX, como base, o módulo criado por Alexsussa
 (https://github.com/Alexsussa/pixqrcodegen), porém foram feitas algumas modificações
 para ficar de acordo com a necessidade de geração de pagamentos pelo manual PIX Bradesco,
 versão 2.0.0: https://exclusive.bradesco/pix/assets/docs/api_pix_200.pdf
+
+
 
 ## Instruções de uso:
 
@@ -38,6 +56,10 @@ uuid (pip install uuid) (Ka-Ping Yee's uuid)
 ## Modificações na GUI (interface gráfica de usuário)
 Caso queira fazer alterações na GUI, basta instalar e utilizar o aplicativo QtDesigner 5
 abrir os arquivos ".ui" dentro da pasta GUI e efetuar as modificações desejadas.
+para rodar o arquivo py da gui criada executar o comando: 
+Ex1.: pyside2-uic "C:\SisPag Pix\gui\main.ui" -o "C:\SisPag Pix\gui\ui_main.py"
+ou
+Ex2.: pyside2-uic "C:\SisPag Pix\gui\InsereProtocolo.ui" -o "C:\SisPag Pix\gui\ui_InsereProtocolo.py"
 
 ## Banco de dados
 Neste projeto, utilizo o banco de dados sqlite (biblioteca já inclusa por padrão no python3), e Postres (psychopg2).
@@ -52,7 +74,11 @@ Bradesco e gravar os dados no banco.
 - Criar um arquivo configer que utiliza variáveis de ambiente para login, evitando a necessidade de 
 ter armazenado no arquivo config.ini as credenciais de login no banco de dados.
 - Desenvolver servidor de consumo da API Bradesco, agora que o contrato de serviços com o Bradesco
-já foi liberado pelo cartório.
-- Criar executável.
+já foi liberado pelo cartório - Feito! :)
+- Criar executável - Feito! :)
+Observação sobre o executável, para criar utilizo o Pyinstaller, porém vale ressaltar que para incluir bibliotecas adicionais que não sejam anexadas gerando erro de módulo faltando, basta copiar
+a pasta do módulo que fica em: PythonX.XX\Lib\site-packages para dentro da pasta do executável
+Sobre o config.ini, apresentou erros ao ficar fora da pasta raiz (C:\API_Bradesco), vou verificar
+posteriormente, por enquanto mantenha o arquivo na raiz junto ao executável.
 
-Em desenvolvimento e criado por Eduardo Rossini Xavier da Silva em dezembro de 2023.
+Em desenvolvimento e criado por Eduardo Rossini Xavier da Silva em dezembro de 2022.

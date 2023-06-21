@@ -1,0 +1,11 @@
+Comando para gerar o arquivo py a partir do arquivo ui criado no QtDesigner
+Segue:
+
+pyside2-uic (o pyside2 precisa estar com o caminho definido nas variáveis de ambiente)
+
+pyside2-uic arquivo_design.ui -o (saída) arquivo.py de saída.
+
+pyside2-uic "C:\SisPag Pix\gui\main.ui" -o "C:\SisPag Pix\gui\ui_main.py"
+
+pyside2-uic "C:\SisPag Pix\gui\InsereProtocolo.ui" -o "C:\SisPag Pix\gui\ui_InsereProtocolo.py"
+

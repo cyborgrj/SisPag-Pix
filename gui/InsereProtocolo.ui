@@ -151,7 +151,7 @@ color: rgba(248, 248, 248, 3);</string>
     <property name="geometry">
      <rect>
       <x>100</x>
-      <y>80</y>
+      <y>70</y>
       <width>181</width>
       <height>31</height>
      </rect>
@@ -163,7 +163,7 @@ border: transparent;
 font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
     </property>
     <property name="text">
-     <string>ID Pix:</string>
+     <string>Pix ID:</string>
     </property>
    </widget>
    <widget class="QLabel" name="label_titulo_protocolo">
@@ -194,7 +194,7 @@ text-decoration: underline
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>120</y>
+      <y>110</y>
       <width>561</width>
       <height>41</height>
      </rect>
@@ -216,7 +216,7 @@ font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>170</y>
+      <y>160</y>
       <width>561</width>
       <height>41</height>
      </rect>
@@ -238,7 +238,7 @@ font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
     <property name="geometry">
      <rect>
       <x>350</x>
-      <y>80</y>
+      <y>70</y>
       <width>131</width>
       <height>31</height>
      </rect>
@@ -253,12 +253,12 @@ font: 16pt &quot;MS Shell Dlg 2&quot;;</string>
      <string>Caixa: ADM</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="campo_protocolo">
+   <widget class="QLineEdit" name="campo_num_protocolo">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>360</x>
       <y>230</y>
-      <width>521</width>
+      <width>181</width>
       <height>40</height>
      </rect>
     </property>
@@ -292,7 +292,91 @@ padding-bottom:7px;</string>
      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
     </property>
     <property name="placeholderText">
-     <string>protocolo/certidão nºs</string>
+     <string>Protocolo nº</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="campo_ano_certidao">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>230</y>
+      <width>81</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgba(0,0,0,0);
+border:none;
+border-bottom:2px solid rgba(105,118,132,255);
+color:rgba(255,255,255,230);
+padding-bottom:7px;</string>
+    </property>
+    <property name="maxLength">
+     <number>64</number>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Normal</enum>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+    <property name="placeholderText">
+     <string>Ano</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="campo_num_certidao">
+    <property name="geometry">
+     <rect>
+      <x>140</x>
+      <y>230</y>
+      <width>181</width>
+      <height>40</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <pointsize>16</pointsize>
+      <weight>50</weight>
+      <bold>false</bold>
+     </font>
+    </property>
+    <property name="focusPolicy">
+     <enum>Qt::StrongFocus</enum>
+    </property>
+    <property name="autoFillBackground">
+     <bool>false</bool>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgba(0,0,0,0);
+border:none;
+border-bottom:2px solid rgba(105,118,132,255);
+color:rgba(255,255,255,230);
+padding-bottom:7px;</string>
+    </property>
+    <property name="maxLength">
+     <number>64</number>
+    </property>
+    <property name="echoMode">
+     <enum>QLineEdit::Normal</enum>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+    </property>
+    <property name="placeholderText">
+     <string>Certidão nº</string>
     </property>
    </widget>
    <zorder>forma_1_protocolo</zorder>
@@ -304,7 +388,9 @@ padding-bottom:7px;</string>
    <zorder>label_nome_protocolo</zorder>
    <zorder>label_valor_protocolo</zorder>
    <zorder>label_caixa_protocolo</zorder>
-   <zorder>campo_protocolo</zorder>
+   <zorder>campo_num_protocolo</zorder>
+   <zorder>campo_ano_certidao</zorder>
+   <zorder>campo_num_certidao</zorder>
   </widget>
   <widget class="QFrame" name="frame_2">
    <property name="geometry">

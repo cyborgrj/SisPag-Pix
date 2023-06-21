@@ -88,7 +88,7 @@ class Ui_Dialog_Protocolo(object):
         self.btn_gravar_protocolo.setStyleSheet(u"")
         self.label_id_pix_protocolo = QLabel(self.frame)
         self.label_id_pix_protocolo.setObjectName(u"label_id_pix_protocolo")
-        self.label_id_pix_protocolo.setGeometry(QRect(100, 80, 181, 31))
+        self.label_id_pix_protocolo.setGeometry(QRect(100, 70, 181, 31))
         self.label_id_pix_protocolo.setStyleSheet(u"background: transparent;\n"
 "color: rgb(248, 248, 252);\n"
 "border: transparent;\n"
@@ -105,7 +105,7 @@ class Ui_Dialog_Protocolo(object):
         self.label_titulo_protocolo.setAlignment(Qt.AlignCenter)
         self.label_nome_protocolo = QLabel(self.frame)
         self.label_nome_protocolo.setObjectName(u"label_nome_protocolo")
-        self.label_nome_protocolo.setGeometry(QRect(10, 120, 561, 41))
+        self.label_nome_protocolo.setGeometry(QRect(10, 110, 561, 41))
         self.label_nome_protocolo.setStyleSheet(u"background: transparent;\n"
 "color: rgb(248, 248, 252);\n"
 "border: transparent;\n"
@@ -113,7 +113,7 @@ class Ui_Dialog_Protocolo(object):
         self.label_nome_protocolo.setAlignment(Qt.AlignCenter)
         self.label_valor_protocolo = QLabel(self.frame)
         self.label_valor_protocolo.setObjectName(u"label_valor_protocolo")
-        self.label_valor_protocolo.setGeometry(QRect(10, 170, 561, 41))
+        self.label_valor_protocolo.setGeometry(QRect(10, 160, 561, 41))
         self.label_valor_protocolo.setStyleSheet(u"background: transparent;\n"
 "color: rgb(248, 248, 252);\n"
 "border: transparent;\n"
@@ -121,29 +121,57 @@ class Ui_Dialog_Protocolo(object):
         self.label_valor_protocolo.setAlignment(Qt.AlignCenter)
         self.label_caixa_protocolo = QLabel(self.frame)
         self.label_caixa_protocolo.setObjectName(u"label_caixa_protocolo")
-        self.label_caixa_protocolo.setGeometry(QRect(350, 80, 131, 31))
+        self.label_caixa_protocolo.setGeometry(QRect(350, 70, 131, 31))
         self.label_caixa_protocolo.setStyleSheet(u"background: transparent;\n"
 "color: rgb(248, 248, 252);\n"
 "border: transparent;\n"
 "font: 16pt \"MS Shell Dlg 2\";")
-        self.campo_protocolo = QLineEdit(self.frame)
-        self.campo_protocolo.setObjectName(u"campo_protocolo")
-        self.campo_protocolo.setGeometry(QRect(30, 230, 521, 40))
+        self.campo_num_protocolo = QLineEdit(self.frame)
+        self.campo_num_protocolo.setObjectName(u"campo_num_protocolo")
+        self.campo_num_protocolo.setGeometry(QRect(360, 230, 181, 40))
         font1 = QFont()
         font1.setPointSize(16)
         font1.setBold(False)
         font1.setWeight(50)
-        self.campo_protocolo.setFont(font1)
-        self.campo_protocolo.setFocusPolicy(Qt.StrongFocus)
-        self.campo_protocolo.setAutoFillBackground(False)
-        self.campo_protocolo.setStyleSheet(u"background-color:rgba(0,0,0,0);\n"
+        self.campo_num_protocolo.setFont(font1)
+        self.campo_num_protocolo.setFocusPolicy(Qt.StrongFocus)
+        self.campo_num_protocolo.setAutoFillBackground(False)
+        self.campo_num_protocolo.setStyleSheet(u"background-color:rgba(0,0,0,0);\n"
 "border:none;\n"
 "border-bottom:2px solid rgba(105,118,132,255);\n"
 "color:rgba(255,255,255,230);\n"
 "padding-bottom:7px;")
-        self.campo_protocolo.setMaxLength(64)
-        self.campo_protocolo.setEchoMode(QLineEdit.Normal)
-        self.campo_protocolo.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.campo_num_protocolo.setMaxLength(64)
+        self.campo_num_protocolo.setEchoMode(QLineEdit.Normal)
+        self.campo_num_protocolo.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.campo_ano_certidao = QLineEdit(self.frame)
+        self.campo_ano_certidao.setObjectName(u"campo_ano_certidao")
+        self.campo_ano_certidao.setGeometry(QRect(50, 230, 81, 40))
+        self.campo_ano_certidao.setFont(font1)
+        self.campo_ano_certidao.setFocusPolicy(Qt.StrongFocus)
+        self.campo_ano_certidao.setAutoFillBackground(False)
+        self.campo_ano_certidao.setStyleSheet(u"background-color:rgba(0,0,0,0);\n"
+"border:none;\n"
+"border-bottom:2px solid rgba(105,118,132,255);\n"
+"color:rgba(255,255,255,230);\n"
+"padding-bottom:7px;")
+        self.campo_ano_certidao.setMaxLength(64)
+        self.campo_ano_certidao.setEchoMode(QLineEdit.Normal)
+        self.campo_ano_certidao.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
+        self.campo_num_certidao = QLineEdit(self.frame)
+        self.campo_num_certidao.setObjectName(u"campo_num_certidao")
+        self.campo_num_certidao.setGeometry(QRect(140, 230, 181, 40))
+        self.campo_num_certidao.setFont(font1)
+        self.campo_num_certidao.setFocusPolicy(Qt.StrongFocus)
+        self.campo_num_certidao.setAutoFillBackground(False)
+        self.campo_num_certidao.setStyleSheet(u"background-color:rgba(0,0,0,0);\n"
+"border:none;\n"
+"border-bottom:2px solid rgba(105,118,132,255);\n"
+"color:rgba(255,255,255,230);\n"
+"padding-bottom:7px;")
+        self.campo_num_certidao.setMaxLength(64)
+        self.campo_num_certidao.setEchoMode(QLineEdit.Normal)
+        self.campo_num_certidao.setAlignment(Qt.AlignLeading|Qt.AlignLeft|Qt.AlignVCenter)
         self.forma_1_protocolo.raise_()
         self.forma_4_protocolo.raise_()
         self.btn_cancelar_protocolo.raise_()
@@ -153,7 +181,9 @@ class Ui_Dialog_Protocolo(object):
         self.label_nome_protocolo.raise_()
         self.label_valor_protocolo.raise_()
         self.label_caixa_protocolo.raise_()
-        self.campo_protocolo.raise_()
+        self.campo_num_protocolo.raise_()
+        self.campo_ano_certidao.raise_()
+        self.campo_num_certidao.raise_()
         self.frame_2 = QFrame(Dialog_Protocolo)
         self.frame_2.setObjectName(u"frame_2")
         self.frame_2.setGeometry(QRect(28, 28, 585, 365))
@@ -178,11 +208,13 @@ class Ui_Dialog_Protocolo(object):
         self.forma_1_protocolo.setText(QCoreApplication.translate("Dialog_Protocolo", u"y", None))
         self.btn_cancelar_protocolo.setText(QCoreApplication.translate("Dialog_Protocolo", u"Cancelar", None))
         self.btn_gravar_protocolo.setText(QCoreApplication.translate("Dialog_Protocolo", u"Gravar", None))
-        self.label_id_pix_protocolo.setText(QCoreApplication.translate("Dialog_Protocolo", u"ID Pix:", None))
+        self.label_id_pix_protocolo.setText(QCoreApplication.translate("Dialog_Protocolo", u"Pix ID:", None))
         self.label_titulo_protocolo.setText(QCoreApplication.translate("Dialog_Protocolo", u"Inserir o protocolo/certid\u00e3o", None))
         self.label_nome_protocolo.setText(QCoreApplication.translate("Dialog_Protocolo", u"Nome:", None))
         self.label_valor_protocolo.setText(QCoreApplication.translate("Dialog_Protocolo", u"Valor:", None))
         self.label_caixa_protocolo.setText(QCoreApplication.translate("Dialog_Protocolo", u"Caixa: ADM", None))
-        self.campo_protocolo.setPlaceholderText(QCoreApplication.translate("Dialog_Protocolo", u"protocolo/certid\u00e3o n\u00bas", None))
+        self.campo_num_protocolo.setPlaceholderText(QCoreApplication.translate("Dialog_Protocolo", u"Protocolo n\u00ba", None))
+        self.campo_ano_certidao.setPlaceholderText(QCoreApplication.translate("Dialog_Protocolo", u"Ano", None))
+        self.campo_num_certidao.setPlaceholderText(QCoreApplication.translate("Dialog_Protocolo", u"Certid\u00e3o n\u00ba", None))
     # retranslateUi
 

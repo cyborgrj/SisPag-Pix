@@ -411,7 +411,7 @@ class Ui_MainWindow(object):
         self.page_gerar.setStyleSheet(u"")
         self.campo_apresentante = QLineEdit(self.page_gerar)
         self.campo_apresentante.setObjectName(u"campo_apresentante")
-        self.campo_apresentante.setGeometry(QRect(240, 80, 531, 41))
+        self.campo_apresentante.setGeometry(QRect(210, 140, 641, 41))
         font3 = QFont()
         font3.setFamily(u"MS Shell Dlg 2")
         font3.setPointSize(16)
@@ -424,14 +424,14 @@ class Ui_MainWindow(object):
         self.campo_apresentante.setClearButtonEnabled(True)
         self.campo_valor = QLineEdit(self.page_gerar)
         self.campo_valor.setObjectName(u"campo_valor")
-        self.campo_valor.setGeometry(QRect(280, 208, 301, 41))
+        self.campo_valor.setGeometry(QRect(250, 208, 301, 41))
         self.campo_valor.setFont(font3)
         self.campo_valor.setStyleSheet(u"padding: 5px;")
         self.campo_valor.setMaxLength(20)
         self.campo_valor.setClearButtonEnabled(True)
         self.txt_id_pix = QLabel(self.page_gerar)
         self.txt_id_pix.setObjectName(u"txt_id_pix")
-        self.txt_id_pix.setGeometry(QRect(231, 280, 301, 43))
+        self.txt_id_pix.setGeometry(QRect(201, 280, 251, 43))
         font4 = QFont()
         font4.setFamily(u"MS Shell Dlg 2")
         font4.setPointSize(15)
@@ -443,20 +443,20 @@ class Ui_MainWindow(object):
 "padding: 5px;")
         self.txt_moeda = QLabel(self.page_gerar)
         self.txt_moeda.setObjectName(u"txt_moeda")
-        self.txt_moeda.setGeometry(QRect(231, 210, 55, 43))
+        self.txt_moeda.setGeometry(QRect(201, 210, 55, 43))
         self.txt_moeda.setFont(font4)
         self.txt_moeda.setStyleSheet(u"background-color: transparent;\n"
 "padding: 5px;")
         self.btn_gerar_qrcode = QPushButton(self.page_gerar)
         self.btn_gerar_qrcode.setObjectName(u"btn_gerar_qrcode")
-        self.btn_gerar_qrcode.setGeometry(QRect(240, 360, 161, 41))
+        self.btn_gerar_qrcode.setGeometry(QRect(170, 360, 161, 41))
         font5 = QFont()
         font5.setPointSize(16)
         self.btn_gerar_qrcode.setFont(font5)
         self.btn_gerar_qrcode.setStyleSheet(u"")
         self.btn_limpar_campos = QPushButton(self.page_gerar)
         self.btn_limpar_campos.setObjectName(u"btn_limpar_campos")
-        self.btn_limpar_campos.setGeometry(QRect(470, 360, 161, 41))
+        self.btn_limpar_campos.setGeometry(QRect(380, 360, 161, 41))
         self.btn_limpar_campos.setFont(font5)
         self.btn_limpar_campos.setStyleSheet(u"")
         self.campo_usuario_atual = QLabel(self.page_gerar)
@@ -491,7 +491,7 @@ class Ui_MainWindow(object):
 "background: transparent;")
         self.campo_cpf_apresentante = QLineEdit(self.page_gerar)
         self.campo_cpf_apresentante.setObjectName(u"campo_cpf_apresentante")
-        self.campo_cpf_apresentante.setGeometry(QRect(240, 140, 211, 41))
+        self.campo_cpf_apresentante.setGeometry(QRect(210, 80, 241, 41))
         self.campo_cpf_apresentante.setFont(font3)
         self.campo_cpf_apresentante.setAutoFillBackground(False)
         self.campo_cpf_apresentante.setStyleSheet(u"padding: 5px;")
@@ -499,10 +499,28 @@ class Ui_MainWindow(object):
         self.campo_cpf_apresentante.setClearButtonEnabled(True)
         self.somente_numeros = QLabel(self.page_gerar)
         self.somente_numeros.setObjectName(u"somente_numeros")
-        self.somente_numeros.setGeometry(QRect(460, 140, 201, 43))
+        self.somente_numeros.setGeometry(QRect(480, 80, 201, 43))
         self.somente_numeros.setFont(font4)
         self.somente_numeros.setStyleSheet(u"background-color: transparent;\n"
 "padding: 5px;")
+        self.btn_cadastrar_solicitante = QPushButton(self.page_gerar)
+        self.btn_cadastrar_solicitante.setObjectName(u"btn_cadastrar_solicitante")
+        self.btn_cadastrar_solicitante.setGeometry(QRect(690, 80, 161, 41))
+        self.btn_cadastrar_solicitante.setFont(font5)
+        self.btn_cadastrar_solicitante.setStyleSheet(u"")
+        self.btn_enviar_email = QPushButton(self.page_gerar)
+        self.btn_enviar_email.setObjectName(u"btn_enviar_email")
+        self.btn_enviar_email.setGeometry(QRect(670, 360, 161, 41))
+        self.btn_enviar_email.setFont(font5)
+        self.btn_enviar_email.setStyleSheet(u"")
+        self.campo_email_solicitante = QLineEdit(self.page_gerar)
+        self.campo_email_solicitante.setObjectName(u"campo_email_solicitante")
+        self.campo_email_solicitante.setGeometry(QRect(510, 290, 481, 41))
+        self.campo_email_solicitante.setFont(font3)
+        self.campo_email_solicitante.setStyleSheet(u"padding: 5px;")
+        self.campo_email_solicitante.setMaxLength(50)
+        self.campo_email_solicitante.setAlignment(Qt.AlignCenter)
+        self.campo_email_solicitante.setClearButtonEnabled(True)
         self.stackedWidget.addWidget(self.page_gerar)
         self.forma_1.raise_()
         self.forma_4.raise_()
@@ -517,6 +535,9 @@ class Ui_MainWindow(object):
         self.campo_apresentante.raise_()
         self.campo_cpf_apresentante.raise_()
         self.somente_numeros.raise_()
+        self.btn_cadastrar_solicitante.raise_()
+        self.btn_enviar_email.raise_()
+        self.campo_email_solicitante.raise_()
         self.page_imprimir = QWidget()
         self.page_imprimir.setObjectName(u"page_imprimir")
         self.frame_10 = QFrame(self.page_imprimir)
@@ -527,7 +548,7 @@ class Ui_MainWindow(object):
         self.frame_10.setFrameShadow(QFrame.Raised)
         self.btn_buscar_imprimir = QPushButton(self.frame_10)
         self.btn_buscar_imprimir.setObjectName(u"btn_buscar_imprimir")
-        self.btn_buscar_imprimir.setGeometry(QRect(470, 270, 191, 41))
+        self.btn_buscar_imprimir.setGeometry(QRect(540, 270, 191, 41))
         self.btn_buscar_imprimir.setFont(font5)
         self.btn_buscar_imprimir.setStyleSheet(u"")
         self.txt_buscar = QLabel(self.frame_10)
@@ -551,7 +572,7 @@ class Ui_MainWindow(object):
 "background:transparent;")
         self.campo_txt_id_imprimir_pix = QLineEdit(self.frame_10)
         self.campo_txt_id_imprimir_pix.setObjectName(u"campo_txt_id_imprimir_pix")
-        self.campo_txt_id_imprimir_pix.setGeometry(QRect(220, 260, 221, 47))
+        self.campo_txt_id_imprimir_pix.setGeometry(QRect(220, 260, 301, 47))
         self.campo_txt_id_imprimir_pix.setFont(font3)
         self.campo_txt_id_imprimir_pix.setStyleSheet(u"")
         self.campo_txt_id_imprimir_pix.setMaxLength(45)
@@ -608,8 +629,8 @@ class Ui_MainWindow(object):
         self.page_consultar = QWidget()
         self.page_consultar.setObjectName(u"page_consultar")
         self.tableConsultaPix = QTableWidget(self.page_consultar)
-        if (self.tableConsultaPix.columnCount() < 6):
-            self.tableConsultaPix.setColumnCount(6)
+        if (self.tableConsultaPix.columnCount() < 8):
+            self.tableConsultaPix.setColumnCount(8)
         __qtablewidgetitem = QTableWidgetItem()
         __qtablewidgetitem.setTextAlignment(Qt.AlignCenter);
         self.tableConsultaPix.setHorizontalHeaderItem(0, __qtablewidgetitem)
@@ -626,7 +647,12 @@ class Ui_MainWindow(object):
         __qtablewidgetitem4.setTextAlignment(Qt.AlignCenter);
         self.tableConsultaPix.setHorizontalHeaderItem(4, __qtablewidgetitem4)
         __qtablewidgetitem5 = QTableWidgetItem()
+        __qtablewidgetitem5.setTextAlignment(Qt.AlignCenter);
         self.tableConsultaPix.setHorizontalHeaderItem(5, __qtablewidgetitem5)
+        __qtablewidgetitem6 = QTableWidgetItem()
+        self.tableConsultaPix.setHorizontalHeaderItem(6, __qtablewidgetitem6)
+        __qtablewidgetitem7 = QTableWidgetItem()
+        self.tableConsultaPix.setHorizontalHeaderItem(7, __qtablewidgetitem7)
         self.tableConsultaPix.setObjectName(u"tableConsultaPix")
         self.tableConsultaPix.setGeometry(QRect(30, 40, 1001, 371))
         font7 = QFont()
@@ -888,32 +914,38 @@ class Ui_MainWindow(object):
         self.btn_cancelar_altera_pix.setFocusPolicy(Qt.NoFocus)
         self.btn_cancelar_altera_pix.setStyleSheet(u"")
         self.tableBuscaEAutorizaPix = QTableWidget(self.frame_4)
-        if (self.tableBuscaEAutorizaPix.columnCount() < 8):
-            self.tableBuscaEAutorizaPix.setColumnCount(8)
-        __qtablewidgetitem6 = QTableWidgetItem()
-        __qtablewidgetitem6.setTextAlignment(Qt.AlignCenter);
-        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(0, __qtablewidgetitem6)
-        __qtablewidgetitem7 = QTableWidgetItem()
-        __qtablewidgetitem7.setTextAlignment(Qt.AlignCenter);
-        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(1, __qtablewidgetitem7)
+        if (self.tableBuscaEAutorizaPix.columnCount() < 10):
+            self.tableBuscaEAutorizaPix.setColumnCount(10)
         __qtablewidgetitem8 = QTableWidgetItem()
         __qtablewidgetitem8.setTextAlignment(Qt.AlignCenter);
-        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(2, __qtablewidgetitem8)
+        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(0, __qtablewidgetitem8)
         __qtablewidgetitem9 = QTableWidgetItem()
         __qtablewidgetitem9.setTextAlignment(Qt.AlignCenter);
-        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(3, __qtablewidgetitem9)
+        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(1, __qtablewidgetitem9)
         __qtablewidgetitem10 = QTableWidgetItem()
         __qtablewidgetitem10.setTextAlignment(Qt.AlignCenter);
-        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(4, __qtablewidgetitem10)
+        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(2, __qtablewidgetitem10)
         __qtablewidgetitem11 = QTableWidgetItem()
         __qtablewidgetitem11.setTextAlignment(Qt.AlignCenter);
-        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(5, __qtablewidgetitem11)
+        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(3, __qtablewidgetitem11)
         __qtablewidgetitem12 = QTableWidgetItem()
         __qtablewidgetitem12.setTextAlignment(Qt.AlignCenter);
-        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(6, __qtablewidgetitem12)
+        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(4, __qtablewidgetitem12)
         __qtablewidgetitem13 = QTableWidgetItem()
         __qtablewidgetitem13.setTextAlignment(Qt.AlignCenter);
-        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(7, __qtablewidgetitem13)
+        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(5, __qtablewidgetitem13)
+        __qtablewidgetitem14 = QTableWidgetItem()
+        __qtablewidgetitem14.setTextAlignment(Qt.AlignCenter);
+        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(6, __qtablewidgetitem14)
+        __qtablewidgetitem15 = QTableWidgetItem()
+        __qtablewidgetitem15.setTextAlignment(Qt.AlignCenter);
+        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(7, __qtablewidgetitem15)
+        __qtablewidgetitem16 = QTableWidgetItem()
+        __qtablewidgetitem16.setTextAlignment(Qt.AlignCenter);
+        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(8, __qtablewidgetitem16)
+        __qtablewidgetitem17 = QTableWidgetItem()
+        __qtablewidgetitem17.setTextAlignment(Qt.AlignCenter);
+        self.tableBuscaEAutorizaPix.setHorizontalHeaderItem(9, __qtablewidgetitem17)
         self.tableBuscaEAutorizaPix.setObjectName(u"tableBuscaEAutorizaPix")
         self.tableBuscaEAutorizaPix.setGeometry(QRect(20, 0, 1001, 341))
         self.tableBuscaEAutorizaPix.setFont(font7)
@@ -1087,7 +1119,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.Sair.clicked.connect(MainWindow.close)
 
-        self.stackedWidget.setCurrentIndex(5)
+        self.stackedWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1117,8 +1149,11 @@ class Ui_MainWindow(object):
         self.forma_2.setText(QCoreApplication.translate("MainWindow", u"a", None))
         self.campo_cpf_apresentante.setInputMask("")
         self.campo_cpf_apresentante.setText("")
-        self.campo_cpf_apresentante.setPlaceholderText(QCoreApplication.translate("MainWindow", u"CPF", None))
+        self.campo_cpf_apresentante.setPlaceholderText(QCoreApplication.translate("MainWindow", u"CPF ou CNPJ", None))
         self.somente_numeros.setText(QCoreApplication.translate("MainWindow", u"(Somente n\u00fameros)", None))
+        self.btn_cadastrar_solicitante.setText(QCoreApplication.translate("MainWindow", u"Cadastrar", None))
+        self.btn_enviar_email.setText(QCoreApplication.translate("MainWindow", u"Enviar e-mail", None))
+        self.campo_email_solicitante.setPlaceholderText(QCoreApplication.translate("MainWindow", u"       e-mail do solicitante", None))
         self.btn_buscar_imprimir.setText(QCoreApplication.translate("MainWindow", u"Buscar e Imprimir", None))
         self.txt_buscar.setText(QCoreApplication.translate("MainWindow", u"Buscar um QrCode Anterior", None))
         self.txt_obs.setText(QCoreApplication.translate("MainWindow", u"Obs.: Respeitar ma\u00edusculas e min\u00fasculas", None))
@@ -1140,7 +1175,11 @@ class Ui_MainWindow(object):
         ___qtablewidgetitem4 = self.tableConsultaPix.horizontalHeaderItem(4)
         ___qtablewidgetitem4.setText(QCoreApplication.translate("MainWindow", u"Status", None));
         ___qtablewidgetitem5 = self.tableConsultaPix.horizontalHeaderItem(5)
-        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Certid\u00e3o/Protocolo", None));
+        ___qtablewidgetitem5.setText(QCoreApplication.translate("MainWindow", u"Ano", None));
+        ___qtablewidgetitem6 = self.tableConsultaPix.horizontalHeaderItem(6)
+        ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"Certid\u00e3o N\u00ba", None));
+        ___qtablewidgetitem7 = self.tableConsultaPix.horizontalHeaderItem(7)
+        ___qtablewidgetitem7.setText(QCoreApplication.translate("MainWindow", u"Protocolo N\u00ba", None));
         self.btn_inser_num_interno_consulta_pix.setText(QCoreApplication.translate("MainWindow", u"Inserir protocolo(s)", None))
         self.combo_limite_consultapix.setItemText(0, QCoreApplication.translate("MainWindow", u"10 items", None))
         self.combo_limite_consultapix.setItemText(1, QCoreApplication.translate("MainWindow", u"30 items", None))
@@ -1190,22 +1229,26 @@ class Ui_MainWindow(object):
 
         self.btn_liberar_pix.setText(QCoreApplication.translate("MainWindow", u"Liberar Pix", None))
         self.btn_cancelar_altera_pix.setText(QCoreApplication.translate("MainWindow", u"Cancelar", None))
-        ___qtablewidgetitem6 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(0)
-        ___qtablewidgetitem6.setText(QCoreApplication.translate("MainWindow", u"ID Pix", None));
-        ___qtablewidgetitem7 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(1)
-        ___qtablewidgetitem7.setText(QCoreApplication.translate("MainWindow", u"Apresentante", None));
-        ___qtablewidgetitem8 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(2)
-        ___qtablewidgetitem8.setText(QCoreApplication.translate("MainWindow", u"Valor", None));
-        ___qtablewidgetitem9 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(3)
-        ___qtablewidgetitem9.setText(QCoreApplication.translate("MainWindow", u"Caixa", None));
-        ___qtablewidgetitem10 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(4)
-        ___qtablewidgetitem10.setText(QCoreApplication.translate("MainWindow", u"Data/Hora", None));
-        ___qtablewidgetitem11 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(5)
-        ___qtablewidgetitem11.setText(QCoreApplication.translate("MainWindow", u"Status", None));
-        ___qtablewidgetitem12 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(6)
-        ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"Liberado", None));
-        ___qtablewidgetitem13 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(7)
-        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"Protocolo/Certid\u00e3o", None));
+        ___qtablewidgetitem8 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(0)
+        ___qtablewidgetitem8.setText(QCoreApplication.translate("MainWindow", u"ID Pix", None));
+        ___qtablewidgetitem9 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(1)
+        ___qtablewidgetitem9.setText(QCoreApplication.translate("MainWindow", u"Apresentante", None));
+        ___qtablewidgetitem10 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(2)
+        ___qtablewidgetitem10.setText(QCoreApplication.translate("MainWindow", u"Valor", None));
+        ___qtablewidgetitem11 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(3)
+        ___qtablewidgetitem11.setText(QCoreApplication.translate("MainWindow", u"Caixa", None));
+        ___qtablewidgetitem12 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(4)
+        ___qtablewidgetitem12.setText(QCoreApplication.translate("MainWindow", u"Data/Hora", None));
+        ___qtablewidgetitem13 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(5)
+        ___qtablewidgetitem13.setText(QCoreApplication.translate("MainWindow", u"Status", None));
+        ___qtablewidgetitem14 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(6)
+        ___qtablewidgetitem14.setText(QCoreApplication.translate("MainWindow", u"Liberado", None));
+        ___qtablewidgetitem15 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(7)
+        ___qtablewidgetitem15.setText(QCoreApplication.translate("MainWindow", u"Ano", None));
+        ___qtablewidgetitem16 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(8)
+        ___qtablewidgetitem16.setText(QCoreApplication.translate("MainWindow", u"Certid\u00e3o N\u00ba", None));
+        ___qtablewidgetitem17 = self.tableBuscaEAutorizaPix.horizontalHeaderItem(9)
+        ___qtablewidgetitem17.setText(QCoreApplication.translate("MainWindow", u"Protocolo N\u00ba", None));
         self.resultado_busca_autoriza.setText("")
         self.btn_set_small_font.setText(QCoreApplication.translate("MainWindow", u"A", None))
         self.btn_set_big_font.setText(QCoreApplication.translate("MainWindow", u"A", None))

@@ -1,0 +1,38 @@
+DROP TABLE IF EXISTS SOLICITANTE;
+DROP TABLE IF EXISTS PAGAMENTO;
+DROP TABLE IF EXISTS PROTOCOLO;
+DROP TABLE IF EXISTS CERTIDAO;
+CREATE TABLE SOLICITANTE (
+    CPF Varchar,
+    Nome Varchar,
+    PRIMARY KEY (CPF)
+);
+CREATE TABLE PAGAMENTO (
+    IDPix Serial,
+    CPF Varchar,
+    Valor Numeric,
+    CreatedBy Varchar,
+    CreatedAt Timestamp,
+    UpdatedBy Varchar,
+    UpdatedAt Timestamp,
+    Status Varchar,
+    TxtID Varchar,
+    PRIMARY KEY (IDPix),
+    FOREIGN KEY (CPF) REFERENCES SOLICITANTE(CPF) ON DELETE CASCADE
+);
+CREATE TABLE PROTOCOLO (
+    IDProt Serial,
+    Num Numeric,
+    IDPix INT NOT NULL,
+    PRIMARY KEY (IDProt),
+    FOREIGN KEY (IDPix) REFERENCES PAGAMENTO(IDPix)
+);
+CREATE TABLE CERTIDAO (
+    IDCert Serial,
+    Ano Numeric,
+    Num Numeric,
+    IDPix INT NOT NULL,
+    PRIMARY KEY (IDCert),
+	FOREIGN KEY (IDPix) REFERENCES PAGAMENTO(IDPix)
+);
+41af1078-b305-4e79-ab66-b72f896c9eb3

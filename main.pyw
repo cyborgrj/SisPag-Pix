@@ -7,20 +7,21 @@ from PySide2.QtCore import (QCoreApplication, QPropertyAnimation, QDate, QDateTi
 from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont, QFontDatabase, QIcon, QKeySequence, QLinearGradient, QPalette, QPainter, QPixmap, QRadialGradient)
 from PySide2.QtWidgets import *
 from datetime import datetime
-from random import randint
-from pixqrcodegen import Payload
 from fpdf import FPDF
-import uuid
+import qrcode
+import time
 import subprocess
 from db.db import *
 import locale
 import configparser
 import re
 from xlsx import xlsx
-
-
+import re 
+import email_rgi.mail as mail_rgi
+from decimal import Decimal
+      
 ########################################################################
-# IMPORT GUI FILE
+# IMPORTAR ARQUIVOS GUI
 from gui import *
 ########################################################################
 
@@ -55,6 +56,7 @@ RGI_CIDADE = config['RGI']['CIDADE']
 # Configurações de Aplicativos Adobe e caminho do PDF
 ADOBE_READER = config['ADOBE']['ACROBAT']
 ADOBE_PDF_FILE = config['ADOBE']['PDFFILE']
+ADOBE_PDF_FILE_EXTRA = config['ADOBE']['PDFFILE_EXTRA']
 ADOBE_QRCODE = config['ADOBE']['QRCODE']
 
 ########################################################################
@@ -213,9 +215,15 @@ class Pagamento:
         self.idTx = idTx
         self.nome = nome
         self.copiaCola = copiaCola
+        self.pixID = ''
 
     def insertUser(self):
         return 'QrCode Gerado com sucesso!'
+
+
+def verificaEmail(email):  
+    regex = r"([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)"
+    return re.search(regex,email) 
 
 
 def dividePixCopiaCola(copiaCola):
@@ -223,6 +231,120 @@ def dividePixCopiaCola(copiaCola):
     parte2 = '5802BR' + parte2
     return parte1, parte2
 
+
+def limpaCPF_CNPJ(cpf_cnpj: str) -> str:
+    resultado = ''
+    for digit in cpf_cnpj:
+        if digit.isdigit():
+            resultado += digit
+    return resultado
+
+
+def verificaCPF(cpf: str):
+    cpf_formatado = ''
+    erro = True
+    # Obtém apenas os números do CPF, ignorando pontuações
+    numbers = [int(digit) for digit in cpf if digit.isdigit()]
+
+    # Verifica se o CPF possui 11 números
+    if len(numbers) != 11:
+        return erro, ''
+
+    # Validação do primeiro dígito verificador:
+    sum_of_products = sum(a*b for a, b in zip(numbers[0:9], range(10, 1, -1)))
+    expected_digit = (sum_of_products * 10 % 11) % 10
+    if numbers[9] != expected_digit:
+        return erro, ''
+
+    # Validação do segundo dígito verificador:
+    sum_of_products = sum(a*b for a, b in zip(numbers[0:10], range(11, 1, -1)))
+    expected_digit = (sum_of_products * 10 % 11) % 10
+    if numbers[10] != expected_digit:
+        return erro, ''
+
+    i = 0
+    for n in numbers:
+        if i == 2 or i == 5:
+            cpf_formatado = cpf_formatado + str(n) + '.'
+        elif i == 8:
+            cpf_formatado = cpf_formatado + str(n) + '-'
+        else:
+            cpf_formatado = cpf_formatado + str(n)
+        i += 1
+    erro = False
+
+    return erro, cpf_formatado
+
+
+def VerificaCNPJ(cnpj: str):
+    """
+    Efetua a validação do CNPJ somente com relação aos números informados, formatação não é importante.
+    """
+    cnpj_formatado = ''
+    erro = True
+    cnpj = ''.join(re.findall('\d', str(cnpj)))
+
+    if (not cnpj) or (len(cnpj) < 14):
+        return erro, ''
+
+    # Pega apenas os 12 primeiros dígitos do CNPJ e gera os 2 dígitos que faltam
+    digitos = [int(digito) for digito in cnpj if digito.isdigit()]
+    novo = digitos[:12]
+
+    prod = [5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2]
+    while len(novo) < 14:
+        r = sum([x * y for (x, y) in zip(novo, prod)]) % 11
+        if r > 1:
+            f = 11 - r
+        else:
+            f = 0
+        novo.append(f)
+        prod.insert(0, 6)
+
+    # Se o número gerado coincidir com o número original, é válido
+    if novo == digitos:
+        erro = False
+
+    i = 0
+    for c in cnpj:
+        if i == 1 or i == 4:
+            cnpj_formatado = cnpj_formatado + str(c) + '.'
+        elif i == 7:
+            cnpj_formatado = cnpj_formatado + str(c) + '/'
+        elif i == 11:
+            cnpj_formatado = cnpj_formatado + str(c) + '-'
+        else:
+            cnpj_formatado = cnpj_formatado + str(c)
+        i += 1
+    erro = False
+
+    return erro, cnpj_formatado
+
+
+def formataCpfCnpj(cpf_cnpj):
+    if len(cpf_cnpj) == 11:
+        cpf_formatado = ''
+        for i in range(11):
+            if i == 2 or i == 5:
+                cpf_formatado += cpf_cnpj[i] + '.'
+            elif i == 8:
+                cpf_formatado += cpf_cnpj[i] + '-'
+            else:
+                cpf_formatado += cpf_cnpj[i]
+        return cpf_formatado
+    if len(cpf_cnpj) == 14:
+        cnpj_formatado = ''
+        for i in range(14):
+            if i == 1 or i == 4:
+                cnpj_formatado += cpf_cnpj[i] + '.'
+            elif i == 7:
+                cnpj_formatado += cpf_cnpj[i] + '/'
+            elif i == 11:
+                cnpj_formatado += cpf_cnpj[i] + '-'
+            else:
+                cnpj_formatado += cpf_cnpj[i]
+        return cnpj_formatado
+    return 'erro'
 
 class PDF(FPDF):
     def header(self):
@@ -245,8 +367,10 @@ class PDF(FPDF):
         self.ln()
         self.cell(50, 14, f"Identificador nº: {id}", align='center')
         self.ln()
+        self.set_font('Times', '', 20)
         self.cell(20, 14, f"Apresentante: {apresentante}")
         self.ln()
+        self.set_font('Times', '', 26)
         self.cell(20, 14, f"Valor: {valor}")
         self.ln()
         self.ln()
@@ -255,10 +379,10 @@ class PDF(FPDF):
             self.ln()
         self.cell(80, 14, f"Pix Copia e Cola:")
         self.ln()
-        self.set_font('Times', '', 5)
+        self.set_font('Times', '', 12)
         # se dividido no pdf o código Pix acaba perdendo sua integridade...
         # pixParte1, pixParte2 = dividePixCopiaCola(copiaCola)
-        self.cell(120, 5, f"{copiaCola}")
+        self.multi_cell(190, 5, f"{copiaCola}")
         self.ln()
 
     def print_chapter(self, apresentante, valor, id, copiaCola):
@@ -266,37 +390,6 @@ class PDF(FPDF):
         self.chapter_title()
         self.chapter_body(apresentante, valor, id, copiaCola)
 
-
-def geradorID(stringId: str) -> str:
-    ''' 
-    Utilizar somente os 8 primeiros dídigos do UUID e colocar minúsculas ou maíusculas aleatoriamente.
-    Isso é feito para diminuir ainda mais as chances de gerar um código repedito já que há um limite
-    na quantidade de caracteres do identificador no Pix, assim sendo não podemos utilizar o UUID completo.
-    '''
-
-    # array para evitar sequencias de números, ex: ae234367.
-    num =  ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-    
-    x = 0
-    identificador = ''
-    for s in stringId:
-        # se o x estiver na posição 4 ou 7 e for número.
-        if x == 4 or x == 5:
-            if s in num:
-                if stringId[x+5] not in num:
-                    s = stringId[x]
-                else:
-                    s = 'u'
-
-        i = randint(0,1)
-        if i == 0:
-            identificador = identificador + s.upper()
-        else:
-            identificador = identificador + s
-        if x >= 7:
-            break
-        x += 1
-    return identificador
 
 
 def diaCorrente():
@@ -342,18 +435,50 @@ class InsereProtocolo(QDialog):
         self.show()
         self.ui.btn_cancelar_protocolo.clicked.connect(lambda: self.sair_insere_protocolo())
         self.ui.btn_gravar_protocolo.clicked.connect(
-            lambda: self.confirma_protocolo(self.pixID, self.ui.campo_protocolo.text()))
-        self.ui.campo_protocolo.returnPressed.connect(
-            lambda: self.confirma_protocolo(self.pixID, self.ui.campo_protocolo.text()))
+            lambda: self.confirma_protocolo(self.pixID, self.ui.campo_ano_certidao.text(),
+            self.ui.campo_num_certidao.text(), self.ui.campo_num_protocolo.text()))
+        self.ui.campo_num_protocolo.returnPressed.connect(
+            lambda: self.confirma_protocolo(self.pixID, self.ui.campo_num_protocolo.text()))
 
     
     def sair_insere_protocolo(self):
         self.done(0)
         self.close()
 
-    def confirma_protocolo(self, txtID, protocolo):
+    def confirma_protocolo(self, pixID, ano, numcert, numprot):
+        int_ano = 0
+        int_numcert = 0
+        int_numprot = 0
+        # Converter o texto dos campos em número, 
+        if ano == '':
+            int_ano = 0
+        else:
+            try:
+                int_ano = int(ano)
+            except:
+                int_ano = -1
+                print('Número inválido')
+        
+        if numcert == '':
+            int_numcert = 0
+        else:
+            try:
+                int_numcert = int(numcert)
+            except:
+                int_numcert = -1
+                print('Número inválido')
+        
+        if numprot == '':
+            int_numprot = 0
+        else:
+            try:
+                int_numprot = int(numprot)
+            except:
+                int_numprot = -1
+        
         try:
-            self.dbPix.updatePixNumInterno(txtID, protocolo)
+            self.dbPix.insertPixNumInterno(pixid=pixID, anocert=int_ano, 
+                                        numcert=int_numcert, numprot=int_numprot)
         except Exception as error:
             print(f'Erro ao gravar protocolo: {error}')
             self.done(0)
@@ -436,6 +561,8 @@ class MainWindow(QMainWindow):
         self.usuario = usuario
         self.acesso = acesso
         self.sigla = sigla
+        self.txIdPix = ''
+        self.globalIdPix = ''
         locale.setlocale(locale.LC_ALL, LOCALE)
         QMainWindow.__init__(self)
         self.ui = Ui_MainWindow()
@@ -461,12 +588,12 @@ class MainWindow(QMainWindow):
         self.ui.filtro_dia_alterapix.setDate(dia)
         self.ui.filtro_data_consultapix.setDate(dia)
         self.ui.filtro_dia_gera_excel.setDate(dia)
-        
-        # Timer que irá verificar recursivamente por novos pagamentos pix 
-        self.pix_counter = self.dbPix.searchPixAguardando(self.data_pix_padrão)
-        self.timer = QTimer()
-        self.timer.timeout.connect(lambda: self.sendMessage('Pix aguardando pagamento'))
-        self.timer.start(1000)
+
+        # # Timer que irá verificar recursivamente por pagamentos pix pagos
+        # self.pix_counter = self.dbPix.searchPixPagos(self.data_pix_padrão, self.sigla)
+        # self.timer = QTimer()
+        # self.timer.timeout.connect(lambda: self.sendMessage('Novo Pix pago!'))
+        # self.timer.start(1000)
 
         # Verificar o nível de acesso do usuário para definir quais telas serão exibidas.
         self.verificaAcesso()
@@ -485,11 +612,22 @@ class MainWindow(QMainWindow):
         self.ui.AutorizarPix.clicked.connect(lambda: self.telaAutorizarPix())
         self.ui.Settings.clicked.connect(lambda: self.telaSettings())
 
+
         # Ações da tela de gerar QrCode
+        self.ui.campo_cpf_apresentante.returnPressed.connect(
+            lambda: self.buscaSolicitante(self.ui.campo_cpf_apresentante.text()))
+        self.ui.btn_cadastrar_solicitante.clicked.connect(
+            lambda: self.cadastraSolicitante(self.ui.campo_cpf_apresentante.text(),
+            self.ui.campo_apresentante.text()))
         self.ui.btn_gerar_qrcode.clicked.connect(
             lambda: self.geraQrCode(self.ui.campo_apresentante.text(), 
             self.ui.campo_valor.text(), self.ui.campo_cpf_apresentante.text()))
         self.ui.btn_limpar_campos.clicked.connect(lambda: self.limparCamposQrCode())
+        self.ui.btn_enviar_email.clicked.connect(lambda: self.enviaEmailSolicitante(
+            nome_solicitante=self.ui.campo_apresentante.text(),
+            email_solicitante=self.ui.campo_email_solicitante.text()
+        ))
+
 
         # Ações da tela de imprimir QrCode
         self.ui.btn_buscar_imprimir.clicked.connect(
@@ -498,10 +636,12 @@ class MainWindow(QMainWindow):
             lambda: self.imprimirPix()
         )
 
+
         # Ações da tela de cadastro
         self.ui.btn_cadastrar.clicked.connect(lambda: self.cadastraUsuario())
         self.ui.btn_cancelar.clicked.connect(lambda: self.limparCamposCadastro())
         self.ui.Sair.clicked.connect(lambda: self.sairSistema())
+
 
         # Ações da tela de consulta pix
         self.ui.btn_set_big_font_consulta.clicked.connect(
@@ -514,6 +654,11 @@ class MainWindow(QMainWindow):
             lambda: self.carregarConsulta(self.sigla))
         self.ui.btn_inser_num_interno_consulta_pix.clicked.connect(
             lambda: self.insereProtocoloPixSelecionado())
+        # Se o usuário escolher uma data, automaticamente muda-se o filtro de data
+        # de "Todos" para "Data", pois entende-se que o usuário quer uma data específica.
+        self.ui.filtro_data_consultapix.dateChanged.connect(
+            lambda: self.ui.combo_filtro_data_consultapix.setCurrentIndex(1))
+
 
         # Ações da tela de altera Pix
         self.ui.btn_set_big_font.clicked.connect(
@@ -534,6 +679,9 @@ class MainWindow(QMainWindow):
             lambda: self.limpaCamposAlteraPix())
         self.ui.btn_liberar_pix.clicked.connect(
             lambda: self.alteraPixSelecionado())
+        self.ui.filtro_dia_alterapix.dateChanged.connect(
+            lambda: self.ui.combo_filtro_data_alterapix.setCurrentIndex(1))
+
 
         # Ações de configurações do sistema (Settings)
         self.ui.combo_tema.activated.connect(lambda: 
@@ -547,94 +695,284 @@ class MainWindow(QMainWindow):
             self.aplicaTema(self.temaAtual)
 
 
+    def enviaEmailSolicitante(self, nome_solicitante, email_solicitante):
+        if nome_solicitante == '' or email_solicitante == '':
+            msg_solicitante = QMessageBox()
+            msg_solicitante.setIcon(QMessageBox.Warning)
+            msg_solicitante.setWindowTitle('Erro ao preparar e-mail')
+            msg_solicitante.setText('É necessário informar nome e email do apresentante')
+            msg_solicitante.exec_()
+        else:
+            if verificaEmail(email_solicitante):
+                copiaECola = self.dbPix.getCopiaCola(self.txIdPix)
+                if copiaECola != 'erro':
+                    status = mail_rgi.envia_email(
+                        nome_dest=nome_solicitante,
+                        email_dest=email_solicitante,
+                        anexo=ADOBE_PDF_FILE,
+                        pixCopiaECola=self.dbPix.getCopiaCola(self.txIdPix)
+                    )
+                    if status == 'sucesso':
+                        msg_solicitante = QMessageBox()
+                        msg_solicitante.setIcon(QMessageBox.Warning)
+                        msg_solicitante.setWindowTitle('Sucesso no envio')
+                        msg_solicitante.setText(f'E-mail enviado com sucesso para: "{email_solicitante}"')
+                        msg_solicitante.exec_()
+                        self.limparCamposQrCode()
+                    else:
+                        msg_solicitante = QMessageBox()
+                        msg_solicitante.setIcon(QMessageBox.Warning)
+                        msg_solicitante.setWindowTitle('Erro ao enviar e-mail')
+                        msg_solicitante.setText(f'''
+    Houve um erro ao enviar o e-mail para: {email_solicitante}.
+    Verificar e tentar novamente!
+
+
+    Erro: {status}''')
+                        msg_solicitante.exec_()
+                else:
+                    msg_solicitante = QMessageBox()
+                    msg_solicitante.setIcon(QMessageBox.Warning)
+                    msg_solicitante.setWindowTitle('Erro ao recuperar pix copia e cola')
+                    msg_solicitante.setText('É necessário gerar o QrCode antes de enviar o e-mail.')
+                    msg_solicitante.exec_()
+                    return
+            else:
+                msg_solicitante = QMessageBox()
+                msg_solicitante.setIcon(QMessageBox.Warning)
+                msg_solicitante.setWindowTitle('Erro ao preparar e-mail')
+                msg_solicitante.setText('O e-mail informado está num formato inválido.')
+                msg_solicitante.exec_()
+
+
+    def cadastraSolicitante(self, cpf_cnpj, nomeSolicitante):
+        if cpf_cnpj != '' and nomeSolicitante != '':
+            cpf_cnpj_formatado = formataCpfCnpj(cpf_cnpj)
+            resultado = self.dbPix.insertSolicitante(cpf_cnpj_formatado, nomeSolicitante)
+            if resultado == 'inserido':
+                print('Inserido com sucesso!')
+            elif resultado == 'existente':
+                solicitante = self.dbPix.buscaSolicitante(cpf_cnpj_formatado)
+                self.ui.campo_apresentante.setText(solicitante[1])
+                msg_solicitante = QMessageBox()
+                msg_solicitante.setIcon(QMessageBox.Warning)
+                msg_solicitante.setWindowTitle('Solicitante já existente')
+                msg_solicitante.setText('Não há necessidade de cadastrar!')
+                msg_solicitante.exec_()
+            else:
+                msg_solicitante = QMessageBox()
+                msg_solicitante.setIcon(QMessageBox.Warning)
+                msg_solicitante.setWindowTitle('Erro ao cadastrar')
+                msg_solicitante.setText(f'Não foi possível cadastrar {resultado}')
+                msg_solicitante.exec_()
+        else:
+            msg_solicitante = QMessageBox()
+            msg_solicitante.setIcon(QMessageBox.Warning)
+            msg_solicitante.setWindowTitle('Dados incompletos...')
+            msg_solicitante.setText('Favor digitar CPF e Nome para cadastrar!')
+            msg_solicitante.exec_()
+
+
+    def buscaSolicitante(self, cpf_cnpj):
+        if len(cpf_cnpj) == 11:
+            erro, _ = verificaCPF(cpf_cnpj)
+            if not erro:
+                cpf_cnpj_formatado = formataCpfCnpj(cpf_cnpj)
+                solicitante = self.dbPix.buscaSolicitante(cpf_cnpj_formatado)
+                if solicitante != None:
+                    self.ui.campo_apresentante.setText(solicitante[1])
+                    print(solicitante[1])
+                else:
+                    msg_solicitante = QMessageBox()
+                    msg_solicitante.setIcon(QMessageBox.Warning)
+                    msg_solicitante.setWindowTitle('Solicitante não encontrado!')
+                    msg_solicitante.setText(f'Informe o nome e clique no botão cadastrar')
+                    msg_solicitante.exec_()
+                
+            else:
+                msg_solicitante = QMessageBox()
+                msg_solicitante.setIcon(QMessageBox.Warning)
+                msg_solicitante.setWindowTitle('CPF inválido')
+                msg_solicitante.setText(f'O CPF digitádo é inválido')
+                msg_solicitante.exec_()
+        elif len(cpf_cnpj) == 14:
+            erro, _ = verificaCPF(cpf_cnpj)
+            if not erro:
+                cpf_cnpj_formatado = formataCpfCnpj(cpf_cnpj)
+                solicitante = self.dbPix.buscaSolicitante(cpf_cnpj_formatado)
+                if solicitante != None:
+                    self.ui.campo_apresentante.setText(solicitante[1])
+                    print(solicitante[1])
+                else:
+                    msg_solicitante = QMessageBox()
+                    msg_solicitante.setIcon(QMessageBox.Warning)
+                    msg_solicitante.setWindowTitle('Solicitante não encontrado!')
+                    msg_solicitante.setText(f'Informe o nome e clique no botão cadastrar')
+                    msg_solicitante.exec_()
+            else:
+                msg_solicitante = QMessageBox()
+                msg_solicitante.setIcon(QMessageBox.Warning)
+                msg_solicitante.setWindowTitle('CNPJ inválido')
+                msg_solicitante.setText(f'O CNPJ digitádo é inválido')
+                msg_solicitante.exec_()
+        else:
+            msg_solicitante = QMessageBox()
+            msg_solicitante.setIcon(QMessageBox.Warning)
+            msg_solicitante.setWindowTitle('CPF/CNPJ inválido')
+            msg_solicitante.setText(f'O CPF/CNPJ digitádo é inválido')
+            msg_solicitante.exec_()
+
+
     def gravarPlanilhaExcel(self):
-        colunas = ['TxtID', 'Nome', 'Valor', 'Caixa', 'Numero Interno']
-        self.planilha = xlsx.Planilha('relatorio-teste.xlsx')
-        self.planilha.criarCabecalho(colunas)
-        
         if self.ui.combo_filtro_gera_excel.currentIndex() == 0:
             estado_gera_excel = ''
-            self.planilha.criarTitulo('Relatório de Pagamentos pix do dia: ' + self.ui.filtro_dia_gera_excel.text() + ' - (Todos)')
         elif self.ui.combo_filtro_gera_excel.currentIndex() == 1:
             estado_gera_excel = 'aguardando'
-            self.planilha.criarTitulo('Relatório de Pagamentos pix do dia: ' + self.ui.filtro_dia_gera_excel.text() + ' - (Aguardando)')
         else:
-            self.planilha.criarTitulo('Relatório de Pagamentos pix do dia: ' + self.ui.filtro_dia_gera_excel.text() + ' - (Pagos)')
             estado_gera_excel = 'pago'
-        
-        relatorio = self.dbPix.searchPixByName( nome='', 
+        relatorio = self.dbPix.searchPixByName( apresentante='', 
                                                 limite=100, 
-                                                estado=estado_gera_excel, 
+                                                filtro=estado_gera_excel, 
                                                 filtroData='Data',
                                                 data=self.ui.filtro_dia_gera_excel.text()
                                                 )
+
+        colunas = ['PixID', 'Nome', 'Valor', 'Caixa', 'Situação', 'Liberado', 'Ano', 'NumCert', 'NumProt']
+        self.planilha = xlsx.Planilha(nomeplanilha='relatorio.xlsx', linhas=(len(relatorio)+2))
+        self.planilha.criarCabecalho(colunas)
+        
+        if estado_gera_excel == '':
+            self.planilha.criarTitulo('Relatório de Pagamentos pix do dia: ' + self.ui.filtro_dia_gera_excel.text() + ' - (Todos)')
+        elif estado_gera_excel == 'aguardando':
+            self.planilha.criarTitulo('Relatório de Pagamentos pix do dia: ' + self.ui.filtro_dia_gera_excel.text() + ' - (Aguardando)')
+        else:
+            self.planilha.criarTitulo('Relatório de Pagamentos pix do dia: ' + self.ui.filtro_dia_gera_excel.text() + ' - (Pagos)')
+        
         linha_atual = 4
+        soma_taxas = Decimal(0)
         for pgto in relatorio:
             self.planilha.escrever(f'A{linha_atual}', pgto[0], False, False)
             self.planilha.escrever(f'B{linha_atual}', pgto[1], False, False)
             self.planilha.escrever(f'C{linha_atual}', pgto[2], False, valor=True)
             self.planilha.escrever(f'D{linha_atual}', pgto[3], False, False)
-            self.planilha.escrever(f'E{linha_atual}', pgto[8], False, False)
+            self.planilha.escrever(f'E{linha_atual}', pgto[5], False, False)
+            self.planilha.escrever(f'F{linha_atual}', pgto[6], False, False)
+            self.planilha.escrever(f'G{linha_atual}', pgto[7], False, False)
+            self.planilha.escrever(f'H{linha_atual}', pgto[8], False, False)
+            self.planilha.escrever(f'I{linha_atual}', pgto[9], False, False)
+            if pgto[5] == 'pago':
+                valor = pgto[2]
+                percentual = Decimal(0.014)
+                tx_minima = Decimal(0.60)
+                tx_maxima = Decimal(1.25)
+                taxa = valor * percentual # Multiplica por 1,40%
+                if taxa < tx_minima:
+                    taxa = tx_minima # esse é o valor mínimo de taxa para o serviço R$ 0,60.
+                elif taxa > tx_maxima:
+                    taxa = tx_maxima # esse é o valor mínimo de taxa para o serviço R$ 1,25
+                else:
+                    # se o valor estiver entre as taxas mínimas e máxima, não fazer nada.
+                    pass 
+                soma_taxas = soma_taxas + taxa
             linha_atual += 1
-        self.planilha.fechaPlanilha()
-
-
-    def sendMessage(self, message: str):
-        quant_pix_atual = self.dbPix.searchPixAguardando(self.data_pix_padrão)
-        if self.ui.AutorizarPix.isVisible():
-            if quant_pix_atual > self.pix_counter:
-                self.pix_counter = quant_pix_atual
-                self.timer.stop()
-                msg_pix = QMessageBox()
-                msg_pix.setIcon(QMessageBox.Warning)
-                msg_pix.setWindowTitle('Novo pix pra ser consultado.')
-                msg_pix.setText(f'Mensagem: {message}')
-                msg_pix.exec_()
-                self.carregarAlteraPix('','')
-                self.timer.start(1000)
-
-
-    def buscarImprimirPix(self, txtId):
-        pix = self.dbPix.searchPixByID(txtId)
-        if pix != None:
-            nomeApresentante = pix[1]
-            valor = (pix[2])
-            erroPix = False
-            print("Gerar QrCode para impressão")
-            pgto = Pagamento(idTx=txtId,
-                        nome=nomeApresentante,
-                        valor=valor,
-                        copiaCola='')
-            valor_str = str(pgto.valor)
-            reais = self.converterFloatReais(pgto.valor)
-            # Validar dados antes de gerar QRCode/PDF e gravar no banco
-            if len(pgto.idTx) < 8:
-                erroPix = True
-                self.erroDadosPix('Não foi possível gerar o ID do Pix.')
-            
-            if len(pgto.nome) < 8:
-                erroPix = True
-                self.erroDadosPix('Informar pelo menos um nome e sobrenome.')
-            
-            if not erroPix:
-                # Gerar QrCode com os dados preenchidos.
-                self.ui.txt_id_pix.setText(f"ID Pix: {pgto.idTx}")
-
-                #print(rgi.Nome, pgto.nome, rgi.ChavePix, pgto.valor, rgi.Cidade, pgto.idTx)
-                payload = Payload(RGI_NOME, pgto.nome, RGI_CHAVE_PIX, valor_str, RGI_CIDADE, pgto.idTx)
-                pixCopiaCola = payload.gerarPayload()
-                pgto.copiaCola = pixCopiaCola
-
-                # Gerar Arquivo PDF com os dados + QrCode
-                pdf = PDF()
-                pdf.print_chapter(pgto.nome, reais, pgto.idTx, pgto.copiaCola)
-                pdf.output(ADOBE_PDF_FILE, 'F')
-
-                # Abrir qrquivo PDF para impressão
-                cmd = '"{}" /p "{}"'.format(ADOBE_READER, ADOBE_PDF_FILE)
-                subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        self.planilha.escrever(f'B{linha_atual+1}', 'Total das taxas de serviço PIX', negrito=True, valor=False)
+        self.planilha.escrever(f'C{linha_atual+1}', soma_taxas, negrito=True, valor=True)
+        try:
+            self.planilha.fechaPlanilha()
+        except Exception as erro:
+            msg_solicitante = QMessageBox()
+            msg_solicitante.setIcon(QMessageBox.Warning)
+            msg_solicitante.setWindowTitle('Erro ao salvar')
+            msg_solicitante.setText(f'O relatório Excel deve estar aberto/em uso, fechar e tentar novamente\n{erro}')
+            msg_solicitante.exec_()
         else:
-            self.erroDadosPix('O Código IDPix informado, não foi encontrado.')
+            msg_solicitante = QMessageBox()
+            msg_solicitante.setIcon(QMessageBox.Warning)
+            msg_solicitante.setWindowTitle('Relatório gerado com sucesso')
+            msg_solicitante.setText(f'O relatório se encontra na pasta: C:\SysPg Pix')
+            msg_solicitante.exec_()
+
+
+    # def sendMessage(self, message: str):
+    #     quant_pix_atual = self.dbPix.searchPixAguardando(self.data_pix_padrão)
+    #     if self.ui.AutorizarPix.isVisible():
+    #         if quant_pix_atual > self.pix_counter:
+    #             self.pix_counter = quant_pix_atual
+    #             self.timer.stop()
+    #             msg_pix = QMessageBox()
+    #             msg_pix.setIcon(QMessageBox.Warning)
+    #             msg_pix.setWindowTitle('Novo pix pra ser consultado.')
+    #             msg_pix.setText(f'Mensagem: {message}')
+    #             msg_pix.exec_()
+    #             self.carregarAlteraPix('','')
+    #             self.timer.start(1000)
+
+
+    def buscarImprimirPix(self, ID):
+        if ID == '':
+            msg_imprimir = QMessageBox()
+            msg_imprimir.setIcon(QMessageBox.Warning)
+            msg_imprimir.setWindowTitle('Informar ID')
+            msg_imprimir.setText(f'Para buscar e imprimir é necessário informar o ID do Pix.')
+            msg_imprimir.exec_()
+        else:
+            pix = self.dbPix.searchPixByID(pixID=ID)
+            if pix != None:
+                nomeApresentante = pix[1]
+                valor = pix[2]
+                erroPix = False
+                print("Gerar QrCode para impressão")
+                pgto = Pagamento(idTx=ID,
+                            nome=nomeApresentante,
+                            valor=valor,
+                            copiaCola='')
+                reais = self.converterFloatReais(pgto.valor)
+                # Validar dados antes de gerar QRCode/PDF e gravar no banco
+                
+                if not erroPix:
+                    # Gerar QrCode com os dados preenchidos.
+                    self.ui.txt_id_pix.setText(f"ID Pix: {pgto.idTx}")
+
+                    # verificar erro
+                    # #print(rgi.Nome, pgto.nome, rgi.ChavePix, pgto.valor, rgi.Cidade, pgto.idTx)
+                    # payload = Payload(RGI_NOME, pgto.nome, RGI_CHAVE_PIX, valor_str, RGI_CIDADE, pgto.idTx)
+                    # pixCopiaCola = payload.gerarPayload()
+                    # pgto.copiaCola = pixCopiaCola
+
+                    # Gerar Arquivo PDF com os dados + QrCode
+                    pdf = PDF()
+                    pdf.print_chapter(pgto.nome, reais, pgto.pixID, pgto.copiaCola)
+                    # Caso o PDF de impressão do QRCode já esteja aberto (ex. O usuário esqueceu de fechar
+                    # na geração anterior, o sistema não conseguirá gravar o arquivo pois o windows gera erro
+                    # de permissão ao criar e gravar novo arquivo com um de mesmo nome e local já aberto
+                    # para evitar um precoce fim do processo de geração, utilizo um arquivo "extra" que nada
+                    # mais é do que o mesmo arquivo, com nome diferente no mesmo local, para seguir com a impressão.
+                    try:
+                        pdf.output(ADOBE_PDF_FILE, 'F')
+                    except Exception as error:
+                        msg_erro = QMessageBox()
+                        msg_erro.setIcon(QMessageBox.Warning)
+                        msg_erro.setWindowTitle('Erro ao gerar arquivo PDF')
+                        msg_erro.setText(f'Após imprimir, sempre feche todas as abas e PDFs abertos, para evitar erros.\n{error}')
+                        msg_erro.exec_()
+                        try:
+                            pdf.output(ADOBE_PDF_FILE_EXTRA, 'F')
+                        except Exception as error:
+                            msg_erro = QMessageBox()
+                            msg_erro.setIcon(QMessageBox.Warning)
+                            msg_erro.setWindowTitle('Falha geral na criação do PDF')
+                            msg_erro.setText(f'Fechar o Adobe e todas as suas abas e gerar novo QRCode.\n{error}')
+                            msg_erro.exec_()
+                        else:
+                            # Abrir arquivo PDF de backup com nome diferente pois já tem um com nome igual aberto.
+                            cmd = '"{}" "{}"'.format(ADOBE_READER, ADOBE_PDF_FILE_EXTRA)
+                            subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                    else:
+                        # No caso de nenhum erro na criação, abrir arquivo PDF para conferência dos dados
+                        cmd = '"{}" "{}"'.format(ADOBE_READER, ADOBE_PDF_FILE)
+                        subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            else:
+                self.erroDadosPix('O Código IDPix informado, não foi encontrado.')
 
 
     def imprimirPix(self):
@@ -939,6 +1277,11 @@ class MainWindow(QMainWindow):
         self.ui.tableBuscaEAutorizaPix.setColumnWidth(4, 157)
         self.ui.tableBuscaEAutorizaPix.setColumnWidth(5, 107)
         self.ui.tableBuscaEAutorizaPix.setColumnWidth(6, 100)
+
+        # Carregar últimos registros após preparar tabela
+        self.carregarAlteraPix(
+                self.ui.campo_buscar_apresentante.text(),
+                self.ui.campo_buscar_id.text())
 
         # Destacar o menu selecionado no momento
         self.ui.AutorizarPix.setStyleSheet('''QPushButton {color: rgb'''+f'{(self.temaAtual.leftMenuTextColor)}'+''';
@@ -1399,267 +1742,168 @@ class MainWindow(QMainWindow):
 
     def carregarAlteraPix(self,name,id):
         # Inicializa limpando a tabela
+        print('Carrega altera pix')
         self.ui.tableBuscaEAutorizaPix.setRowCount(0)
         self.ui.resultado_busca_autoriza.clear()
         self.ui.tableBuscaEAutorizaPix.setSortingEnabled(False)
-        if id != '' and name == '':
-            self.ui.tableBuscaEAutorizaPix.setRowCount(1)
-            pagamento = self.dbPix.searchPixByID(id)
-            if pagamento == None:
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Warning)
-                msg.setWindowTitle('Não encontrado')
-                msg.setText('Nenhum registro com o ID informado. Verificar!')
-                msg.exec_()
-                self.ui.resultado_busca_autoriza.clear()
-                self.ui.resultado_busca_autoriza.setText('Resultado da busca: nenhum registro encontrado')
-            else:
-                self.ui.campo_buscar_apresentante.setText('')
-                self.ui.resultado_busca_autoriza.setText(
-                    f'Resultado da busca: 1 registro encontrado')
-                reais = self.converterFloatReais(pagamento[2])
-                diaHora = self.converterDiaHora(pagamento[4])
-                for coluna in range(0,9,1):
-                    if coluna == 2:
-                        item_atual = QTableWidgetItem(reais)
-                        item_atual.setFont(self.fontTable)
-                        self.ui.tableBuscaEAutorizaPix.setItem(0, 
-                            coluna, item_atual)
-                    elif coluna == 4:
-                        item_atual = QTableWidgetItem(diaHora)
-                        item_atual.setFont(self.fontTable)
-                        self.ui.tableBuscaEAutorizaPix.setItem(0, 
-                            coluna, item_atual)
-                    else:
-                        if coluna == 6 or coluna == 3:
-                            # Se for a última coluna, verifica se o valor é none pra retornar ''
-                            # Se não for none, aplica a sigla do usuário em maiúsculas
-                            if str(pagamento[coluna]) == 'None':
-                                item_atual = QTableWidgetItem('')
-                            else:
-                                item_atual = QTableWidgetItem(str(pagamento[coluna]).upper())
-                            item_atual.setFont(self.fontTable)
-                            self.ui.tableBuscaEAutorizaPix.setItem(0, coluna, item_atual)
-                        elif coluna == 8:
-                            # Se for a última coluna, verifica se o valor é none pra retornar ''
-                            # Se não for none, aplica a sigla do usuário em maiúsculas
-                            if str(pagamento[coluna]) == 'None':
-                                item_atual = QTableWidgetItem('')
-                            else:
-                                item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                            item_atual.setFont(self.fontTable)
-                            self.ui.tableBuscaEAutorizaPix.setItem(0, 
-                                coluna - 1, item_atual)
-                            item_atual.setFont(self.fontTable)
-                        else:
-                            item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                            item_atual.setFont(self.fontTable)
-                            self.ui.tableBuscaEAutorizaPix.setItem(0, 
-                                coluna, item_atual)
-                            item_atual.setFont(self.fontTable)
-            self.ui.tableBuscaEAutorizaPix.resizeColumnsToContents()
-            self.ui.tableBuscaEAutorizaPix.resizeRowsToContents()
-        elif name != '' and id == '':
-            # Verificar o estado do filtro limite de registros
-            if self.ui.combo_limite_altera.currentIndex() == 0:
-                limite = 10
-            elif self.ui.combo_limite_altera.currentIndex() == 1:
-                limite = 30
-            elif self.ui.combo_limite_altera.currentIndex() == 2:
-                limite = 50
-            else:
-                limite = 100 
-
-            # Verificar o estado do filtro status dos pagamentos
-            if self.ui.combo_filtro_alterapix.currentIndex() == 0:
-                filtro = ''
-            elif self.ui.combo_filtro_alterapix.currentIndex() == 1:
-                filtro = 'aguardando'
-            else:
-                filtro = 'pago'
-
-            # Verificar o estado do filtro de data
-            if self.ui.combo_filtro_data_alterapix.currentIndex() == 0:
-                filtroData = ''
-            else:
-                filtroData = 'Data'
-
-            # Repassa a data escolhida na caixa de seleção de data em formato texto.
-            dataBusca = self.ui.filtro_dia_alterapix.text()
-
-            pagamentos = self.dbPix.searchPixByName(name, limite, filtro, filtroData, dataBusca)
-            if pagamentos == None:
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Warning)
-                msg.setWindowTitle('Não encontrado')
-                msg.setText('Nenhum registro com o nome e/ou filtro informado. Verificar!')
-                msg.exec_()
-                self.ui.resultado_busca_autoriza.clear()
-                self.ui.resultado_busca_autoriza.setText('Resultado da busca: nenhum registro encontrado')
-            elif len(pagamentos) < 1:
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Warning)
-                msg.setWindowTitle('Não encontrado')
-                msg.setText('Nenhum registro com o nome e/ou filtro informado. Verificar!')
-                msg.exec_()
-                self.ui.resultado_busca_autoriza.clear()
-                self.ui.resultado_busca_autoriza.setText('Resultado da busca: nenhum registro encontrado')
-            else:
-                self.ui.campo_buscar_id.setText('')
-                self.ui.resultado_busca_autoriza.clear()
-                self.ui.resultado_busca_autoriza.setText(
-                    f'Resultado da busca: {len(pagamentos)} registro(s) encontrado(s)')
-                linha = 0
-                self.ui.tableBuscaEAutorizaPix.setRowCount(len(pagamentos))
-                for pagamento in pagamentos:
-                    reais = self.converterFloatReais(pagamento[2])
-                    diaHora = self.converterDiaHora(pagamento[4])
-                    for coluna in range(0,9,1):
-                        if coluna == 2:
-                            item_atual = QTableWidgetItem(reais)
-                            item_atual.setFont(self.fontTable)
-                            self.ui.tableBuscaEAutorizaPix.setItem(linha, 
-                            coluna, item_atual)
-                        elif coluna == 4:
-                            item_atual = QTableWidgetItem(diaHora)
-                            item_atual.setFont(self.fontTable)
-                            self.ui.tableBuscaEAutorizaPix.setItem(linha, 
-                            coluna, item_atual)
-                            item_atual.setFont(self.fontTable)
-                        else:
-                            if coluna == 6 or coluna == 3:
-                                # Se for a última coluna, verifica se o valor é none pra retornar ''
-                                # Se não for none, aplica a sigla do usuário em maiúsculas
-                                if str(pagamento[coluna]) == 'None':
-                                    item_atual = QTableWidgetItem('')
-                                else:
-                                    item_atual = QTableWidgetItem(str(pagamento[coluna]).upper())
-                                item_atual.setFont(self.fontTable)
-                                self.ui.tableBuscaEAutorizaPix.setItem(linha, coluna, item_atual)
-                            elif coluna == 8:
-                                # Se for a última coluna, verifica se o valor é none pra retornar ''
-                                # Se não for none, aplica a sigla do usuário em maiúsculas
-                                if str(pagamento[coluna]) == 'None':
-                                    item_atual = QTableWidgetItem('')
-                                else:
-                                    item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                                item_atual.setFont(self.fontTable)
-                                self.ui.tableBuscaEAutorizaPix.setItem(linha, 
-                                    coluna - 1, item_atual)
-                                item_atual.setFont(self.fontTable)
-                            else:
-                                item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                                item_atual.setFont(self.fontTable)
-                                self.ui.tableBuscaEAutorizaPix.setItem(linha, 
-                                    coluna, item_atual)
-                                item_atual.setFont(self.fontTable)
-                    linha += 1
-            self.ui.tableBuscaEAutorizaPix.resizeColumnsToContents()
-            self.ui.tableBuscaEAutorizaPix.resizeRowsToContents()
-        elif name == '' and id == '':
-            # Verificar o estado do filtro limite de registros
-            if self.ui.combo_limite_altera.currentIndex() == 0:
-                limite = 10
-            elif self.ui.combo_limite_altera.currentIndex() == 1:
-                limite = 30
-            elif self.ui.combo_limite_altera.currentIndex() == 2:
-                limite = 50
-            else:
-                limite = 100 
-
-            # Verificar o estado do filtro status dos pagamentos
-            if self.ui.combo_filtro_alterapix.currentIndex() == 0:
-                filtro = ''
-            elif self.ui.combo_filtro_alterapix.currentIndex() == 1:
-                filtro = 'aguardando'
-            else:
-                filtro = 'pago'
-
-            # Verificar o estado do filtro de data
-            if self.ui.combo_filtro_data_alterapix.currentIndex() == 0:
-                filtroData = ''
-            else:
-                filtroData = 'Data'
-            
-            # Repassa a data escolhida na caixa de seleção de data em formato texto.
-            dataBusca = self.ui.filtro_dia_alterapix.text()
-
-            pagamentos = self.dbPix.searchPixByName('', limite, filtro, filtroData, dataBusca)
-            if pagamentos == None:
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Warning)
-                msg.setWindowTitle('Não encontrado')
-                msg.setText('Nenhum registro com o nome e/ou filtro informado. Verificar!')
-                msg.exec_()
-                self.ui.resultado_busca_autoriza.clear()
-                self.ui.resultado_busca_autoriza.setText('Resultado da busca: nenhum registro encontrado')
-            elif len(pagamentos) < 1:
-                msg = QMessageBox()
-                msg.setIcon(QMessageBox.Warning)
-                msg.setWindowTitle('Não encontrado')
-                msg.setText('Nenhum registro com o nome e/ou filtro informado. Verificar!')
-                msg.exec_()
-                self.ui.resultado_busca_autoriza.clear()
-                self.ui.resultado_busca_autoriza.setText('Resultado da busca: nenhum registro encontrado')
-            else:    
-                self.ui.campo_buscar_id.setText('')
-                self.ui.resultado_busca_autoriza.setText(
-                    f'Resultado da busca: {len(pagamentos)} registro(s) encontrado(s)')
-                linha = 0
-                self.ui.tableBuscaEAutorizaPix.setRowCount(len(pagamentos))
-                for pagamento in pagamentos:
-                    reais = self.converterFloatReais(pagamento[2])
-                    diaHora = self.converterDiaHora(pagamento[4])
-                    for coluna in range(0,9,1):
-                        if coluna == 2:
-                            item_atual = QTableWidgetItem(reais)
-                            item_atual.setFont(self.fontTable)
-                            self.ui.tableBuscaEAutorizaPix.setItem(linha, 
-                                coluna, item_atual)
-                        elif coluna == 4:
-                            item_atual = QTableWidgetItem(diaHora)
-                            item_atual.setFont(self.fontTable)
-                            self.ui.tableBuscaEAutorizaPix.setItem(linha, 
-                                coluna, item_atual)
-                            item_atual.setFont(self.fontTable)
-                        else:
-                            if coluna == 6 or coluna == 3:
-                                # Se for a última coluna, verifica se o valor é none pra retornar ''
-                                # Se não for none, aplica a sigla do usuário em maiúsculas
-                                if str(pagamento[coluna]) == 'None':
-                                    item_atual = QTableWidgetItem('')
-                                else:
-                                    item_atual = QTableWidgetItem(str(pagamento[coluna]).upper())
-                                item_atual.setFont(self.fontTable)
-                                self.ui.tableBuscaEAutorizaPix.setItem(linha, coluna, item_atual)
-                            elif coluna == 8:
-                                # Se for a última coluna, verifica se o valor é none pra retornar ''
-                                # Se não for none, aplica a sigla do usuário em maiúsculas
-                                if str(pagamento[coluna]) == 'None':
-                                    item_atual = QTableWidgetItem('')
-                                else:
-                                    item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                                item_atual.setFont(self.fontTable)
-                                self.ui.tableBuscaEAutorizaPix.setItem(linha, 
-                                    coluna - 1, item_atual)
-                                item_atual.setFont(self.fontTable)
-                            else:
-                                item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                                item_atual.setFont(self.fontTable)
-                                self.ui.tableBuscaEAutorizaPix.setItem(linha, 
-                                    coluna, item_atual)
-                                item_atual.setFont(self.fontTable)
-
-                    linha += 1
-            self.ui.tableBuscaEAutorizaPix.resizeColumnsToContents()
-            self.ui.tableBuscaEAutorizaPix.resizeRowsToContents()
+        
+        idPix = self.ui.campo_buscar_id.text()
+        apresentante = self.ui.campo_buscar_apresentante.text()
+        # Verificar o estado do filtro status dos pagamentos
+        if self.ui.combo_filtro_alterapix.currentIndex() == 0:
+            filtro = ''
+        elif self.ui.combo_filtro_alterapix.currentIndex() == 1:
+            filtro = 'aguardando'
         else:
+            filtro = 'pago'
+
+        # Verificar o estado do filtro limite de registros
+        if self.ui.combo_limite_altera.currentIndex() == 0:
+            limite = 10
+        elif self.ui.combo_limite_altera.currentIndex() == 1:
+            limite = 30
+        elif self.ui.combo_limite_altera.currentIndex() == 2:
+            limite = 50
+        else:
+            limite = 100 
+
+
+        # Verificar o estado do filtro de data
+        if self.ui.combo_filtro_data_alterapix.currentIndex() == 0:
+            filtroData = ''
+        else:
+            filtroData = 'Data'
+
+        # Repassa a data escolhida na caixa de seleção de data em formato texto.
+        dataBusca = self.ui.filtro_dia_alterapix.text()
+
+        if idPix != '' and apresentante != '':
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
-            msg.setWindowTitle('Busca em duplicidade')
-            msg.setText('Informar somente o nome ou somente o ID.')
+            msg.setWindowTitle('Dados inválidos')
+            msg.setText('Informar somente o nome ou somente o ID Pix.')
             msg.exec_()
+            self.ui.resultado_busca_consultapix.clear()
+            self.ui.resultado_busca_consultapix.setText('Resultado da busca: nenhum registro encontrado')
+            return
 
+        if idPix == '':
+            pagamentos = self.dbPix.searchPixByName( 
+                limite=limite,
+                filtro=filtro,
+                filtroData=filtroData,
+                apresentante=apresentante,
+                data=dataBusca
+            )
+        else:
+            pagamentos = self.dbPix.searchPixByID(
+                pixID=idPix,
+            )
+        
+        if pagamentos == None:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setWindowTitle('Não encontrado')
+            msg.setText('Nenhum registro com o nome e/ou filtro informado. Verificar!')
+            msg.exec_()
+            self.ui.resultado_busca_autoriza.clear()
+            self.ui.resultado_busca_autoriza.setText('Resultado da busca: nenhum registro encontrado')
+        elif len(pagamentos) < 1:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setWindowTitle('Não encontrado')
+            msg.setText('Nenhum registro com o nome e/ou filtro informado. Verificar!')
+            msg.exec_()
+            self.ui.resultado_busca_consultapix.clear()
+            self.ui.resultado_busca_consultapix.setText('Resultado da busca: nenhum registro encontrado')
+        else:
+            linha = 0
+            self.ui.tableBuscaEAutorizaPix.setRowCount(len(pagamentos))
+            self.ui.tableBuscaEAutorizaPix.setSortingEnabled(False)
+            if idPix  == '':
+                for pagamento in pagamentos:
+                    reais = self.converterFloatReais(pagamento[2])
+                    diaHora = self.converterDiaHora(pagamento[4])
+                    for coluna in range(0,9,1):
+                        if coluna == 0 or coluna == 1 or coluna == 3:
+                            item_atual = QTableWidgetItem(str(pagamento[coluna]))
+                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                            item_atual.setFont(self.fontTable)
+                            self.ui.tableBuscaEAutorizaPix.setItem(linha, 
+                                coluna, item_atual)
+                            item_atual.setFont(self.fontTable)
+                        elif coluna == 2:
+                            item_atual = QTableWidgetItem(reais)
+                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                            item_atual.setFont(self.fontTable)
+                            self.ui.tableBuscaEAutorizaPix.setItem(linha, 
+                                coluna, item_atual)
+                        elif coluna == 4:
+                            item_atual = QTableWidgetItem(str(pagamento[coluna]))
+                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                            item_atual.setFont(self.fontTable)
+                            self.ui.tableBuscaEAutorizaPix.setItem(linha, 
+                                coluna, item_atual)
+                            item_atual.setFont(self.fontTable)
+                        else:
+                            # Se for a última coluna, verifica se o valor é none pra retornar ''
+                            # Se não for none, aplica a sigla do usuário em maiúsculas
+                            if str(pagamento[coluna]) == 'None':
+                                pgtoColuna = ''
+                            else:
+                                pgtoColuna = str(pagamento[coluna])   
+                            item_atual = QTableWidgetItem(pgtoColuna)
+                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                            item_atual.setFont(self.fontTable)
+                            self.ui.tableBuscaEAutorizaPix.setItem(linha, 
+                                coluna-1, item_atual)
+                            item_atual.setFont(self.fontTable)
+                    linha += 1
+                    self.ui.tableBuscaEAutorizaPix.resizeColumnsToContents()
+                    self.ui.tableBuscaEAutorizaPix.resizeRowsToContents()
+            else:
+                reais = self.converterFloatReais(pagamentos[2])
+                diaHora = self.converterDiaHora(pagamentos[4])
+                for coluna in range(0,9,1):
+                    if coluna == 0 or coluna == 1 or coluna == 3:
+                        item_atual = QTableWidgetItem(str(pagamentos[coluna]))
+                        item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                            self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                        item_atual.setFont(self.fontTable)
+                        self.ui.tableBuscaEAutorizaPix.setItem(linha, 
+                            coluna, item_atual)
+                    elif coluna == 2:
+                        item_atual = QTableWidgetItem(diaHora)
+                        item_atual.setFont(self.fontTable)
+                        self.ui.tableBuscaEAutorizaPix.setItem(linha, 
+                            coluna, item_atual)
+                        item_atual.setFont(self.fontTable)
+                    elif coluna == 4:
+                        item_atual.setFont(self.fontTable)
+                        item_atual = QTableWidgetItem(reais)
+                        item_atual.setFont(self.fontTable)
+                        self.ui.tableBuscaEAutorizaPix.setItem(linha, 
+                            coluna, item_atual)
+                    else:
+                        # Se for a última coluna, verifica se o valor é none pra retornar ''
+                        # Se não for none, aplica a sigla do usuário em maiúsculas
+                        if str(pagamentos[coluna]) == 'None':
+                            pgtoColuna = ''
+                        else:
+                            pgtoColuna = str(pagamentos[coluna])   
+                        item_atual = QTableWidgetItem(pgtoColuna)
+                        item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                            self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                        item_atual.setFont(self.fontTable)
+                        self.ui.tableBuscaEAutorizaPix.setItem(linha, 
+                            coluna-1, item_atual)
+                        item_atual.setFont(self.fontTable)
+                self.ui.tableBuscaEAutorizaPix.resizeColumnsToContents()
+                self.ui.tableBuscaEAutorizaPix.resizeRowsToContents()
         self.ui.tableBuscaEAutorizaPix.setSortingEnabled(True)
 
 
@@ -1698,6 +1942,16 @@ class MainWindow(QMainWindow):
         # Repassa a data escolhida na caixa de seleção de data em formato texto.
         dataBusca = self.ui.filtro_data_consultapix.text()
 
+        if idPix != '' and apresentante != '':
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Warning)
+            msg.setWindowTitle('Dados inválidos')
+            msg.setText('Informar somente o nome ou somente o ID Pix.')
+            msg.exec_()
+            self.ui.resultado_busca_consultapix.clear()
+            self.ui.resultado_busca_consultapix.setText('Resultado da busca: nenhum registro encontrado')
+            return
+
         if idPix == '':
             pagamentos = self.dbPix.searchPixByCaixa(
                 caixa=caixa, 
@@ -1709,25 +1963,26 @@ class MainWindow(QMainWindow):
             )
         else:
             pagamentos = self.dbPix.searchPixByIDCaixa(
-                txtID=idPix,
+                pixID=idPix,
                 caixa=caixa
             )
+
         if pagamentos == None:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowTitle('Não encontrado')
             msg.setText('Nenhum registro com o nome e/ou filtro informado. Verificar!')
             msg.exec_()
-            self.ui.resultado_busca_autoriza.clear()
-            self.ui.resultado_busca_autoriza.setText('Resultado da busca: nenhum registro encontrado')
+            self.ui.resultado_busca_consultapix.clear()
+            self.ui.resultado_busca_consultapix.setText('Resultado da busca: nenhum registro encontrado')
         elif len(pagamentos) < 1:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
             msg.setWindowTitle('Não encontrado')
             msg.setText('Nenhum registro com o nome e/ou filtro informado. Verificar!')
             msg.exec_()
-            self.ui.resultado_busca_autoriza.clear()
-            self.ui.resultado_busca_autoriza.setText('Resultado da busca: nenhum registro encontrado')
+            self.ui.resultado_busca_consultapix.clear()
+            self.ui.resultado_busca_consultapix.setText('Resultado da busca: nenhum registro encontrado')
         else:
             linha = 0
             self.ui.tableConsultaPix.setRowCount(len(pagamentos))
@@ -1735,89 +1990,93 @@ class MainWindow(QMainWindow):
             if idPix == '':
                 for pagamento in pagamentos:
                     reais = self.converterFloatReais(pagamento[2])
-                    diaHora = self.converterDiaHora(pagamento[4])
+                    diaHora = self.converterDiaHora(pagamento[3])
                     for coluna in range(0,9,1):
-                        if coluna != 3:
-                            if coluna == 2:
-                                item_atual = QTableWidgetItem(reais)
-                                item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                    self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
-                                item_atual.setFont(self.fontTable)
-                                self.ui.tableConsultaPix.setItem(linha, 
-                                    coluna, item_atual)
-                            elif coluna == 4:
-                                item_atual = QTableWidgetItem(diaHora)
-                                item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                    self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
-                                item_atual.setFont(self.fontTable)
-                                self.ui.tableConsultaPix.setItem(linha, 
-                                    coluna - 1, item_atual)
-                                item_atual.setFont(self.fontTable)
-                            elif coluna == 5:   
-                                item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                                item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                    self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
-                                item_atual.setFont(self.fontTable)
-                                self.ui.tableConsultaPix.setItem(linha, 
-                                    coluna - 1, item_atual)
-                            elif coluna == 8:
-                                if str(pagamento[coluna]) == 'None':
-                                    pgtoColuna = ''
-                                else:
-                                    pgtoColuna = str(pagamento[coluna])
-                                item_atual = QTableWidgetItem(pgtoColuna)
-                                item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                    self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
-                                item_atual.setFont(self.fontTable)
-                                self.ui.tableConsultaPix.setItem(linha, 
-                                    coluna - 3, item_atual)
-                            else:   
-                                item_atual = QTableWidgetItem(str(pagamento[coluna]))
-                                item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                    self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
-                                item_atual.setFont(self.fontTable)
-                                self.ui.tableConsultaPix.setItem(linha, 
-                                    coluna, item_atual)
-                                item_atual.setFont(self.fontTable)
-                    linha += 1
-                    self.ui.tableConsultaPix.resizeColumnsToContents()
-                    self.ui.tableConsultaPix.resizeRowsToContents()
-            else:
-                reais = self.converterFloatReais(pagamentos[2])
-                diaHora = self.converterDiaHora(pagamentos[4])
-                for coluna in range(0,6,1):
-                    if coluna != 3:
-                        if coluna == 2:
+                        if coluna == 0 or coluna == 1:
+                            item_atual = QTableWidgetItem(str(pagamento[coluna]))
+                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                            item_atual.setFont(self.fontTable)
+                            self.ui.tableConsultaPix.setItem(linha, 
+                                coluna, item_atual)
+                        elif coluna == 2:
                             item_atual = QTableWidgetItem(reais)
                             item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
                                 self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                             item_atual.setFont(self.fontTable)
                             self.ui.tableConsultaPix.setItem(linha, 
                                 coluna, item_atual)
-                        elif coluna == 4:
+                        elif coluna == 3:
                             item_atual = QTableWidgetItem(diaHora)
-                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
-                            item_atual.setFont(self.fontTable)
-                            self.ui.tableConsultaPix.setItem(linha, 
-                                coluna - 1, item_atual)
-                            item_atual.setFont(self.fontTable)
-                        elif coluna == 5:   
-                            item_atual = QTableWidgetItem(str(pagamentos[coluna]))
-                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
-                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
-                            item_atual.setFont(self.fontTable)
-                            self.ui.tableConsultaPix.setItem(linha, 
-                                coluna - 1, item_atual)
-                        else:   
-                            item_atual = QTableWidgetItem(str(pagamentos[coluna]))
                             item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
                                 self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                             item_atual.setFont(self.fontTable)
                             self.ui.tableConsultaPix.setItem(linha, 
                                 coluna, item_atual)
                             item_atual.setFont(self.fontTable)
-                linha += 1
+                        elif coluna == 4:
+                            # se for a coluna 4 "createdby" não é necessário exibir
+                            # pois nessa tela todos os pagamentos são do próprio caixa
+                            continue
+                        else:
+                            # Se for a última coluna, verifica se o valor é none pra retornar ''
+                                # Se não for none, aplica a sigla do usuário em maiúsculas
+                            if str(pagamento[coluna]) == 'None':
+                                pgtoColuna = ''
+                            else:
+                                pgtoColuna = str(pagamento[coluna])   
+                            item_atual = QTableWidgetItem(pgtoColuna)
+                            item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                                self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                            item_atual.setFont(self.fontTable)
+                            self.ui.tableConsultaPix.setItem(linha, 
+                                coluna-1, item_atual)
+                    linha += 1
+                    self.ui.tableConsultaPix.resizeColumnsToContents()
+                    self.ui.tableConsultaPix.resizeRowsToContents()
+            else:
+                reais = self.converterFloatReais(pagamentos[2])
+                diaHora = self.converterDiaHora(pagamentos[3])
+                for coluna in range(0,9,1):
+                    if coluna == 0 or coluna == 1:
+                        item_atual = QTableWidgetItem(str(pagamentos[coluna]))
+                        item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                            self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                        item_atual.setFont(self.fontTable)
+                        self.ui.tableConsultaPix.setItem(linha, 
+                            coluna, item_atual)
+                        item_atual.setFont(self.fontTable)
+                    elif coluna == 2:
+                        item_atual = QTableWidgetItem(reais)
+                        item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                            self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                        item_atual.setFont(self.fontTable)
+                        self.ui.tableConsultaPix.setItem(linha, 
+                            coluna, item_atual)
+                    elif coluna == 3:
+                        item_atual = QTableWidgetItem(diaHora)
+                        item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                            self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                        item_atual.setFont(self.fontTable)
+                        self.ui.tableConsultaPix.setItem(linha, 
+                            coluna, item_atual)
+                        item_atual.setFont(self.fontTable)
+                    elif coluna == 4:
+                        # se for a coluna 4 "createdby" não é necessário exibir
+                        # pois nessa tela todos os pagamentos são do próprio caixa
+                        continue
+                    else:
+                        if str(pagamentos[coluna]) == 'None':
+                            pgtoColuna = ''
+                        else:
+                            pgtoColuna = str(pagamentos[coluna])   
+                        item_atual = QTableWidgetItem(pgtoColuna)
+                        item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
+                            self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
+                        item_atual.setFont(self.fontTable)
+                        self.ui.tableConsultaPix.setItem(linha, 
+                            coluna-1, item_atual)
+                        item_atual.setFont(self.fontTable)
                 self.ui.tableConsultaPix.resizeColumnsToContents()
                 self.ui.tableConsultaPix.resizeRowsToContents()
         self.ui.tableConsultaPix.setSortingEnabled(True)
@@ -1929,6 +2188,7 @@ class MainWindow(QMainWindow):
         self.ui.campo_cpf_apresentante.setText('')
         self.ui.campo_valor.setText('')
         self.ui.txt_id_pix.setText('ID Pix: ')
+        self.ui.campo_email_solicitante.setText('')
 
 
     def limparCamposCadastro(self):
@@ -1940,94 +2200,113 @@ class MainWindow(QMainWindow):
         self.ui.campo_repetir_senha.setText('')
 
 
-    def verificaCPF(self, cpf: str):
-        cpf_digitos = ''
-        erro = True
-        # Obtém apenas os números do CPF, ignorando pontuações
-        numbers = [int(digit) for digit in cpf if digit.isdigit()]
+    def geraQrCode(self, apresentante, valor, cpf_cnpj):
+        cpf_cnpj_formatado = formataCpfCnpj(cpf_cnpj)
+        solicitante = self.dbPix.buscaSolicitante(cpf_cnpj_formatado)
+        if solicitante == None or solicitante == 'erro':
+            msg_erro = QMessageBox()
+            msg_erro.setIcon(QMessageBox.Warning)
+            msg_erro.setWindowTitle('Erro!')
+            msg_erro.setText('O solicitante não está cadastrado, verificar e tentar novamente.')
+            msg_erro.exec_()
+            return
+        else:
+            erroPix = False
+            print("Gerar QrCode")
+            txtId = genTxtID()
+            pgto = Pagamento(idTx=txtId,
+                        nome=apresentante,
+                        valor=valor,
+                        copiaCola='')
 
-        # Verifica se o CPF possui 11 números
-        if len(numbers) != 11:
-            return erro, ''
+            depositoInicial = pgto.valor
+            valor_decimal = depositoInicial.replace('.', '')
+            valor_decimal = valor_decimal.replace(',', '.')
 
-        # Validação do primeiro dígito verificador:
-        sum_of_products = sum(a*b for a, b in zip(numbers[0:9], range(10, 1, -1)))
-        expected_digit = (sum_of_products * 10 % 11) % 10
-        if numbers[9] != expected_digit:
-            return erro, ''
+            cpf_cnpj_informado = cpf_cnpj
+            digitos_cpf_cnpj = limpaCPF_CNPJ(cpf_cnpj_informado)
+            
+            if len(digitos_cpf_cnpj) == 11:
+                err, cpf_cnpj_verificado = verificaCPF(cpf_cnpj_informado)
+            else:
+                err, cpf_cnpj_verificado = VerificaCNPJ(cpf_cnpj_informado)
 
-        # Validação do segundo dígito verificador:
-        sum_of_products = sum(a*b for a, b in zip(numbers[0:10], range(11, 1, -1)))
-        expected_digit = (sum_of_products * 10 % 11) % 10
-        if numbers[10] != expected_digit:
-            return erro, ''
+            if err:
+                erroPix = True
+                self.erroDadosPix('O CPF/CNPJ informado está incorreto.')
 
-        for n in numbers:
-            cpf_digitos = cpf_digitos + str(n)
-        erro = False
-
-        return erro, cpf_digitos
-
-
-    def geraQrCode(self, apresentante, valor, cpf):
-        erroPix = False
-        print("Gerar QrCode")
-        identificador = uuid.uuid4()
-        txtId = geradorID(str(identificador))
-        pgto = Pagamento(idTx=txtId,
-                       nome=apresentante,
-                       valor=valor,
-                       copiaCola='')
-        
-        depositoInicial = pgto.valor
-        valor_decimal = depositoInicial.replace('.', '')
-        valor_decimal = valor_decimal.replace(',', '.')
-
-        # Validar dados antes de gerar QRCode/PDF e gravar no banco
-        if len(pgto.idTx) < 8:
-            erroPix = True
-            self.erroDadosPix('Não foi possível gerar o ID do Pix.')
-        
-        if len(pgto.nome) < 8:
-            erroPix = True
-            self.erroDadosPix('Informar pelo menos um nome e sobrenome.')
-
-        cpf_informado = self.ui.campo_cpf_apresentante.text()
-        err, cpf = self.verificaCPF(cpf_informado)
-        if err:
-            erroPix = True
-            self.erroDadosPix('O CPF informado está incorreto.')
-
-        try:
-            valorPix=float(valor_decimal)
-        except Exception as error:
-            erroPix = True
-            self.erroDadosPix('Formato de valor inválido, verificar. (ex.: 24.145,00)')
-        
-        if not erroPix:
-            # Gerar QrCode com os dados preenchidos.
-            self.ui.txt_id_pix.setText(f"ID Pix: {pgto.idTx}")
-
-            #print(rgi.Nome, pgto.nome, rgi.ChavePix, pgto.valor, rgi.Cidade, pgto.idTx)
-            payload = Payload(RGI_NOME, pgto.nome, RGI_CHAVE_PIX, valor_decimal, RGI_CIDADE, pgto.idTx)
-            pixCopiaCola = payload.gerarPayload()
-            pgto.copiaCola = pixCopiaCola
-            # Gerar Arquivo PDF com os dados + QrCode
-            pdf = PDF()
-            pdf.print_chapter(pgto.nome, pgto.valor, pgto.idTx, pgto.copiaCola)
-            pdf.output(ADOBE_PDF_FILE, 'F')
-
-            # Gravar pix no banco de dados PostgreSQL
             try:
-                self.dbPix.insertPix(txtID=pgto.idTx, nomeApresentante=pgto.nome, valor=valorPix,
-                                createdBy=self.sigla, status='aguardando', cpf=cpf)
+                valorPix = Decimal(valor_decimal)
             except Exception as error:
-                self.erroDadosPix(error)
+                erroPix = True
+                self.erroDadosPix('Formato de valor inválido, verificar. (ex.: 24.145,00)')
+                return
+            else:        
+                reais = self.converterFloatReais(valorPix)
 
-            # Abrir qrquivo PDF para conferência dos dados
-            cmd = '"{}" "{}"'.format(ADOBE_READER, ADOBE_PDF_FILE)
-            subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            if not erroPix:
+                # Gravar pix no banco de dados PostgreSQL
+                try:
+                    self.dbPix.insertPix(txtID=pgto.idTx, valor=valorPix, createdBy=self.sigla,
+                                status='aguardando', cpf_cnpj=cpf_cnpj_verificado)
+                except Exception as error:
+                    self.erroDadosPix(error)
+                pgto.pixID = self.dbPix.getPixID(TxtID=pgto.idTx)
 
+                # Gerar QrCode com os dados preenchidos.
+                pixRegistrado = False
+                tentativas = 0
+                
+                # Gerar QrCode com os dados preenchidos.
+                while not pixRegistrado:
+                    time.sleep(2)
+                    pgto.copiaCola = self.dbPix.getCopiaCola(TxtID=pgto.idTx)
+                    tentativas += 1
+                    if pgto.copiaCola != None and pgto.copiaCola != '':
+                        pixRegistrado = True
+                    if tentativas >= 5:
+                        break
+                
+                qr = qrcode.make(pgto.copiaCola)
+                qr.save(r'C:\SisPag Pix\src\pixqrcode.png')
+
+                self.ui.txt_id_pix.setText(f"ID Pix: {pgto.pixID}")
+                # Gerar Arquivo PDF com os dados + QrCode
+
+                # Fechar o arquivo PDF, caso esteja aberto
+                
+                pdf = PDF()
+                pdf.print_chapter(pgto.nome, reais, pgto.pixID, pgto.copiaCola)
+                # Caso o PDF de impressão do QRCode já esteja aberto (ex. O usuário esqueceu de fechar
+                # na geração anterior, o sistema não conseguirá gravar o arquivo pois o windows gera erro
+                # de permissão ao criar e gravar novo arquivo com um de mesmo nome e local já aberto
+                # para evitar um precoce fim do processo de geração, utilizo um arquivo "extra" que nada
+                # mais é do que o mesmo arquivo, com nome diferente no mesmo local, para seguir com a impressão.
+                try:
+                    pdf.output(ADOBE_PDF_FILE, 'F')
+                except Exception as error:
+                    msg_erro = QMessageBox()
+                    msg_erro.setIcon(QMessageBox.Warning)
+                    msg_erro.setWindowTitle('Erro ao gerar arquivo PDF')
+                    msg_erro.setText(f'Após imprimir, sempre feche todas as abas e PDFs abertos, para evitar erros.\n{error}')
+                    msg_erro.exec_()
+                    try:
+                        pdf.output(ADOBE_PDF_FILE_EXTRA, 'F')
+                    except Exception as error:
+                        msg_erro = QMessageBox()
+                        msg_erro.setIcon(QMessageBox.Warning)
+                        msg_erro.setWindowTitle('Falha geral na criação do PDF')
+                        msg_erro.setText(f'Fechar o Adobe e todas as suas abas e gerar novo QRCode.\n{error}')
+                        msg_erro.exec_()
+                    else:
+                        # Abrir arquivo PDF de backup com nome diferente pois já tem um com nome igual aberto.
+                        cmd = '"{}" "{}"'.format(ADOBE_READER, ADOBE_PDF_FILE_EXTRA)
+                        subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                else:
+                    # No caso de nenhum erro na criação, abrir arquivo PDF para conferência dos dados
+                    cmd = '"{}" "{}"'.format(ADOBE_READER, ADOBE_PDF_FILE)
+                    subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                self.txIdPix = txtId
 
     def erroDadosPix(self, texto):
         msg = QMessageBox()
