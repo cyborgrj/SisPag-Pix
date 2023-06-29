@@ -84,6 +84,10 @@ class Tema:
             self.btnBgColorHover = (120, 120, 120)
             self.btnPressText = (45, 45, 45)
 
+            # Cores das formas
+            self.forma_color1 = (248, 248, 248, 3)
+            self.forma_color2 = (248, 248, 248, 10)
+
             # Cores da tabela
             self.tableItemBgColor = (50, 50, 50)
             self.tableItemAltBgColor = (60, 60, 60)
@@ -117,6 +121,10 @@ class Tema:
             self.btnPressColor = (95, 95, 95)
             self.btnPressText = (230, 230, 230)
             self.btnBgColorHover = (70, 70, 70)
+
+            # Cores das formas
+            self.forma_color1 = (148, 148, 148, 60)
+            self.forma_color2 = (148, 148, 148, 40)
 
             # Cores da tabela
             self.tableItemBgColor = (230, 230, 230)
@@ -152,6 +160,10 @@ class Tema:
             self.btnPressColor = (189, 147, 249)
             self.btnBgColorHover = (96, 114, 164)
             self.btnPressText = (29, 30, 40)
+
+            # Cores das formas
+            self.forma_color1 = (248, 248, 248, 3)
+            self.forma_color2 = (248, 248, 248, 10)
 
             # Cores da tabela
             self.tableItemBgColor = (33, 34, 44)
@@ -197,6 +209,10 @@ class Tema:
             # Cores das fontes
             self.leftMenuTextColor = (248, 248, 242)
             self.mainTextColor = (40, 42, 54)
+
+            # Cores das formas
+            self.forma_color1 = (148, 148, 148, 60)
+            self.forma_color2 = (148, 148, 148, 40)
             
             # Cores chaves
             self.keyColor1 = (98, 114, 139)
@@ -695,6 +711,15 @@ class MainWindow(QMainWindow):
             self.aplicaTema(self.temaAtual)
 
 
+    def encerraSistema(self):
+        msg_solicitante = QMessageBox()
+        msg_solicitante.setIcon(QMessageBox.Warning)
+        msg_solicitante.setWindowTitle('Encerrado por inatividade.')
+        msg_solicitante.setText('Será necessário fechar e entrar novamente no sistema.')
+        msg_solicitante.exec_()
+        sys.exit('Encerrado por inatividade.')
+
+
     def enviaEmailSolicitante(self, nome_solicitante, email_solicitante):
         if nome_solicitante == '' or email_solicitante == '':
             msg_solicitante = QMessageBox()
@@ -705,6 +730,11 @@ class MainWindow(QMainWindow):
         else:
             if verificaEmail(email_solicitante):
                 copiaECola = self.dbPix.getCopiaCola(self.txIdPix)
+                
+                # Verifica se a conexão do banco foi encerrada por inatividade.
+                if copiaECola == 'conexão encerrada':
+                    self.encerraSistema()
+
                 if copiaECola != 'erro':
                     status = mail_rgi.envia_email(
                         nome_dest=nome_solicitante,
@@ -749,8 +779,17 @@ class MainWindow(QMainWindow):
         if cpf_cnpj != '' and nomeSolicitante != '':
             cpf_cnpj_formatado = formataCpfCnpj(cpf_cnpj)
             resultado = self.dbPix.insertSolicitante(cpf_cnpj_formatado, nomeSolicitante)
+            
+            # Verifica se a conexão do banco foi encerrada por inatividade.
+            if resultado == 'conexão encerrada':
+                    self.encerraSistema()
+
             if resultado == 'inserido':
-                print('Inserido com sucesso!')
+                msg_solicitante = QMessageBox()
+                msg_solicitante.setIcon(QMessageBox.Warning)
+                msg_solicitante.setWindowTitle('Inserido com sucesso!')
+                msg_solicitante.setText('O cadastro foi efetuado com sucesso.')
+                msg_solicitante.exec_()
             elif resultado == 'existente':
                 solicitante = self.dbPix.buscaSolicitante(cpf_cnpj_formatado)
                 self.ui.campo_apresentante.setText(solicitante[1])
@@ -779,6 +818,11 @@ class MainWindow(QMainWindow):
             if not erro:
                 cpf_cnpj_formatado = formataCpfCnpj(cpf_cnpj)
                 solicitante = self.dbPix.buscaSolicitante(cpf_cnpj_formatado)
+                
+                # Verifica se a conexão do banco foi encerrada por inatividade.
+                if solicitante == 'conexão encerrada':
+                    self.encerraSistema()
+
                 if solicitante != None:
                     self.ui.campo_apresentante.setText(solicitante[1])
                     print(solicitante[1])
@@ -836,6 +880,10 @@ class MainWindow(QMainWindow):
                                                 filtroData='Data',
                                                 data=self.ui.filtro_dia_gera_excel.text()
                                                 )
+        
+        # Verifica se a conexão do banco foi encerrada por inatividade.
+        if relatorio == 'conexão encerrada':
+            self.encerraSistema()
 
         colunas = ['PixID', 'Nome', 'Valor', 'Caixa', 'Situação', 'Liberado', 'Ano', 'NumCert', 'NumProt']
         self.planilha = xlsx.Planilha(nomeplanilha='relatorio.xlsx', linhas=(len(relatorio)+2))
@@ -917,6 +965,11 @@ class MainWindow(QMainWindow):
             msg_imprimir.exec_()
         else:
             pix = self.dbPix.searchPixByID(pixID=ID)
+            
+            # Verifica se a conexão do banco foi encerrada por inatividade.
+            if pix == 'conexão encerrada':
+                self.encerraSistema()
+
             if pix != None:
                 nomeApresentante = pix[1]
                 valor = pix[2]
@@ -980,6 +1033,12 @@ class MainWindow(QMainWindow):
         cmd = '"{}" /p "{}"'.format(ADOBE_READER, ADOBE_PDF_FILE)
         subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
+    def verificaProtCertPix(self, pagamentoPix):
+        if pagamentoPix[6] == None or pagamentoPix[6] == '':
+            if pagamentoPix[7] == None or pagamentoPix[7] == '':
+                if pagamentoPix[8] == None or pagamentoPix[8] == '':
+                    return False
+        return True
 
     def insereProtocoloPixSelecionado(self):
         colunaId = self.ui.tableConsultaPix.selectedIndexes()[0]
@@ -994,10 +1053,14 @@ class MainWindow(QMainWindow):
 
         pix_selecionado = self.dbPix.searchPixByID(id)
         
-        if pix_selecionado[8] != '':
+        # Verifica se a conexão do banco foi encerrada por inatividade.
+        if pix_selecionado == 'conexão encerrada':
+            self.encerraSistema()
+        
+        if self.verificaProtCertPix(pix_selecionado):
             msg_pix = QMessageBox()
             msg_pix.setWindowTitle(f'Protocolo/Certidão já informado: {pix_selecionado[0]}')
-            msg_pix.setText(f'Atenção o Pix informado já tem o número: {pix_selecionado[8]}, favor confirmar o pix selecionado!')
+            msg_pix.setText(f'Atenção o Pix já tem nº de certidão e/ou protocolo informados, confirmar o pix selecionado!')
             msg_pix.exec_()
 
         if status == 'pago':
@@ -1029,6 +1092,10 @@ class MainWindow(QMainWindow):
         valor = self.ui.tableBuscaEAutorizaPix.model().data(colunaValor)
         pix_selecionado = self.dbPix.searchPixByID(id)
 
+        # Verifica se a conexão do banco foi encerrada por inatividade.
+        if pix_selecionado == 'conexão encerrada':
+            self.encerraSistema()
+
         if pix_selecionado[5] == 'pago':
             msg_pix = QMessageBox()
             msg_pix.setWindowTitle(f'Pix selecionado: {pix_selecionado[0]}')
@@ -1040,7 +1107,7 @@ class MainWindow(QMainWindow):
             self.dialog.close()
             if senhaAutorizaPixOk == 1:
                 try:
-                    self.dbPix.updatePix(txtID=id, updatedBy=self.sigla, status='pago')
+                    self.dbPix.updatePix(pixId=id, updatedBy=self.sigla, status='pago')
                 except Exception as error:
                     msg = QMessageBox()
                     msg.setIcon(QMessageBox.Warning)
@@ -1093,6 +1160,11 @@ class MainWindow(QMainWindow):
             self.ui.campo_usuario_atual.setText(f"Usuário: {self.usuario}")
             self.ui.CadastrarUsuario.setVisible(False)
             self.ui.AutorizarPix.setVisible(False)
+            self.ui.filtro_dia_gera_excel.setVisible(False)
+            self.ui.combo_filtro_gera_excel.setVisible(False)
+            self.ui.label_gera_relatorio.setText('Função desabilitada para o usuário.')
+            self.ui.btn_gera_excel.setVisible(False)
+            self.ui.label_status.setVisible(False)
 
 
     def aplicaTema(self, temaAtual: Tema):
@@ -1242,6 +1314,52 @@ class MainWindow(QMainWindow):
 
         self.ui.label_titulo.setStyleSheet('''
             color: rgb'''+f'{(temaAtual.leftMenuTextColor)}'+''';
+        ''')
+        self.ui.forma_1.setStyleSheet('''
+            font: 57 300pt "Marlett";
+            color: rgba'''+f'{(temaAtual.forma_color1)}'+''';
+        ''')
+
+        self.ui.forma_2.setStyleSheet('''
+            font: 57 500pt "Marlett";
+            color: rgba'''+f'{(temaAtual.forma_color1)}'+''';
+            background: transparent;
+        ''')
+
+        self.ui.forma_3.setStyleSheet('''
+            font: 600pt "Wingdings 3";
+            color: rgba'''+f'{(temaAtual.forma_color2)}'+''';
+            background: transparent;
+        ''')
+
+        self.ui.forma_4.setStyleSheet('''
+            font: 700pt "Wingdings 3";
+            color: rgba'''+f'{(temaAtual.forma_color2)}'+''';
+            background: transparent;
+        ''')
+
+        self.ui.forma_5.setStyleSheet('''
+            font: 700pt "Wingdings 3";
+            color: rgba'''+f'{(temaAtual.forma_color2)}'+''';
+            background: transparent;
+        ''')
+
+        self.ui.forma_6.setStyleSheet('''
+            font: 57 300pt "Marlett";
+            color: rgba'''+f'{(temaAtual.forma_color1)}'+''';
+            background: transparent;
+        ''')
+
+        self.ui.forma_7.setStyleSheet('''
+            font: 600pt "Wingdings 3";
+            color: rgba'''+f'{(temaAtual.forma_color2)}'+''';
+            background: transparent;
+        ''')
+
+        self.ui.forma_8.setStyleSheet('''
+            font: 57 500pt "Marlett";
+            color: rgba'''+f'{(temaAtual.forma_color1)}'+''';
+            background: transparent;
         ''')
 
         self.ui.top_left_frame.setStyleSheet('''
@@ -1740,7 +1858,7 @@ class MainWindow(QMainWindow):
             config.write(configfile)
 
 
-    def carregarAlteraPix(self,name,id):
+    def carregarAlteraPix(self, name, id):
         # Inicializa limpando a tabela
         print('Carrega altera pix')
         self.ui.tableBuscaEAutorizaPix.setRowCount(0)
@@ -1799,7 +1917,11 @@ class MainWindow(QMainWindow):
             pagamentos = self.dbPix.searchPixByID(
                 pixID=idPix,
             )
-        
+
+        # Verifica se a conexão do banco foi encerrada por inatividade. 
+        if pagamentos == 'conexão encerrada': 
+            self.encerraSistema() 
+
         if pagamentos == None:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
@@ -1841,7 +1963,7 @@ class MainWindow(QMainWindow):
                             self.ui.tableBuscaEAutorizaPix.setItem(linha, 
                                 coluna, item_atual)
                         elif coluna == 4:
-                            item_atual = QTableWidgetItem(str(pagamento[coluna]))
+                            item_atual = QTableWidgetItem(diaHora)
                             item_atual.setTextColor(QColor(self.temaAtual.mainTextColor[0],
                                 self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                             item_atual.setFont(self.fontTable)
@@ -1860,7 +1982,7 @@ class MainWindow(QMainWindow):
                                 self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                             item_atual.setFont(self.fontTable)
                             self.ui.tableBuscaEAutorizaPix.setItem(linha, 
-                                coluna-1, item_atual)
+                                coluna, item_atual)
                             item_atual.setFont(self.fontTable)
                     linha += 1
                     self.ui.tableBuscaEAutorizaPix.resizeColumnsToContents()
@@ -1877,14 +1999,14 @@ class MainWindow(QMainWindow):
                         self.ui.tableBuscaEAutorizaPix.setItem(linha, 
                             coluna, item_atual)
                     elif coluna == 2:
-                        item_atual = QTableWidgetItem(diaHora)
+                        item_atual = QTableWidgetItem(reais)
                         item_atual.setFont(self.fontTable)
                         self.ui.tableBuscaEAutorizaPix.setItem(linha, 
                             coluna, item_atual)
                         item_atual.setFont(self.fontTable)
                     elif coluna == 4:
                         item_atual.setFont(self.fontTable)
-                        item_atual = QTableWidgetItem(reais)
+                        item_atual = QTableWidgetItem(diaHora)
                         item_atual.setFont(self.fontTable)
                         self.ui.tableBuscaEAutorizaPix.setItem(linha, 
                             coluna, item_atual)
@@ -1900,7 +2022,7 @@ class MainWindow(QMainWindow):
                             self.temaAtual.mainTextColor[1],self.temaAtual.mainTextColor[2]))
                         item_atual.setFont(self.fontTable)
                         self.ui.tableBuscaEAutorizaPix.setItem(linha, 
-                            coluna-1, item_atual)
+                            coluna, item_atual)
                         item_atual.setFont(self.fontTable)
                 self.ui.tableBuscaEAutorizaPix.resizeColumnsToContents()
                 self.ui.tableBuscaEAutorizaPix.resizeRowsToContents()
@@ -1909,7 +2031,7 @@ class MainWindow(QMainWindow):
 
     def carregarConsulta(self, caixa):
         # Inicializa limpando a tabela
-        print('Carrega consulta pix')
+        print('Carrega consulta pix')  
         self.ui.tableConsultaPix.setRowCount(0)
         self.ui.resultado_busca_autoriza.clear()
         idPix = self.ui.campo_buscar_id_consulta_pix.text()
@@ -1967,6 +2089,10 @@ class MainWindow(QMainWindow):
                 caixa=caixa
             )
 
+        # Verifica se a conexão do banco foi encerrada por inatividade.
+        if pagamentos == 'conexão encerrada':
+            self.encerraSistema()
+
         if pagamentos == None:
             msg = QMessageBox()
             msg.setIcon(QMessageBox.Warning)
@@ -1985,9 +2111,9 @@ class MainWindow(QMainWindow):
             self.ui.resultado_busca_consultapix.setText('Resultado da busca: nenhum registro encontrado')
         else:
             linha = 0
-            self.ui.tableConsultaPix.setRowCount(len(pagamentos))
             self.ui.tableConsultaPix.setSortingEnabled(False)
             if idPix == '':
+                self.ui.tableConsultaPix.setRowCount(len(pagamentos))
                 for pagamento in pagamentos:
                     reais = self.converterFloatReais(pagamento[2])
                     diaHora = self.converterDiaHora(pagamento[3])
@@ -2035,6 +2161,7 @@ class MainWindow(QMainWindow):
                     self.ui.tableConsultaPix.resizeColumnsToContents()
                     self.ui.tableConsultaPix.resizeRowsToContents()
             else:
+                self.ui.tableConsultaPix.setRowCount(1)
                 reais = self.converterFloatReais(pagamentos[2])
                 diaHora = self.converterDiaHora(pagamentos[3])
                 for coluna in range(0,9,1):
@@ -2203,6 +2330,11 @@ class MainWindow(QMainWindow):
     def geraQrCode(self, apresentante, valor, cpf_cnpj):
         cpf_cnpj_formatado = formataCpfCnpj(cpf_cnpj)
         solicitante = self.dbPix.buscaSolicitante(cpf_cnpj_formatado)
+
+        # Verifica se a conexão do banco foi encerrada por inatividade.
+        if solicitante == 'conexão encerrada':
+            self.encerraSistema()
+
         if solicitante == None or solicitante == 'erro':
             msg_erro = QMessageBox()
             msg_erro.setIcon(QMessageBox.Warning)
@@ -2265,7 +2397,12 @@ class MainWindow(QMainWindow):
                     if pgto.copiaCola != None and pgto.copiaCola != '':
                         pixRegistrado = True
                     if tentativas >= 5:
-                        break
+                        msg_erro = QMessageBox()
+                        msg_erro.setIcon(QMessageBox.Warning)
+                        msg_erro.setWindowTitle('Erro ao gerar arquivo QrCode')
+                        msg_erro.setText(f'Solicitar ao TI que verifique o status do Servidor de API "(\\vmauto)".')
+                        msg_erro.exec_()
+                        return
                 
                 qr = qrcode.make(pgto.copiaCola)
                 qr.save(r'C:\SisPag Pix\src\pixqrcode.png')
