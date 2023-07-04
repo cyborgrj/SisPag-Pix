@@ -317,7 +317,7 @@ QPushButton:pressed {
               <number>0</number>
              </property>
              <item>
-              <widget class="QPushButton" name="Menu">
+              <widget class="QPushButton" name="menu">
                <property name="minimumSize">
                 <size>
                  <width>250</width>
@@ -364,7 +364,7 @@ QPushButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="GerarQrCode">
+              <widget class="QPushButton" name="gerar_qr_code">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -415,7 +415,7 @@ QPushButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="Imprimir">
+              <widget class="QPushButton" name="imprimir">
                <property name="minimumSize">
                 <size>
                  <width>250</width>
@@ -457,7 +457,7 @@ QPushButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="ConsultaPgto">
+              <widget class="QPushButton" name="consulta_pgto">
                <property name="minimumSize">
                 <size>
                  <width>250</width>
@@ -499,7 +499,7 @@ QPushButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="CadastrarUsuario">
+              <widget class="QPushButton" name="cadastrar_usuario">
                <property name="minimumSize">
                 <size>
                  <width>250</width>
@@ -541,7 +541,7 @@ QPushButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="AutorizarPix">
+              <widget class="QPushButton" name="autorizar_pix">
                <property name="minimumSize">
                 <size>
                  <width>250</width>
@@ -583,7 +583,7 @@ QPushButton:pressed {
               </widget>
              </item>
              <item>
-              <spacer name="verticalSpacer">
+              <spacer name="vertical_spacer">
                <property name="orientation">
                 <enum>Qt::Vertical</enum>
                </property>
@@ -599,7 +599,7 @@ QPushButton:pressed {
               </spacer>
              </item>
              <item>
-              <widget class="QPushButton" name="Settings">
+              <widget class="QPushButton" name="settings">
                <property name="minimumSize">
                 <size>
                  <width>250</width>
@@ -644,7 +644,7 @@ QPushButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="Sair">
+              <widget class="QPushButton" name="sair">
                <property name="minimumSize">
                 <size>
                  <width>250</width>
@@ -855,7 +855,7 @@ background-color: rgb(29, 30, 40);
            <string notr="true"/>
           </property>
           <property name="currentIndex">
-           <number>0</number>
+           <number>4</number>
           </property>
           <widget class="QWidget" name="page_gerar">
            <property name="styleSheet">
@@ -1525,7 +1525,7 @@ background: transparent;</string>
            </widget>
           </widget>
           <widget class="QWidget" name="page_consultar">
-           <widget class="QTableWidget" name="tableConsultaPix">
+           <widget class="QTableWidget" name="table_consulta_pix">
             <property name="geometry">
              <rect>
               <x>30</x>
@@ -2485,7 +2485,7 @@ font: 18pt &quot;MS Shell Dlg 2&quot;;</string>
                <string>Cancelar</string>
               </property>
              </widget>
-             <widget class="QTableWidget" name="tableBuscaEAutorizaPix">
+             <widget class="QTableWidget" name="table_busca_e_autoriza_pix">
               <property name="geometry">
                <rect>
                 <x>20</x>
@@ -3038,8 +3038,8 @@ background:transparent</string>
   <tabstop>campo_valor</tabstop>
   <tabstop>btn_gerar_qrcode</tabstop>
   <tabstop>btn_limpar_campos</tabstop>
-  <tabstop>Settings</tabstop>
-  <tabstop>Sair</tabstop>
+  <tabstop>settings</tabstop>
+  <tabstop>sair</tabstop>
   <tabstop>btn_imprimir</tabstop>
   <tabstop>campo_txt_id_imprimir_pix</tabstop>
   <tabstop>btn_buscar_imprimir</tabstop>
@@ -3049,7 +3049,7 @@ background:transparent</string>
   <tabstop>combo_limite_consultapix</tabstop>
   <tabstop>combo_filtro_data_consultapix</tabstop>
   <tabstop>filtro_data_consultapix</tabstop>
-  <tabstop>tableConsultaPix</tabstop>
+  <tabstop>table_consulta_pix</tabstop>
   <tabstop>btn_inser_num_interno_consulta_pix</tabstop>
   <tabstop>combo_tipo_usuario</tabstop>
   <tabstop>campo_usuario</tabstop>
@@ -3064,7 +3064,7 @@ background:transparent</string>
   <tabstop>combo_limite_altera</tabstop>
   <tabstop>combo_filtro_data_alterapix</tabstop>
   <tabstop>filtro_dia_alterapix</tabstop>
-  <tabstop>tableBuscaEAutorizaPix</tabstop>
+  <tabstop>table_busca_e_autoriza_pix</tabstop>
   <tabstop>combo_tema</tabstop>
   <tabstop>btn_aplicar_tema</tabstop>
   <tabstop>btn_aplicar_tema_2</tabstop>
@@ -3074,7 +3074,7 @@ background:transparent</string>
  </resources>
  <connections>
   <connection>
-   <sender>Sair</sender>
+   <sender>sair</sender>
    <signal>clicked()</signal>
    <receiver>MainWindow</receiver>
    <slot>close()</slot>

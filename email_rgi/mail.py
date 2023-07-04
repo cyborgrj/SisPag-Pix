@@ -5,9 +5,9 @@ from email.mime.application import MIMEApplication
 from email.mime.base import MIMEBase
 from email import encoders
 
-CONTA_PADRAO = 'ajuda.apple@gmail.com'
+CONTA_PADRAO = 'cartoriorgirj@gmail.com'
 
-def envia_email(nome_dest, email_dest, anexo, pixCopiaECola):
+def envia_email(nome_dest, email_dest, anexo, pix_copia_e_cola):
     status = ''
     message = MIMEMultipart()
     message["To"] = email_dest
@@ -24,7 +24,7 @@ def envia_email(nome_dest, email_dest, anexo, pixCopiaECola):
     <br>
 
     Obs.: Certifique-se de selecionar todo o texto sublinhado, para garantir que o código seja aceito pelo aplicativo do banco.<br><br>
-    <b><u><a name="copiaecola">{pixCopiaECola}</a></u></b>
+    <b><u><a name="copiaecola">{pix_copia_e_cola}</a></u></b>
     <br>
     <br>
     Anexo, segue o arquivo PDF com a imagem QRCode, caso queira escanear no aplicativo do banco.'''
@@ -33,7 +33,7 @@ def envia_email(nome_dest, email_dest, anexo, pixCopiaECola):
     message.attach(messageText)
 
     # body = f'''Prezado senhor {nome_dest}, segue abaixo seu código Pix Copia e Cola:<br>
-    # {pixCopiaECola}<br>
+    # {pix_copia_e_cola}<br>
     # Anexo, segue o arquivo PDF com a imagem QRCode, caso queira escanear no App.'''
     # messageBody = MIMEText(body)
     # message.attach(messageBody)
@@ -55,7 +55,7 @@ def envia_email(nome_dest, email_dest, anexo, pixCopiaECola):
 
     email = CONTA_PADRAO
     #password incorreto para testes = 'trxnykgianxboom'
-    password = 'trxnykgianxboomw'
+    password = 'lrukoabdjvlkmhlw'
 
     server = smtplib.SMTP('smtp.gmail.com:587')
     server.ehlo('Gmail')
@@ -87,5 +87,5 @@ envia_email(
     nome_dest='Leonardo F. Koblitz',
     email_dest='lfkoblitz@gmail.com',
     anexo=r'C:\SisPag Pix\src\dadospagamento.pdf',
-    pixCopiaECola='''00020101021226860014BR.GOV.BCB.PIX2564qrpix.bradesco.com.br/qr/v2/63c8706d-6910-452d-b786-db348caf04d85204000053039865406134.755802BR5925RIO DE JANEIRO CARTORIO 26014RIO DE JANEIRO62070503***6304806D'''
+    pix_copia_e_cola='''00020101021226860014BR.GOV.BCB.PIX2564qrpix.bradesco.com.br/qr/v2/63c8706d-6910-452d-b786-db348caf04d85204000053039865406134.755802BR5925RIO DE JANEIRO CARTORIO 26014RIO DE JANEIRO62070503***6304806D'''
 )

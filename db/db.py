@@ -3,7 +3,7 @@ import sqlite3
 import bcrypt
 import uuid
 
-def genTxtID():
+def gen_txt_id():
     struuid = uuid.uuid4()
     txtid = str(struuid).replace('-',"")
     return txtid
@@ -11,22 +11,22 @@ def genTxtID():
 class DataBaseUsers():
     def __init__(self, dbname):
         self.dbname = dbname
-        self.connectUsers()
+        self.connect_users()
     
-    def connectUsers(self):
+    def connect_users(self):
         try:
             self.db = sqlite3.connect(self.dbname)
         except Exception as error:
             print(f"Erro ao conectar: {error}")
         self.cursor = self.db.cursor()
 
-    def closeUsers(self):
+    def close_users(self):
         try:
             self.db.close()
         except Exception as error:
             print(f'Erro ao fechar o banco SQLite3 (users): {error}')
 
-    def insertUsers(self, user, password, access, username) -> str:
+    def insert_users(self, user, password, access, user_name) -> str:
         self.cursor = self.db.cursor()
         sigla = user.lower()
         print('Início de cadastro de usuários')
@@ -41,16 +41,16 @@ class DataBaseUsers():
             print('Usuário já cadastrado!')
             return 'existente'
         else:
-            self.cursor.execute('''INSERT INTO users(user, password, access, username) 
-                            VALUES(?,?,?,?)''', (sigla, hashPwd, hashAcesso, username))
+            self.cursor.execute('''INSERT INTO users(user, password, access, user_name) 
+                            VALUES(?,?,?,?)''', (sigla, hashPwd, hashAcesso, user_name))
             self.cursor.close()
             self.db.commit()
             return 'sucesso'
 
 
-    def checkUsers(self, user, password):
+    def check_users(self, user, password):
         found = None
-        acessoUsuario = ''
+        acesso_usuario = ''
         self.cursor = self.db.cursor()
         try:
             self.cursor.execute('''SELECT * FROM users WHERE user=?''', (user,))
@@ -60,27 +60,27 @@ class DataBaseUsers():
         else:
             found = self.cursor.fetchone()
             if found != None:
-                storedPwd = found[1]
-                storedAcesso = found[2]
-                username = found[3]
-                listaAcessos = ['administrador', 'caixa', 'contabilidade']
+                stored_psswd = found[1]
+                stored_acesso = found[2]
+                user_name = found[3]
+                lista_acessos = ['administrador', 'caixa', 'contabilidade']
             
-                typedPwd = password.encode('utf-8')
+                typed_psswd = password.encode('utf-8')
 
                 try:
-                    passwordOk = bcrypt.checkpw(typedPwd, storedPwd)
+                    psswd_ok = bcrypt.checkpw(typed_psswd, stored_psswd)
                 except:
                     return 'credenciais', 'incorretas'
 
-                for acesso in listaAcessos:
-                    chkAcesso = acesso.encode('utf-8')
-                    if bcrypt.checkpw(chkAcesso, storedAcesso):
-                        acessoUsuario = acesso
+                for acesso in lista_acessos:
+                    chk_acesso = acesso.encode('utf-8')
+                    if bcrypt.checkpw(chk_acesso, stored_acesso):
+                        acesso_usuario = acesso
                         break
 
-                if passwordOk and acessoUsuario != '':
+                if psswd_ok and acesso_usuario != '':
                     self.cursor.close()
-                    return username, acessoUsuario
+                    return user_name, acesso_usuario
                 else:
                     self.cursor.close()
                     return 'credenciais', 'incorretas'
@@ -93,17 +93,17 @@ class DataBasePix():
     def __init__(self, host, dbname, user, password, port):
         self.host = host
         self.dbname = dbname
-        self.username = user
+        self.user_name = user
         self.pwd = password
         self.port_id = port
-        self.connectDB()
+        self.connect_db()
 
-    def connectDB(self):
+    def connect_db(self):
         try:
             self.conn = psycopg2.connect(
                     host = self.host,
                     dbname = self.dbname,
-                    user = self.username,
+                    user = self.user_name,
                     password = self.pwd,
                     port = self.port_id)
 
@@ -111,13 +111,17 @@ class DataBasePix():
             print(error)
 
     # Consertar
-    def insertSolicitante(self, cpf_cnpj, nomeApresentante):
-        cursor = self.conn.cursor()
+    def insert_solicitante(self, cpf_cnpj, nome_apresentante):
+        try:
+            cursor = self.conn.cursor()
+        except Exception as error:
+            print(error)
+            return 'conexão encerrada'
         tabela = "solicitante"
         resultado = ''
         search_query = f"""SELECT * FROM {tabela} WHERE cpf_cnpj = '{cpf_cnpj}'"""
         insert_query = f"""INSERT INTO {tabela} (cpf_cnpj, nome) 
-                        VALUES('{cpf_cnpj}','{nomeApresentante}')"""
+                        VALUES('{cpf_cnpj}','{nome_apresentante}')"""
 
         try:
             cursor.execute(search_query)
@@ -128,9 +132,9 @@ class DataBasePix():
             resultado = 'Erro ao buscar solicitante'
             return resultado
         else:
-            soliticanteExistente = cursor.fetchone()
+            solicitante_existente = cursor.fetchone()
 
-        if soliticanteExistente == None:
+        if solicitante_existente == None:
             try:
                 cursor.execute(insert_query)
             except Exception as error:
@@ -150,8 +154,12 @@ class DataBasePix():
             cursor.close()
             return resultado
 
-    def buscaSolicitante(self, cpf_cnpj):
-        cursor = self.conn.cursor()
+    def busca_solicitante(self, cpf_cnpj):
+        try:
+            cursor = self.conn.cursor()
+        except Exception as error:
+            print(error)
+            return 'conexão encerrada'
         tabela = "solicitante"
         resultado = ''
         search_query = f"""SELECT * FROM {tabela} WHERE cpf_cnpj = '{cpf_cnpj}'"""
@@ -168,7 +176,7 @@ class DataBasePix():
             resultado = cursor.fetchone()
             return resultado
             
-    def insertPix(self, txtID, valor, createdBy, status, cpf_cnpj):
+    def insert_pix(self, txt_id, valor, created_by, status, cpf_cnpj):
         try:
             cursor = self.conn.cursor()
         except Exception as error:
@@ -176,20 +184,20 @@ class DataBasePix():
             return 'conexão encerrada'
         tabela = "pagamento"
         insert_query = f"""INSERT INTO {tabela} (txtid, valor, createdby, status, createdat, cpf_cnpj) 
-                        VALUES('{txtID}','{valor}','{createdBy}','{status}',now(),'{cpf_cnpj}')"""
+                        VALUES('{txt_id}','{valor}','{created_by}','{status}',now(),'{cpf_cnpj}')"""
         try:
             cursor.execute(insert_query)
         except Exception as error:
             print(f'Erro ao inserir o pix: {error} (db.InsertPix, linha 179)')
             self.conn.rollback()
         else:
-            print(f'Pix de ID: {txtID} inserido com sucesso!')
+            print(f'Pix de ID: {txt_id} inserido com sucesso!')
             self.conn.commit()
         finally:
             cursor.close()
 
 
-    def searchPixByName(self, apresentante, limite, filtro, filtroData, data):
+    def search_pix_by_name(self, apresentante, limite, filtro, filtro_data, data):
         nomesEncontrados = []
         try:
             cursor = self.conn.cursor()
@@ -229,7 +237,7 @@ class DataBasePix():
         # Search query com nome do apresentante, filtro de status e/ou data
         # Search query com regex iniciando com case insensitive (*) e 
         # aceitando palavras, espaços etc. tanto antes quanto após o nome pesquisado.
-        if apresentante != '' and filtro != '' and filtroData != '':
+        if apresentante != '' and filtro != '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
                         status, updatedby, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -241,7 +249,7 @@ class DataBasePix():
                         AND createdat >= '{inicioDia}'
                         AND createdat <= '{fimDia}'
                         ORDER BY createdat DESC LIMIT {limite}"""
-        elif apresentante != '' and filtro == '' and filtroData != '':
+        elif apresentante != '' and filtro == '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
                         status, updatedby, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -252,7 +260,7 @@ class DataBasePix():
                         AND createdat >= '{inicioDia}'
                         AND createdat <= '{fimDia}'
                         ORDER BY createdat DESC LIMIT {limite}"""
-        elif apresentante == '' and filtro != '' and filtroData != '':
+        elif apresentante == '' and filtro != '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
                         status, updatedby, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -263,7 +271,7 @@ class DataBasePix():
                         AND createdat >= '{inicioDia}'
                         AND createdat <= '{fimDia}'
                         ORDER BY createdat DESC LIMIT {limite}"""
-        elif apresentante == '' and filtro == '' and filtroData != '':
+        elif apresentante == '' and filtro == '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
                         status, updatedby, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -274,7 +282,7 @@ class DataBasePix():
                         AND createdat <= '{fimDia}'
                         ORDER BY createdat DESC LIMIT {limite}"""
         # Filtro de data desligado:                
-        elif apresentante != '' and filtro != '' and filtroData == '':
+        elif apresentante != '' and filtro != '' and filtro_data == '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
                         status, updatedby, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -284,7 +292,7 @@ class DataBasePix():
                         WHERE S.nome ~* '^.*{apresentante}.*$'
                         AND status = '{filtro}'
                         ORDER BY createdat DESC LIMIT {limite}"""
-        elif apresentante != '' and filtro == '' and filtroData == '':
+        elif apresentante != '' and filtro == '' and filtro_data == '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
                         status, updatedby, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -293,7 +301,7 @@ class DataBasePix():
                         INNER JOIN {tabela2} AS S ON S.cpf_cnpj = P.cpf_cnpj
                         WHERE S.nome ~* '^.*{apresentante}.*$'
                         ORDER BY createdat DESC LIMIT {limite}"""
-        elif apresentante == '' and filtro != '' and filtroData == '':
+        elif apresentante == '' and filtro != '' and filtro_data == '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
                         status, updatedby, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -324,13 +332,13 @@ class DataBasePix():
             return nomesEncontrados
 
     # data = data completa ex.: 23/05/2023
-    def searchPixAguardando(self, data):
+    def search_pix_status(self, sigla, data, filtro):
         pix_aguardando = []
         try:
             cursor = self.conn.cursor()
         except Exception as error:
             print(error)
-            return 'conexão encerrada'
+            return 0
 
         dia, mes, ano = data.split('/')
         inicioDia = f"{ano}-{mes}-{dia} 00:00:00"
@@ -339,23 +347,24 @@ class DataBasePix():
         tabela2 = "solicitante"
         tabela3 = "protocolo"
         tabela4 = "certidao"
-        filtro = 'aguardando'
         limite = 50
 
-        search_query = f"""SELECT SELECT P.idpix, nome, valor, createdby, 
+        search_query = f"""SELECT P.idpix, nome, valor, createdby, 
                         createdat, status, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
                         FULL outer JOIN {tabela4} AS C ON C.idpix = P.idpix
                         FULL outer JOIN {tabela3} AS PR ON PR.idpix = P.idpix
                         INNER JOIN {tabela2} AS S ON S.cpf_cnpj = P.cpf_cnpj
                         AND status = '{filtro}'
+                        AND createdby = '{sigla}'
                         AND createdat >= '{inicioDia}'
                         AND createdat <= '{fimDia}'
                         ORDER BY createdat DESC LIMIT {limite}"""
         try:
             cursor.execute(search_query)
         except Exception as error:
-            print(f"Erro ao buscar pagamentos pix com estatus aguardando")
+            print(f"Erro ao buscar pagamentos pix com status: {filtro}")
+            print(error)
             self.conn.rollback()
         else:
             pix_aguardando = cursor.fetchall()
@@ -367,7 +376,7 @@ class DataBasePix():
     # caixa = sigla (edu, ana, fra), limite = 10, 50, filtro = 'pago', 'aguardando'
     # apresentante = parte de nome do solicitante ex.: eduardo, marcelo costa etc.
     # filtrodata = sim ou '', data = data completa ex.: 23/05/2023
-    def searchPixByCaixa(self, caixa, limite, filtro, apresentante, filtroData, data) -> list:
+    def search_pix_by_caixa(self, caixa, limite, filtro, apresentante, filtro_data, data) -> list:
         pgtosEncontrados = []
         try:
             cursor = self.conn.cursor()
@@ -387,7 +396,7 @@ class DataBasePix():
         # Search query com nome do caixa para exibir os pagamentos gerados pelo mesmo.
         # Search query com regex iniciando com case insensitive (*) e 
         # aceitando palavras, espaços etc. tanto antes quanto após o nome pesquisado.
-        if apresentante != '' and filtro != '' and filtroData != '':
+        if apresentante != '' and filtro != '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdat, createdby,
                         status, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -400,7 +409,7 @@ class DataBasePix():
                         AND createdat >= '{inicioDia}'
                         AND createdat <= '{fimDia}'
                         ORDER BY createdat DESC LIMIT {limite}"""
-        elif apresentante != '' and filtro == '' and filtroData != '':
+        elif apresentante != '' and filtro == '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdat, createdby,
                         status, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -412,7 +421,7 @@ class DataBasePix():
                         AND createdat >= '{inicioDia}'
                         AND createdat <= '{fimDia}'
                         ORDER BY createdat DESC LIMIT {limite}"""
-        elif apresentante == '' and filtro != '' and filtroData != '':
+        elif apresentante == '' and filtro != '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdat, createdby,
                         status, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -424,7 +433,7 @@ class DataBasePix():
                         AND createdat >= '{inicioDia}'
                         AND createdat <= '{fimDia}'
                         ORDER BY createdat DESC LIMIT {limite}"""
-        elif apresentante == '' and filtro == '' and filtroData != '':
+        elif apresentante == '' and filtro == '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdat, createdby,
                         status, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -436,7 +445,7 @@ class DataBasePix():
                         AND createdat <= '{fimDia}'
                         ORDER BY createdat DESC LIMIT {limite}"""
         # Filtro de data desligado:                
-        elif apresentante != '' and filtro != '' and filtroData == '':
+        elif apresentante != '' and filtro != '' and filtro_data == '':
             search_query = f"""SELECT P.idpix, nome, valor, createdat, createdby,
                         status, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -447,7 +456,7 @@ class DataBasePix():
                         AND createdby = '{caixa}' 
                         AND status = '{filtro}'
                         ORDER BY createdat DESC LIMIT {limite}"""
-        elif apresentante != '' and filtro == '' and filtroData == '':
+        elif apresentante != '' and filtro == '' and filtro_data == '':
             search_query = f"""SELECT P.idpix, nome, valor, createdat, createdby,
                         status, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -457,7 +466,7 @@ class DataBasePix():
                         WHERE S.nome ~* '^.*{apresentante}.*$'
                         AND createdby = '{caixa}' 
                         ORDER BY createdat DESC LIMIT {limite}"""
-        elif apresentante == '' and filtro != '' and filtroData == '':
+        elif apresentante == '' and filtro != '' and filtro_data == '':
             search_query = f"""SELECT P.idpix, nome, valor, createdat, createdby,
                         status, C.ano, C.num, PR.num
                         FROM {tabela1} AS P
@@ -553,7 +562,7 @@ class DataBasePix():
 
 
 
-    def searchPixByIDCaixa(self, pixID, caixa) -> tuple:
+    def search_pix_by_id_caixa(self, pix_id, caixa) -> tuple:
         pixEncontrado: tuple
         try:
             cursor = self.conn.cursor()
@@ -571,12 +580,12 @@ class DataBasePix():
                         FULL outer JOIN {tabela4} AS C ON C.idpix = P.idpix
                         FULL outer JOIN {tabela3} AS PR ON PR.idpix = P.idpix
                         INNER JOIN {tabela2} AS S ON S.cpf_cnpj = P.cpf_cnpj
-                        WHERE P.idpix = '{pixID}'
+                        WHERE P.idpix = '{pix_id}'
                         AND createdby = '{caixa}'"""
         try:
             cursor.execute(search_query)
         except Exception as error:
-            print(f"Erro ao localizar o pix de ID {pixID}, Erro: {error}")
+            print(f"Erro ao localizar o pix de ID {pix_id}, Erro: {error}")
             self.conn.rollback()
         else:
             pixEncontrado = cursor.fetchone()
@@ -586,7 +595,7 @@ class DataBasePix():
             return pixEncontrado
 
 
-    def searchPixByID(self, pixID) -> tuple:
+    def search_pix_by_id(self, pix_id) -> tuple:
         pixEncontrado = ''
         try:
             cursor = self.conn.cursor()
@@ -604,11 +613,11 @@ class DataBasePix():
                         FULL outer JOIN {tabela4} AS C ON C.idpix = P.idpix
                         FULL outer JOIN {tabela3} AS PR ON PR.idpix = P.idpix
                         INNER JOIN {tabela2} AS S ON S.cpf_cnpj = P.cpf_cnpj
-                        WHERE P.idpix = '{pixID}'"""
+                        WHERE P.idpix = '{pix_id}'"""
         try:
             cursor.execute(search_query)
         except Exception as error:
-            print(f"Erro ao localizar o pix de ID {pixID}, Erro: {error}")
+            print(f"Erro ao localizar o pix de ID {pix_id}, Erro: {error}")
             self.conn.rollback()
         else:
             pixEncontrado = cursor.fetchone()
@@ -618,7 +627,7 @@ class DataBasePix():
             return pixEncontrado
 
 
-    def getPixID(self, TxtID):
+    def get_pix_id(self, txt_id):
         try:
             cursor = self.conn.cursor()
         except Exception as error:
@@ -626,11 +635,11 @@ class DataBasePix():
             return 'conexão encerrada'
         tabela1 = "pagamento"
 
-        search_query = f"""SELECT idpix FROM {tabela1} WHERE txtid = '{TxtID}'"""
+        search_query = f"""SELECT idpix FROM {tabela1} WHERE txtid = '{txt_id}'"""
         try:
             cursor.execute(search_query)
         except Exception as error:
-            print(f"Erro ao localizar o pix de ID {TxtID}, Erro: {error}")
+            print(f"Erro ao localizar o pix de ID {txt_id}, Erro: {error}")
             self.conn.rollback()
         else:
             pixEncontrado = cursor.fetchone()
@@ -641,9 +650,34 @@ class DataBasePix():
                 return int(pixEncontrado[0])
             else:
                 return 'Pix inexistente'
-            
 
-    def getCopiaCola(self, TxtID):
+
+    def get_txt_id(self, pix_id):
+        try:
+            cursor = self.conn.cursor()
+        except Exception as error:
+            print(error)
+            return 'conexão encerrada'
+        tabela1 = "pagamento"
+
+        search_query = f"""SELECT txtid FROM {tabela1} WHERE idpix = '{pix_id}'"""
+        try:
+            cursor.execute(search_query)
+        except Exception as error:
+            print(f"Erro ao localizar o pix de ID {pix_id}, Erro: {error}")
+            self.conn.rollback()
+        else:
+            pixEncontrado = cursor.fetchone()
+            self.conn.commit()
+        finally:
+            cursor.close()
+            if pixEncontrado != None:
+                return pixEncontrado[0]
+            else:
+                return 'Pix inexistente'
+
+
+    def get_copia_cola(self, txt_id):
         try:
             cursor = self.conn.cursor()
         except Exception as error:
@@ -653,11 +687,11 @@ class DataBasePix():
 
         search_query = f"""SELECT pixcopiacola
                         FROM {tabela1}
-                        WHERE txtid = '{TxtID}'"""
+                        WHERE txtid = '{txt_id}'"""
         try:
             cursor.execute(search_query)
         except Exception as error:
-            print(f"Erro ao localizar o pix de ID {TxtID}, Erro: {error}")
+            print(f"Erro ao localizar o pix de ID {txt_id}, Erro: {error}")
             self.conn.rollback()
         else:
             pixEncontrado = cursor.fetchone()
@@ -670,31 +704,31 @@ class DataBasePix():
                 return 'erro'
 
 
-    def updatePix(self, pixId, updatedBy, status):
+    def update_pix(self, pix_id, updated_by, status):
         try:
             cursor = self.conn.cursor()
         except Exception as error:
             print(error)
             return 'conexão encerrada'
         tabela = "pagamento"
-        update_status_query = f"""UPDATE {tabela} SET status = '{status}' WHERE idpix = '{pixId}'"""
-        update_upBy_query = f"""UPDATE {tabela} SET updatedby = '{updatedBy}' WHERE idpix = '{pixId}'"""
-        update_upAt_query = f"""UPDATE {tabela} SET updatedat = now() WHERE idpix = '{pixId}'"""
+        update_status_query = f"""UPDATE {tabela} SET status = '{status}' WHERE idpix = '{pix_id}'"""
+        update_upBy_query = f"""UPDATE {tabela} SET updatedby = '{updated_by}' WHERE idpix = '{pix_id}'"""
+        update_upAt_query = f"""UPDATE {tabela} SET updatedat = now() WHERE idpix = '{pix_id}'"""
         try:
-            cursor.execute(update_status_query, (status, pixId))
-            cursor.execute(update_upBy_query, (updatedBy, pixId))
-            cursor.execute(update_upAt_query, (pixId,))
+            cursor.execute(update_status_query, (status, pix_id))
+            cursor.execute(update_upBy_query, (updated_by, pix_id))
+            cursor.execute(update_upAt_query, (pix_id,))
         except Exception as error:
-            print(f"Erro ao atualizar o pix de ID {pixId}, Erro: {error}")
+            print(f"Erro ao atualizar o pix de ID {pix_id}, Erro: {error}")
             self.conn.rollback()
         else:
-            print(f'Pix de ID: {pixId} atualizado com sucesso!')
+            print(f'Pix de ID: {pix_id} atualizado com sucesso!')
             self.conn.commit()
         finally:
             cursor.close()
 
     #### CONSERTAR ####
-    def insertPixNumInterno(self, pixid, anocert, numcert, numprot):
+    def insertPixNumInterno(self, pix_id, anocert, numcert, numprot):
         try:
             cursor = self.conn.cursor()
         except Exception as error:
@@ -704,45 +738,45 @@ class DataBasePix():
         tabela2 = "protocolo"
         if anocert != 0 and numcert != 0 and numprot != 0:
             insert_cert_query = f"""INSERT INTO {tabela1} (idpix, ano, num) 
-                                    VALUES({pixid}, {anocert}, {numcert})"""
+                                    VALUES({pix_id}, {anocert}, {numcert})"""
             insert_prot_query = f"""INSERT INTO {tabela2} (idpix, num) 
-                                    VALUES({pixid}, {numprot})"""
+                                    VALUES({pix_id}, {numprot})"""
             try:
                 cursor.execute(insert_cert_query)
                 cursor.execute(insert_prot_query)
             except Exception as error:
-                print(f"Erro ao inserir prototolo e certidão para o pix de ID {pixid}, Erro: {error}")
+                print(f"Erro ao inserir prototolo e certidão para o pix de ID {pix_id}, Erro: {error}")
                 self.conn.rollback()
             else:
-                print(f'Pix de ID: {pixid} atualizado com sucesso!')
+                print(f'Pix de ID: {pix_id} atualizado com sucesso!')
                 self.conn.commit()
                 return 'sucesso'
             finally:
                 cursor.close()
         elif anocert == 0 and numcert == 0 and numprot != 0:
             insert_prot_query = f"""INSERT INTO {tabela2} (idpix, num) 
-                                    VALUES({pixid}, {numprot})"""
+                                    VALUES({pix_id}, {numprot})"""
             try:
                 cursor.execute(insert_prot_query)
             except Exception as error:
-                print(f"Erro ao inserir prototolo para o pix de ID {pixid}, Erro: {error}")
+                print(f"Erro ao inserir prototolo para o pix de ID {pix_id}, Erro: {error}")
                 self.conn.rollback()
             else:
-                print(f'Pix de ID: {pixid} atualizado com sucesso!')
+                print(f'Pix de ID: {pix_id} atualizado com sucesso!')
                 self.conn.commit()
                 return 'sucesso'
             finally:
                 cursor.close()
         elif anocert != 0 and numcert != 0 and numprot == 0:
             insert_cert_query = f"""INSERT INTO {tabela1} (idpix, ano, num) 
-                                    VALUES({pixid}, {anocert}, {numcert})"""
+                                    VALUES({pix_id}, {anocert}, {numcert})"""
             try:
                 cursor.execute(insert_cert_query)
             except Exception as error:
-                print(f"Erro ao inserir prototolo para o pix de ID {pixid}, Erro: {error}")
+                print(f"Erro ao inserir prototolo para o pix de ID {pix_id}, Erro: {error}")
                 self.conn.rollback()
             else:
-                print(f'Pix de ID: {pixid} atualizado com sucesso!')
+                print(f'Pix de ID: {pix_id} atualizado com sucesso!')
                 self.conn.commit()
                 return 'sucesso'
             finally:
@@ -752,32 +786,32 @@ class DataBasePix():
             return 'erro'
 
             
-    def deletePix(self, txtID) -> str:
+    def deletePix(self, txt_id) -> str:
         try:
             cursor = self.conn.cursor()
         except Exception as error:
             print(error)
             return 'conexão encerrada'
         tabela = "pagamento"
-        delete_query = f"""DELETE FROM {tabela} WHERE txtid = '{txtID}'"""
-        pixID = self.getPixID(TxtID=txtID)
-        buscaPix = self.searchPixByID(pixID)
+        delete_query = f"""DELETE FROM {tabela} WHERE txtid = '{txt_id}'"""
+        pix_id = self.get_pix_id(txt_id)
+        buscaPix = self.search_pix_by_id(pix_id)
         if buscaPix == None or buscaPix == '':
-            return(f'O Pix de ID: {pixID} não foi encontrado, nada para deletar.')
+            return(f'O Pix de ID: {pix_id} não foi encontrado, nada para deletar.')
         try:
             cursor.execute(delete_query)
         except Exception as error:
             print(f'Erro ao deletar pix: {error}')
             self.conn.rollback()
         else:
-            print(f"Pix de ID: {pixID} excluído com sucesso")
+            print(f"Pix de ID: {pix_id} excluído com sucesso")
         finally:
             self.conn.commit()
             cursor.close()
         return
 
 
-    def closeDB(self):
+    def close_db(self):
         try:
             self.conn.close()
         except Exception as error:
@@ -786,44 +820,44 @@ class DataBasePix():
 if __name__ == "__main__":
     hostname = 'localhost'
     database = 'syspagpix'
-    username = 'postgres'
+    user_name = 'postgres'
     pwd = '3m193mRJA@'
     port_id = '5432'
     
     #  Informações para teste de gravação no banco
-    txtID = genTxtID()
+    txt_id = gen_txt_id()
     cpf = "009.922.677-49"
     nome = "Jardel Frederico de Boscoli"
     valor = 76012.41
-    createdBy = 'edu'
+    created_by = 'edu'
     status = 'aguardando'
     novoStatus = 'pago'
-    updatedBy = 'edu'
+    updated_by = 'edu'
 
     conn = None
     cur = None
 
-    db = DataBasePix(hostname, database, username, pwd, port_id)
+    db = DataBasePix(hostname, database, user_name, pwd, port_id)
 
     # Teste de cadastro do solicitante
     print('Criando solicitante de Teste')
     try: 
-        db.insertSolicitante(cpf, nome)
+        db.insert_solicitante(cpf, nome)
     except Exception as error:
         print(f'Erro ao inserir: {error}')
     print('\n')
 
-    pixID = db.getPixID(txtID)
+    pix_id = db.get_pix_id(txt_id)
     # Teste das funções de dados, primeiramente tentar apagar um pix caso exista
     print('Tentativa de deletar pix, caso o pix exista.')
-    print(db.deletePix(txtID))
+    print(db.deletePix(txt_id))
     print('\n')
 
 
     # Criar um pix de teste repassando menos valores para a função
     print('Criando pix de teste com valor faltando')
     try:
-        db.insertPix(txtID, valor, createdBy, status)
+        db.insert_pix(txt_id, valor, created_by, status)
     except Exception as error:
         print(f'Erro ao inserir: {error}')
     print('\n')
@@ -832,29 +866,29 @@ if __name__ == "__main__":
     # Criar um pix de teste repassando valores corretos para a função
     print('Criando pix de teste com valores corretos')
     try:
-        db.insertPix(txtID, valor, createdBy, status, cpf)
+        db.insert_pix(txt_id, valor, created_by, status, cpf)
     except Exception as error:
         print(f'Erro ao inserir: {error}')
     print('\n')
 
 
     # Verficar o pix inserido anteriormente
-    pixID = db.getPixID(txtID)
+    pix_id = db.get_pix_id(txt_id)
     print("Verificando pix inserido")
-    pixInserido = db.searchPixByID(pixID)
+    pixInserido = db.search_pix_by_id(pix_id)
     if pixInserido != None:
         print('Pix inserido com sucesso, valores:')
         for i, valor in enumerate(pixInserido):
             print(f'Indice: {i} e valor: {valor}')
     else:
-        print(f'O Pix de id {pixID} não pode ser verificado')
+        print(f'O Pix de id {pix_id} não pode ser verificado')
     print('\n')
 
 
     # Verficar o status do pix inserido anteriormente
     print("Atualizando pix inserido")
     try:
-        db.updatePix(pixId=pixID, updatedBy=updatedBy, status=novoStatus)
+        db.update_pix(pix_id=pix_id, updated_by=updated_by, status=novoStatus)
     except Exception as error:
         print(f'Erro ao inserir: {error}')
     print('\n')
@@ -862,45 +896,45 @@ if __name__ == "__main__":
     # # Verficar o status do pix inserido anteriormente
     # print("Atualizando número interno do pix inserido")
     # try:
-    #     db.updatePixNumInterno(txtID=txtID, numInterno='22/22025672')
+    #     db.updatePixNumInterno(txt_id=txt_id, numInterno='22/22025672')
     # except Exception as error:
     #     print(f'Erro ao inserir: {error}')
     # print('\n')
 
     # Verifica o status do pix após atualizado
     print("Verificando pix atualizado")
-    pixAtualizado = db.searchPixByID(pixID=pixID)
+    pixAtualizado = db.search_pix_by_id(pix_id=pix_id)
     if pixAtualizado != None:
         print('Pix localizado com sucesso, seguem os valores:')
         for i, valor in enumerate(pixAtualizado):
             print(f'Indice: {i} e valor: {valor}')
     else:
-        print(f'O Pix de id {pixID} não pode ser localizado')
+        print(f'O Pix de id {pix_id} não pode ser localizado')
     print('\n')
 
     # # Testa query de busca por caixa
     # print("Verificando busca por caixa")
-    # caixaPix = db.searchPixByCaixa(caixa='edu', limite=10, filtro="pago", apresentante='ross', filtroData='', data='19/05/2023')
+    # caixaPix = db.search_pix_by_caixa(caixa='edu', limite=10, filtro="pago", apresentante='ross', filtro_data='', data='19/05/2023')
     # for pix in caixaPix:
     #     print(pix)
 
     print("Verificando busca por nome")
-    nomePix = db.searchPixByName(apresentante='ed', limite=10, filtro='', filtroData='', data='01/01/2023')
+    nomePix = db.search_pix_by_name(apresentante='ed', limite=10, filtro='', filtro_data='', data='01/01/2023')
     for nome in nomePix:
         print(nome)
 
     print('\n')
-    print('Teste de localizar PixID pelo TxtID')
-    pixID = db.getPixID(txtID)
-    print(f'Pix ID encontrado: {pixID}')
+    print('Teste de localizar PixID pelo txt_id')
+    pix_id = db.get_pix_id(txt_id)
+    print(f'Pix ID encontrado: {pix_id}')
     # # Testar query de nome
-    # nomes = db.searchPixByName('Eduardo', 10, 'aguardando', 'Data', '30/11/2022')
+    # nomes = db.search_pix_by_name('Eduardo', 10, 'aguardando', 'Data', '30/11/2022')
     # for nome in nomes:
     #     print(nome)
 
     # # Deletar o pix criado após rodada de testes finalizada.
     # print('Deletando pix criado após o teste com sucesso.')
-    # print(db.deletePix(txtID))
+    # print(db.deletePix(txt_id))
     # print('\n')
 
-    db.closeDB()
+    db.close_db()

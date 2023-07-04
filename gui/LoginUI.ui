@@ -277,7 +277,7 @@ border-radius: 20px;</string>
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="Sair">
+   <widget class="QPushButton" name="sair">
     <property name="geometry">
      <rect>
       <x>284</x>
@@ -354,7 +354,7 @@ background:transparent;</string>
    <zorder>btn_login</zorder>
    <zorder>campo_senha</zorder>
    <zorder>campo_usuario</zorder>
-   <zorder>Sair</zorder>
+   <zorder>sair</zorder>
    <zorder>label_correct_user</zorder>
   </widget>
  </widget>

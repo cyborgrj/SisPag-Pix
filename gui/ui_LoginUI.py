@@ -121,10 +121,10 @@ class Ui_Form(object):
         self.label_5.setGeometry(QRect(24, 230, 317, 231))
         self.label_5.setStyleSheet(u"background-color: qlineargradient(spread:pad, x1:0.523, y1:1, x2:0.506, y2:0, stop:0.420455 rgba(36, 36, 36, 191), stop:1 rgba(132, 132, 132, 0));\n"
 "border-radius: 20px;")
-        self.Sair = QPushButton(self.widget)
-        self.Sair.setObjectName(u"Sair")
-        self.Sair.setGeometry(QRect(284, 53, 33, 33))
-        self.Sair.setStyleSheet(u"QPushButton{\n"
+        self.sair = QPushButton(self.widget)
+        self.sair.setObjectName(u"sair")
+        self.sair.setGeometry(QRect(284, 53, 33, 33))
+        self.sair.setStyleSheet(u"QPushButton{\n"
 "	border-radius:15px;\n"
 "	\n"
 "	background-color: rgb(83, 83, 83);\n"
@@ -142,8 +142,8 @@ class Ui_Form(object):
 "}")
         icon = QIcon()
         icon.addFile(u":/icons/icons/x-circle.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.Sair.setIcon(icon)
-        self.Sair.setIconSize(QSize(26, 26))
+        self.sair.setIcon(icon)
+        self.sair.setIconSize(QSize(26, 26))
         self.label_correct_user = QLabel(self.widget)
         self.label_correct_user.setObjectName(u"label_correct_user")
         self.label_correct_user.setGeometry(QRect(80, 380, 201, 31))
@@ -160,7 +160,7 @@ class Ui_Form(object):
         self.btn_login.raise_()
         self.campo_senha.raise_()
         self.campo_usuario.raise_()
-        self.Sair.raise_()
+        self.sair.raise_()
         self.label_correct_user.raise_()
 
         self.retranslateUi(Form)
@@ -179,7 +179,7 @@ class Ui_Form(object):
         self.btn_login.setText(QCoreApplication.translate("Form", u"Login", None))
         self.label_incorrect_user.setText("")
         self.label_5.setText("")
-        self.Sair.setText("")
+        self.sair.setText("")
         self.label_correct_user.setText("")
     # retranslateUi
 

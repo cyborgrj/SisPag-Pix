@@ -25,7 +25,7 @@ class Planilha:
         self.worksheet.add_table(f'A3:I{ultima_linha+3}',{'header_row' : False})
 
 
-    def criarTitulo(self, titulo: str):
+    def criar_titulo(self, titulo: str):
         self.worksheet.set_row(0, 25)
         mesclar_celula = self.workbook.add_format({
                                             'bold': 1,
@@ -36,7 +36,7 @@ class Planilha:
         self.worksheet.merge_range('A1:I1', titulo, mesclar_celula)
 
 
-    def criarCabecalho(self, colunas):
+    def criar_cabecalho(self, colunas):
         letras_coluna = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
         format = self.workbook.add_format({'align': 'center', 'valign': 'vcenter', 'bold': 1, 'border': 1})
         self.worksheet.set_row(1, 6)
@@ -68,14 +68,14 @@ class Planilha:
             self.worksheet.write(local, campo, self.negrito)
         
     
-    def fechaPlanilha(self):
+    def fecha_planilha(self):
         self.workbook.close()
 
 if __name__ == '__main__':
     planilha = Planilha('relatorio_teste.xlsx',linhas=1)
     colunas = ['PixID', 'Nome', 'Valor', 'Caixa', 'Situação', 'Liberado', 'Ano', 'NumCert', 'NumProt']
-    planilha.criarTitulo('Relatório de Pagamentos pix do dia: ' + planilha.diaCorrente())
-    planilha.criarCabecalho(colunas)
+    planilha.criar_titulo('Relatório de Pagamentos pix do dia: ' + planilha.diaCorrente())
+    planilha.criar_cabecalho(colunas)
     planilha.escrever('A4', 125, False, False)
     planilha.escrever('B4', 'Eduardo Rossini', False, False)
     planilha.escrever('C4', 741526.09, False, valor=True)
@@ -86,4 +86,4 @@ if __name__ == '__main__':
     planilha.escrever('H4', 10258, False, False)
     planilha.escrever('I4', 502655, False, False)
     
-    planilha.fechaPlanilha()
+    planilha.fecha_planilha()

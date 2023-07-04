@@ -37,6 +37,7 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=['C:\\SisPag Pix\\gui\\icons\\pix_icon.png'],
 )
 coll = COLLECT(
     exe,
