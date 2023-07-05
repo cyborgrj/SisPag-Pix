@@ -247,6 +247,12 @@ class Pagamento:
         return 'QrCode Gerado com sucesso!'
 
 
+def show_tray_message(self, tray: QSystemTrayIcon, notification_title, notification_message):
+    icon = QIcon(r'C:\SisPag Pix\gui\icons\pix_icon.png')
+    duration = 3 * 1000
+    tray.showMessage(notification_title, notification_message, icon, duration)
+
+
 def verifica_email(email):  
     regex = r"([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)"
     return re.search(regex, email) 
@@ -622,7 +628,8 @@ class MainWindow(QMainWindow):
         self.timer.timeout.connect(lambda: self.consulta_novo_pix_pago(self.pix_counter))
         self.timer.start(3000)
 
-        # Clicando em notificação abre a janela de consulta pix
+        # Clicando na notificação mostra a janela (se estiver oculta) e entra no consulta pix
+        tray.messageClicked.connect(lambda: self.showNormal())
         tray.messageClicked.connect(lambda: self.tela_consultar())
 
         # Verificar o nível de acesso do usuário para definir quais telas serão exibidas.
@@ -965,16 +972,16 @@ class MainWindow(QMainWindow):
             msg_solicitante.setText(f'O relatório se encontra na pasta: C:\SysPg Pix')
             msg_solicitante.exec_()
 
-    # Função para procurar pix aguardando pagamento para verificação manual
-    def send_message(self, message: str):
-        quant_pix_atual = self.db_pix.search_pix_status(self.sigla, self.data_pix_padrão, 'aguardando')
-        if self.ui.autorizar_pix.isVisible():
-            if quant_pix_atual > self.pix_counter:
-                self.pix_counter = quant_pix_atual
-                self.timer.stop()
-                show_tray_message(self, tray, 'Novo Pix!', 'Há um novo Pix aguardando pagamento...' )
-                self.carregar_altera_pix('','')
-                self.timer.start(1000)
+    # # Função para procurar pix aguardando pagamento para verificação manual
+    # def send_message(self, message: str):
+    #     quant_pix_atual = self.db_pix.search_pix_status(self.sigla, self.data_pix_padrão, 'aguardando')
+    #     if self.ui.autorizar_pix.isVisible():
+    #         if quant_pix_atual > self.pix_counter:
+    #             self.pix_counter = quant_pix_atual
+    #             self.timer.stop()
+    #             show_tray_message(self, tray, 'Novo Pix!', 'Há um novo Pix aguardando pagamento...' )
+    #             self.carregar_altera_pix('','')
+    #             self.timer.start(1000)
 
 
     def buscar_imprimir_pix(self, id):
@@ -2520,11 +2527,6 @@ def show_message(mensagem, titulo):
     msg.setInformativeText("Informações adicionais podem ser inseridas aqui...")
     msg.setDetailedText("Ainda mais detalhes nessa parte")
     msg.exec_()
-
-def show_tray_message(self, tray: QSystemTrayIcon, notification_title, notification_message):
-    icon = QIcon(r'C:\SisPag Pix\gui\icons\pix_icon.png')
-    duration = 3 * 1000
-    tray.showMessage(notification_title, notification_message, icon, duration)
 
 if __name__ == "__main__":
     import sys
