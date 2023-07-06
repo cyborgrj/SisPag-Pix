@@ -617,6 +617,9 @@ class MainWindow(QMainWindow):
             dia.setDate(aa, mm, dd)
             self.data_pix_padrão = str(dd)+'/'+str(mm)+'/'+str(aa)
         
+        # Minimizar para a tray ao clicar no fechar
+        
+
         # Definir o dia base para ser exibido no filtro de consulta/libera pix
         self.ui.filtro_dia_alterapix.setDate(dia)
         self.ui.filtro_data_consultapix.setDate(dia)
@@ -636,8 +639,8 @@ class MainWindow(QMainWindow):
         self.verifica_acesso()
         
         # Ações de esconder e exibir a janela
-        action_hide.triggered.connect(lambda: self.hide())
-        action_show.triggered.connect(lambda: self.showNormal())
+        # action_hide.triggered.connect(lambda: self.hide())
+        action_show_hide.triggered.connect(lambda: self.show_hide())
 
         # Recolher e expandir menu lateral
         self.ui.menu.clicked.connect(lambda: self.slide_left_menu())
@@ -735,6 +738,13 @@ class MainWindow(QMainWindow):
             self.tema_atual.escolher_tema(TEMA)
             self.aplica_tema(self.tema_atual)
 
+    def show_hide(self):
+        if self.isVisible():
+            self.hide()
+        else:
+            self.showNormal()
+
+
 
     def consulta_novo_pix_pago(self, quant_atual):
         quant_pix_pagos = self.db_pix.search_pix_status(self.sigla, self.data_pix_padrão, 'pago')
@@ -788,7 +798,7 @@ class MainWindow(QMainWindow):
                         msg_solicitante.setText(f'''
     Houve um erro ao enviar o e-mail para: {email_solicitante}.
     Verificar e tentar novamente!
-
+                                    
 
     Erro: {status}''')
                         msg_solicitante.exec_()
@@ -2546,6 +2556,8 @@ if __name__ == "__main__":
     tray = QSystemTrayIcon(QIcon(r'C:\SisPag Pix\gui\icons\pix_icon.png'), app)
     tray.show()
 
+    tray.setToolTip('SisPag Pix - v2.3')
+
     # # Criar o menu da system tray
     menu = QMenu()
 
@@ -2560,15 +2572,9 @@ if __name__ == "__main__":
     # action_tray_message.triggered.connect(lambda: show_tray_message(window_obj, tray, 'Teste', 'Mensagem de teste'))
     # menu.addAction(action_tray_message)
     
-    # Esconder a janela para a system tray
-    action_hide = QAction("Ocultar a janela principal")
-    menu.addAction(action_hide)
-    
-
-    # Mostrar a janela para a system tray
-    action_show = QAction("Exibir a janela principal")
-    menu.addAction(action_show)
-
+    # Esconder ou exibir a janela para a system tray
+    action_show_hide = QAction("Ocultar/exibir a janela principal")
+    menu.addAction(action_show_hide)
 
     # Mostrar a janela a partir da system tray
     action_exit = QAction("Sair")

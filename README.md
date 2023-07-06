@@ -2,8 +2,21 @@
 
 ## Programa para geração de pagamentos Pix para o cartório onde trabalho, como desenvolvedor em Python.
 
+Versão 3.0
+Implementado nessa nova versão o uso da "system tray" ou seja a barra de tarefas em segundo plano,
+agora ao fechar o app sem encerrar pelo botão específico ele oculta a janela e fica disponível na
+tray do sistema, em caso de pagamento pix efetuado pela parte é exibida uma notificação do windows
+ainda que o usuário esteja com a janela oculta ou até mesmo trabalhando em outra aplicação.
+Ao clicar na notificação, o sistema automaticamente é exibido já na tela de consulta de pagamentos.
+
+
+Versão 2.1
+Correções de bugs visuais e correção da geração de PDF quando o usuário esquece o PDF base aberto
+após gerar o pagamento QrCode anterior. Caso aconteça, é gerado um pdf secundário de segurança
+pára impressão do pagamento atual e aviso para o usuário, solicitando fechar o PDF após o uso.
+
 Versão 2.0
-Na versão atual, não mais é necessário criar o códico copia e cola com as 750 posições, em vez disso
+Não é mais necessário criar o códico copia e cola com as 750 posições, em vez disso
 as informações do pagamento são enviadas pela API do Bradesco em uma chamada PUT e a API retorna
 com o código copia e cola, para que seja gerado o QRCode para pagamento.
 
