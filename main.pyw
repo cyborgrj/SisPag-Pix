@@ -911,6 +911,7 @@ class MainWindow(QMainWindow):
 
 
     def gravar_planilha_excel(self):
+        botao = {'SIM' : 0, 'NÃO' : 1}
         if self.ui.combo_filtro_gera_excel.currentIndex() == 0:
             estado_gera_excel = ''
         elif self.ui.combo_filtro_gera_excel.currentIndex() == 1:
@@ -985,8 +986,9 @@ class MainWindow(QMainWindow):
             msg_solicitante.addButton('Sim', QtWidgets.QMessageBox.YesRole)
             msg_solicitante.addButton('Não', QtWidgets.QMessageBox.NoRole)
             abrir_excel = msg_solicitante.exec_()
-            if abrir_excel == 0: # retorno da caixa de mensagem 0 = sim e 1 = não
+            if abrir_excel == botao['SIM']:
                 os.system("start EXCEL.EXE relatorio.xlsx")
+
 
     # # Função para procurar pix aguardando pagamento para verificação manual
     # def send_message(self, message: str):
