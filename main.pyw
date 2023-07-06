@@ -2,6 +2,7 @@
 ## IMPORTS
 ########################################################################
 import sys
+import os
 from PySide2 import QtCore, QtGui, QtWidgets
 from PySide2.QtCore import (QCoreApplication, QPropertyAnimation, QDate, QDateTime, QMetaObject, QObject, QPoint, QRect, QSize, QTime, QUrl, Qt, QEvent)
 from PySide2.QtGui import (QBrush, QColor, QConicalGradient, QCursor, QFont, QFontDatabase, QIcon, QKeySequence, QLinearGradient, QPalette, QPainter, QPixmap, QRadialGradient)
@@ -978,9 +979,14 @@ class MainWindow(QMainWindow):
         else:
             msg_solicitante = QMessageBox()
             msg_solicitante.setIcon(QMessageBox.Warning)
-            msg_solicitante.setWindowTitle('Relatório gerado com sucesso')
-            msg_solicitante.setText(f'O relatório se encontra na pasta: C:\SysPg Pix')
-            msg_solicitante.exec_()
+            msg_solicitante.setWindowTitle('Relatório gerado')
+            msg_solicitante.setText(f'O relatório em Excel foi gerado com sucesso!')
+            msg_solicitante.setInformativeText('Deseja abrir o arquivo criado?')
+            msg_solicitante.addButton('Sim', QtWidgets.QMessageBox.YesRole)
+            msg_solicitante.addButton('Não', QtWidgets.QMessageBox.NoRole)
+            abrir_excel = msg_solicitante.exec_()
+            if abrir_excel == 0: # retorno da caixa de mensagem 0 = sim e 1 = não
+                os.system("start EXCEL.EXE relatorio.xlsx")
 
     # # Função para procurar pix aguardando pagamento para verificação manual
     # def send_message(self, message: str):
@@ -2573,7 +2579,7 @@ if __name__ == "__main__":
     # menu.addAction(action_tray_message)
     
     # Esconder ou exibir a janela para a system tray
-    action_show_hide = QAction("Ocultar/exibir a janela principal")
+    action_show_hide = QAction("Exibir/ocultar a janela principal")
     menu.addAction(action_show_hide)
 
     # Mostrar a janela a partir da system tray
