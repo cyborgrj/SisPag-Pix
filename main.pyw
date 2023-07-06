@@ -2556,7 +2556,7 @@ if __name__ == "__main__":
     tray = QSystemTrayIcon(QIcon(r'C:\SisPag Pix\gui\icons\pix_icon.png'), app)
     tray.show()
 
-    tray.setToolTip('SisPag Pix - v2.3')
+    tray.setToolTip('SisPag Pix - v3.0')
 
     # # Criar o menu da system tray
     menu = QMenu()
