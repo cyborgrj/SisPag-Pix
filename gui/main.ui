@@ -3008,7 +3008,7 @@ background:transparent</string>
            <rect>
             <x>10</x>
             <y>470</y>
-            <width>441</width>
+            <width>511</width>
             <height>20</height>
            </rect>
           </property>
@@ -3021,7 +3021,7 @@ background:transparent</string>
            <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
           </property>
           <property name="text">
-           <string>Sistema de gerenciamento de Pix, desenvolvido por Eduardo Rossini - 2022.</string>
+           <string>Sistema de gerenciamento de Pix, desenvolvido por Eduardo Rossini - 2022. Versão 3.0</string>
           </property>
          </widget>
         </widget>

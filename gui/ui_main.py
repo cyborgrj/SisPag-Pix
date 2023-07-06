@@ -1069,7 +1069,7 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.page_settings)
         self.label_creditos = QLabel(self.right_panel)
         self.label_creditos.setObjectName(u"label_creditos")
-        self.label_creditos.setGeometry(QRect(10, 470, 441, 20))
+        self.label_creditos.setGeometry(QRect(10, 470, 511, 20))
         font10 = QFont()
         font10.setPointSize(10)
         self.label_creditos.setFont(font10)
@@ -1273,6 +1273,6 @@ class Ui_MainWindow(object):
         self.combo_filtro_gera_excel.setItemText(1, QCoreApplication.translate("MainWindow", u"Aguardando", None))
         self.combo_filtro_gera_excel.setItemText(2, QCoreApplication.translate("MainWindow", u"Pagos", None))
 
-        self.label_creditos.setText(QCoreApplication.translate("MainWindow", u"Sistema de gerenciamento de Pix, desenvolvido por Eduardo Rossini - 2022.", None))
+        self.label_creditos.setText(QCoreApplication.translate("MainWindow", u"Sistema de gerenciamento de Pix, desenvolvido por Eduardo Rossini - 2022. Vers\u00e3o 3.0", None))
     # retranslateUi
 
