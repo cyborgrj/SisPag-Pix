@@ -26,13 +26,10 @@ from decimal import Decimal
 from gui import *
 ########################################################################
 
-
 ########################################################################
 # Criar objeto de janela para "system tray" global
 window_obj = []
 ########################################################################
-
-
 
 ########################################################################
 # Carregar configurações do arquivo config.ini
@@ -71,7 +68,6 @@ ADOBE_PDF_FILE_EXTRA = config['ADOBE']['PDFFILE_EXTRA']
 ADOBE_QRCODE = config['ADOBE']['QRCODE']
 
 ########################################################################
-
 
 class Tema:
     def __init__(self, nome_tema: str):
