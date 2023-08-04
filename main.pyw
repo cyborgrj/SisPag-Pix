@@ -301,7 +301,8 @@ def verifica_cpf(cpf: str):
 
 def verifica_cnpj(cnpj: str):
     """
-    Efetua a validação do CNPJ somente com relação aos números informados, formatação não é importante.
+    Efetua a validação do CNPJ somente com relação aos números informados, 
+    inicialmente a formatação não é importante.
     """
     cnpj_formatado = ''
     erro = True
@@ -339,7 +340,6 @@ def verifica_cnpj(cnpj: str):
         else:
             cnpj_formatado = cnpj_formatado + str(c)
         i += 1
-    erro = False
 
     return erro, cnpj_formatado
 
@@ -354,7 +354,8 @@ def formata_cpf_cnpj(cpf_cnpj):
                 cpf_formatado += cpf_cnpj[i] + '-'
             else:
                 cpf_formatado += cpf_cnpj[i]
-        return cpf_formatado
+        return verifica_cpf(cpf_formatado)
+
     if len(cpf_cnpj) == 14:
         cnpj_formatado = ''
         for i in range(14):
@@ -366,8 +367,9 @@ def formata_cpf_cnpj(cpf_cnpj):
                 cnpj_formatado += cpf_cnpj[i] + '-'
             else:
                 cnpj_formatado += cpf_cnpj[i]
-        return cnpj_formatado
-    return 'erro'
+        return verifica_cnpj(cnpj_formatado)
+
+    return True, 'erro'
 
 class PDF(FPDF):
     def header(self):
@@ -471,41 +473,23 @@ class InsereProtocolo(QDialog):
 
     def confirma_protocolo(self, pix_id, ano, numcert, numprot):
         int_ano = 0
-        int_numcert = 0
-        int_numprot = 0
-        # Converter o texto dos campos em número, 
         if ano == '':
             int_ano = 0
         else:
             try:
                 int_ano = int(ano)
             except:
-                int_ano = -1
+                int_ano = 99
                 print('Número inválido')
-        
-        if numcert == '':
-            int_numcert = 0
-        else:
-            try:
-                int_numcert = int(numcert)
-            except:
-                int_numcert = -1
-                print('Número inválido')
-        
-        if numprot == '':
-            int_numprot = 0
-        else:
-            try:
-                int_numprot = int(numprot)
-            except:
-                int_numprot = -1
         
         try:
-            self.db_pix.insertPixNumInterno(pix_id, int_ano, int_numcert, int_numprot)
+            self.db_pix.insert_pix_num_interno(pix_id, int_ano, numcert, numprot)
+
         except Exception as error:
             print(f'Erro ao gravar protocolo: {error}')
             self.done(0)
             self.close()
+
         else:
             self.done(1)
             self.close()
@@ -816,32 +800,39 @@ class MainWindow(QMainWindow):
 
     def cadastra_solicitante(self, cpf_cnpj, nome_solicitante):
         if cpf_cnpj != '' and nome_solicitante != '':
-            cpf_cnpj_formatado = formata_cpf_cnpj(cpf_cnpj)
-            resultado = self.db_pix.insert_solicitante(cpf_cnpj_formatado, nome_solicitante)
-            
-            # Verifica se a conexão do banco foi encerrada por inatividade.
-            if resultado == 'conexão encerrada':
-                    self.encerra_sistema()
+            erro_cpf_cnpj, cpf_cnpj_formatado = formata_cpf_cnpj(cpf_cnpj)
+            if not erro_cpf_cnpj:
+                resultado = self.db_pix.insert_solicitante(cpf_cnpj_formatado, nome_solicitante)
+                
+                # Verifica se a conexão do banco foi encerrada por inatividade.
+                if resultado == 'conexão encerrada':
+                        self.encerra_sistema()
 
-            if resultado == 'inserido':
-                msg_solicitante = QMessageBox()
-                msg_solicitante.setIcon(QMessageBox.Warning)
-                msg_solicitante.setWindowTitle('Inserido com sucesso!')
-                msg_solicitante.setText('O cadastro foi efetuado com sucesso.')
-                msg_solicitante.exec_()
-            elif resultado == 'existente':
-                solicitante = self.db_pix.busca_solicitante(cpf_cnpj_formatado)
-                self.ui.campo_apresentante.setText(solicitante[1])
-                msg_solicitante = QMessageBox()
-                msg_solicitante.setIcon(QMessageBox.Warning)
-                msg_solicitante.setWindowTitle('Solicitante já existente')
-                msg_solicitante.setText('Não há necessidade de cadastrar!')
-                msg_solicitante.exec_()
+                if resultado == 'inserido':
+                    msg_solicitante = QMessageBox()
+                    msg_solicitante.setIcon(QMessageBox.Warning)
+                    msg_solicitante.setWindowTitle('Inserido com sucesso!')
+                    msg_solicitante.setText('O cadastro foi efetuado com sucesso.')
+                    msg_solicitante.exec_()
+                elif resultado == 'existente':
+                    solicitante = self.db_pix.busca_solicitante(cpf_cnpj_formatado)
+                    self.ui.campo_apresentante.setText(solicitante[1])
+                    msg_solicitante = QMessageBox()
+                    msg_solicitante.setIcon(QMessageBox.Warning)
+                    msg_solicitante.setWindowTitle('Solicitante já existente')
+                    msg_solicitante.setText('Não há necessidade de cadastrar!')
+                    msg_solicitante.exec_()
+                else:
+                    msg_solicitante = QMessageBox()
+                    msg_solicitante.setIcon(QMessageBox.Warning)
+                    msg_solicitante.setWindowTitle('Erro ao cadastrar')
+                    msg_solicitante.setText(f'Não foi possível cadastrar {resultado}')
+                    msg_solicitante.exec_()
             else:
                 msg_solicitante = QMessageBox()
                 msg_solicitante.setIcon(QMessageBox.Warning)
-                msg_solicitante.setWindowTitle('Erro ao cadastrar')
-                msg_solicitante.setText(f'Não foi possível cadastrar {resultado}')
+                msg_solicitante.setWindowTitle('CPF/CNPJ incorreto...')
+                msg_solicitante.setText('Favor verificar o CPF/CNPJ e Nome para cadastrar!')
                 msg_solicitante.exec_()
         else:
             msg_solicitante = QMessageBox()
@@ -849,14 +840,14 @@ class MainWindow(QMainWindow):
             msg_solicitante.setWindowTitle('Dados incompletos...')
             msg_solicitante.setText('Favor digitar CPF e Nome para cadastrar!')
             msg_solicitante.exec_()
+        
 
 
     def busca_solicitante(self, cpf_cnpj):
         if len(cpf_cnpj) == 11:
-            erro, _ = verifica_cpf(cpf_cnpj)
-            if not erro:
-                cpf_cnpj_formatado = formata_cpf_cnpj(cpf_cnpj)
-                solicitante = self.db_pix.busca_solicitante(cpf_cnpj_formatado)
+            erro_cpf, cpf_formatado = formata_cpf_cnpj(cpf_cnpj)
+            if not erro_cpf:
+                solicitante = self.db_pix.busca_solicitante(cpf_formatado)
                 
                 # Verifica se a conexão do banco foi encerrada por inatividade.
                 if solicitante == 'conexão encerrada':
@@ -879,10 +870,9 @@ class MainWindow(QMainWindow):
                 msg_solicitante.setText(f'O CPF digitádo é inválido')
                 msg_solicitante.exec_()
         elif len(cpf_cnpj) == 14:
-            erro, _ = verifica_cpf(cpf_cnpj)
-            if not erro:
-                cpf_cnpj_formatado = formata_cpf_cnpj(cpf_cnpj)
-                solicitante = self.db_pix.busca_solicitante(cpf_cnpj_formatado)
+            erro_cnpj, cnpj_formatado = formata_cpf_cnpj(cpf_cnpj)
+            if not erro_cnpj:
+                solicitante = self.db_pix.busca_solicitante(cnpj_formatado)
                 if solicitante != None:
                     self.ui.campo_apresentante.setText(solicitante[1])
                     print(solicitante[1])
@@ -2132,9 +2122,8 @@ class MainWindow(QMainWindow):
                 data=dataBusca
             )
         else:
-            pagamentos = self.db_pix.search_pix_by_id_caixa(
+            pagamentos = self.db_pix.search_pix_by_id(
                 pix_id=idPix,
-                caixa=caixa
             )
 
         # Verifica se a conexão do banco foi encerrada por inatividade.
@@ -2341,7 +2330,7 @@ class MainWindow(QMainWindow):
         senha = self.ui.campo_senha.text()
         acesso = self.ui.combo_tipo_usuario.currentText()
         
-        cadastro = self.db.insertUsers(user.lower(), senha, acesso.lower(), nome)
+        cadastro = self.db.insert_users(user.lower(), senha, acesso.lower(), nome)
         if cadastro == 'sucesso':
             msg_sucesso = QMessageBox()
             msg_sucesso.setIcon(QMessageBox.Warning)

@@ -82,10 +82,10 @@ def envia_email(nome_dest, email_dest, anexo, pix_copia_e_cola):
     
     server.quit()
     return status
-
-envia_email(
-    nome_dest='Eduardo Rossini Xavier',
-    email_dest='ajuda.apple@gmail.com',
-    anexo=r'C:\SisPag Pix\src\dadospagamento.pdf',
-    pix_copia_e_cola='''00020101021226860014BR.GOV.BCB.PIX2564qrpix.bradesco.com.br/qr/v2/63c8706d-6910-452d-b786-db348caf04d85204000053039865406134.755802BR5925RIO DE JANEIRO CARTORIO 26014RIO DE JANEIRO62070503***6304806D'''
-)
+if __name__ == "__main__":
+    envia_email(    
+        nome_dest='Eduardo Rossini Xavier',
+        email_dest='ajuda.apple@gmail.com',
+        anexo=r'C:\SisPag Pix\src\dadospagamento.pdf',
+        pix_copia_e_cola='''00020101021226860014BR.GOV.BCB.PIX2564qrpix.bradesco.com.br/qr/v2/63c8706d-6910-452d-b786-db348caf04d85204000053039865406134.755802BR5925RIO DE JANEIRO CARTORIO 26014RIO DE JANEIRO62070503***6304806D'''
+    )

@@ -41,7 +41,7 @@ class DataBaseUsers():
             print('Usuário já cadastrado!')
             return 'existente'
         else:
-            self.cursor.execute('''INSERT INTO users(user, password, access, user_name) 
+            self.cursor.execute('''INSERT INTO users(user, password, access, username) 
                             VALUES(?,?,?,?)''', (sigla, hashPwd, hashAcesso, user_name))
             self.cursor.close()
             self.db.commit()
@@ -728,7 +728,7 @@ class DataBasePix():
             cursor.close()
 
     #### CONSERTAR ####
-    def insertPixNumInterno(self, pix_id, anocert, numcert, numprot):
+    def insert_pix_num_interno(self, pix_id, anocert, numcert, numprot):
         try:
             cursor = self.conn.cursor()
         except Exception as error:
@@ -736,11 +736,11 @@ class DataBasePix():
             return 'conexão encerrada'
         tabela1 = "certidao"
         tabela2 = "protocolo"
-        if anocert != 0 and numcert != 0 and numprot != 0:
+        if anocert != 0 and numcert != '' and numprot != '':
             insert_cert_query = f"""INSERT INTO {tabela1} (idpix, ano, num) 
-                                    VALUES({pix_id}, {anocert}, {numcert})"""
+                                    VALUES({pix_id}, {anocert}, '{numcert}')"""
             insert_prot_query = f"""INSERT INTO {tabela2} (idpix, num) 
-                                    VALUES({pix_id}, {numprot})"""
+                                    VALUES({pix_id}, '{numprot}')"""
             try:
                 cursor.execute(insert_cert_query)
                 cursor.execute(insert_prot_query)
@@ -753,9 +753,9 @@ class DataBasePix():
                 return 'sucesso'
             finally:
                 cursor.close()
-        elif anocert == 0 and numcert == 0 and numprot != 0:
+        elif anocert == 0 and numcert == '' and numprot != '':
             insert_prot_query = f"""INSERT INTO {tabela2} (idpix, num) 
-                                    VALUES({pix_id}, {numprot})"""
+                                    VALUES({pix_id}, '{numprot}')"""
             try:
                 cursor.execute(insert_prot_query)
             except Exception as error:
@@ -767,9 +767,9 @@ class DataBasePix():
                 return 'sucesso'
             finally:
                 cursor.close()
-        elif anocert != 0 and numcert != 0 and numprot == 0:
+        elif anocert != 0 and numcert != '' and numprot == '':
             insert_cert_query = f"""INSERT INTO {tabela1} (idpix, ano, num) 
-                                    VALUES({pix_id}, {anocert}, {numcert})"""
+                                    VALUES({pix_id}, {anocert}, '{numcert}')"""
             try:
                 cursor.execute(insert_cert_query)
             except Exception as error:
