@@ -548,9 +548,9 @@ class LoginWindow(QWidget):
         app.exit()
     
     def efetuar_login(self):       
-        usuario = self.ui.campo_usuario.text()
+        usuario = self.ui.campo_usuario.text().lower()
         senha = self.ui.campo_senha.text()
-        username, acesso = self.db.check_users(usuario.lower(), senha)
+        username, acesso = self.db.check_users(usuario, senha)
         self.ui.label_incorrect_user.clear()
         if acesso == 'incorretas':
             self.ui.label_incorrect_user.setText('Senha ou usuário incorreto!')
@@ -643,13 +643,13 @@ class MainWindow(QMainWindow):
             lambda: self.busca_solicitante(self.ui.campo_cpf_apresentante.text()))
         self.ui.btn_cadastrar_solicitante.clicked.connect(
             lambda: self.cadastra_solicitante(self.ui.campo_cpf_apresentante.text(),
-            self.ui.campo_apresentante.text()))
+            self.ui.campo_apresentante.text().title()))
         self.ui.btn_gerar_qrcode.clicked.connect(
-            lambda: self.gera_qr_code(self.ui.campo_apresentante.text(), 
+            lambda: self.gera_qr_code(self.ui.campo_apresentante.text().title(), 
             self.ui.campo_valor.text(), self.ui.campo_cpf_apresentante.text()))
         self.ui.btn_limpar_campos.clicked.connect(lambda: self.limpar_campos_qr_code())
         self.ui.btn_enviar_email.clicked.connect(lambda: self.envia_email_solicitante(
-            nome_solicitante=self.ui.campo_apresentante.text(),
+            nome_solicitante=self.ui.campo_apresentante.text().title(),
             email_solicitante=self.ui.campo_email_solicitante.text()
         ))
 
@@ -798,11 +798,11 @@ class MainWindow(QMainWindow):
                 msg_solicitante.exec_()
 
 
-    def cadastra_solicitante(self, cpf_cnpj, nome_solicitante):
+    def cadastra_solicitante(self, cpf_cnpj: str, nome_solicitante: str):
         if cpf_cnpj != '' and nome_solicitante != '':
             erro_cpf_cnpj, cpf_cnpj_formatado = formata_cpf_cnpj(cpf_cnpj)
             if not erro_cpf_cnpj:
-                resultado = self.db_pix.insert_solicitante(cpf_cnpj_formatado, nome_solicitante)
+                resultado = self.db_pix.insert_solicitante(cpf_cnpj_formatado, nome_solicitante.title())
                 
                 # Verifica se a conexão do banco foi encerrada por inatividade.
                 if resultado == 'conexão encerrada':
@@ -816,7 +816,7 @@ class MainWindow(QMainWindow):
                     msg_solicitante.exec_()
                 elif resultado == 'existente':
                     solicitante = self.db_pix.busca_solicitante(cpf_cnpj_formatado)
-                    self.ui.campo_apresentante.setText(solicitante[1])
+                    self.ui.campo_apresentante.setText(solicitante[1].title())
                     msg_solicitante = QMessageBox()
                     msg_solicitante.setIcon(QMessageBox.Warning)
                     msg_solicitante.setWindowTitle('Solicitante já existente')
@@ -854,7 +854,7 @@ class MainWindow(QMainWindow):
                     self.encerra_sistema()
 
                 if solicitante != None:
-                    self.ui.campo_apresentante.setText(solicitante[1])
+                    self.ui.campo_apresentante.setText(solicitante[1].title())
                     print(solicitante[1])
                 else:
                     msg_solicitante = QMessageBox()
@@ -874,7 +874,7 @@ class MainWindow(QMainWindow):
             if not erro_cnpj:
                 solicitante = self.db_pix.busca_solicitante(cnpj_formatado)
                 if solicitante != None:
-                    self.ui.campo_apresentante.setText(solicitante[1])
+                    self.ui.campo_apresentante.setText(solicitante[1].title())
                     print(solicitante[1])
                 else:
                     msg_solicitante = QMessageBox()
