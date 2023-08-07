@@ -598,9 +598,11 @@ class MainWindow(QMainWindow):
             dia.setDate(aa, mm, dd)
             self.data_pix_padrão = str(dd)+'/'+str(mm)+'/'+str(aa)
         
+        # Desabilitar botão de enviar e-mail para que só esteja disponível após gerar o QrCode
+        self.ui.btn_enviar_email.setEnabled(False)
+
         # Minimizar para a tray ao clicar no fechar
         
-
         # Definir o dia base para ser exibido no filtro de consulta/libera pix
         self.ui.filtro_dia_alterapix.setDate(dia)
         self.ui.filtro_data_consultapix.setDate(dia)
@@ -716,6 +718,7 @@ class MainWindow(QMainWindow):
                 self.tema_atual.escolher_tema(self.ui.combo_tema.currentText()))
         self.ui.btn_aplicar_tema.clicked.connect(lambda: self.aplica_tema(self.tema_atual))
         self.ui.btn_gera_excel.clicked.connect(lambda: self.gravar_planilha_excel())
+        self.ui.btn_testa_email.clicked.connect(lambda: self.envia_email_teste())
         self.show()
 
         if TEMA != 'Drcl Night':
@@ -728,6 +731,32 @@ class MainWindow(QMainWindow):
         else:
             self.showNormal()
 
+    def envia_email_teste(self):
+        nome_solicitante = 'E-mail de teste'
+        email_solicitante = 'cartorio@2rgi-rj.com.br'
+        status = mail_rgi.envia_email(
+                        nome_dest=nome_solicitante,
+                        email_dest=email_solicitante,
+                        anexo=ADOBE_PDF_FILE,
+                        pix_copia_e_cola='pix_copia_e_cola'
+                    )
+        if status == 'sucesso':
+            msg_solicitante = QMessageBox()
+            msg_solicitante.setIcon(QMessageBox.Warning)
+            msg_solicitante.setWindowTitle('Sucesso no envio')
+            msg_solicitante.setText(f'E-mail enviado com sucesso para: "{email_solicitante}"')
+            msg_solicitante.exec_()
+        else:
+            msg_solicitante = QMessageBox()
+            msg_solicitante.setIcon(QMessageBox.Warning)
+            msg_solicitante.setWindowTitle('Erro ao enviar e-mail')
+            msg_solicitante.setText(f'''
+    Houve um erro ao enviar o e-mail para: {email_solicitante}.
+    Verificar e tentar novamente!
+                                    
+
+    Erro: {status}''')
+            msg_solicitante.exec_()
 
 
     def consulta_novo_pix_pago(self, quant_atual):
@@ -787,6 +816,7 @@ class MainWindow(QMainWindow):
                         msg_solicitante.setText(f'E-mail enviado com sucesso para: "{email_solicitante}"')
                         msg_solicitante.exec_()
                         self.limpar_campos_qr_code()
+                        self.ui.btn_enviar_email.setEnabled(False)
                     else:
                         msg_solicitante = QMessageBox()
                         msg_solicitante.setIcon(QMessageBox.Warning)
@@ -1195,11 +1225,12 @@ class MainWindow(QMainWindow):
             # Inicializar a MainWindow do App na tela de autorizar pix.
             self.ui.cadastrar_usuario.setVisible(True)
             self.tela_cadastrar_usuario()
+            self.ui.btn_testa_email.setVisible(True)
             # Na fase de desenvolvimento o usuário administrador terá acesso à todas as telas
-            # self.ui.autorizar_pix.setVisible(False)
-            # self.ui.gerar_qr_code.setVisible(False)
-            # self.ui.consulta_pgto.setVisible(False)
-            # self.ui.imprimir.setVisible(False)
+            self.ui.autorizar_pix.setVisible(False)
+            self.ui.gerar_qr_code.setVisible(False)
+            self.ui.consulta_pgto.setVisible(False)
+            self.ui.imprimir.setVisible(False)
 
         elif self.acesso.lower() == 'contabilidade':
             # Inicializar a MainWindow do App na tela de autorizar pix.
@@ -1209,6 +1240,7 @@ class MainWindow(QMainWindow):
             self.ui.gerar_qr_code.setVisible(False)
             self.ui.consulta_pgto.setVisible(False)
             self.ui.imprimir.setVisible(False)
+            self.ui.btn_testa_email.setVisible(False)
 
         else:
             # Inicializar a MainWindow do App na tela de geração de Qr Code.
@@ -1221,6 +1253,7 @@ class MainWindow(QMainWindow):
             self.ui.label_gera_relatorio.setText('Função desabilitada para o usuário.')
             self.ui.btn_gera_excel.setVisible(False)
             self.ui.label_status.setVisible(False)
+            self.ui.btn_testa_email.setVisible(False)
 
 
     def aplica_tema(self, tema_atual: Tema):
@@ -2504,6 +2537,7 @@ class MainWindow(QMainWindow):
                     cmd = '"{}" "{}"'.format(ADOBE_READER, ADOBE_PDF_FILE)
                     subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 self.tx_id_pix = txt_id
+                self.ui.btn_enviar_email.setEnabled(True)
 
     def erro_dados_pix(self, texto):
         msg = QMessageBox()

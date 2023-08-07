@@ -427,7 +427,8 @@ class Ui_MainWindow(object):
         self.campo_valor.setGeometry(QRect(250, 208, 301, 41))
         self.campo_valor.setFont(font3)
         self.campo_valor.setStyleSheet(u"padding: 5px;")
-        self.campo_valor.setMaxLength(20)
+        self.campo_valor.setMaxLength(32767)
+        self.campo_valor.setCursorPosition(0)
         self.campo_valor.setClearButtonEnabled(True)
         self.txt_id_pix = QLabel(self.page_gerar)
         self.txt_id_pix.setObjectName(u"txt_id_pix")
@@ -1066,6 +1067,10 @@ class Ui_MainWindow(object):
         self.combo_filtro_gera_excel.setObjectName(u"combo_filtro_gera_excel")
         self.combo_filtro_gera_excel.setGeometry(QRect(480, 140, 121, 33))
         self.combo_filtro_gera_excel.setStyleSheet(u"")
+        self.btn_testa_email = QPushButton(self.frame_9)
+        self.btn_testa_email.setObjectName(u"btn_testa_email")
+        self.btn_testa_email.setGeometry(QRect(10, 150, 171, 37))
+        self.btn_testa_email.setStyleSheet(u"")
         self.stackedWidget.addWidget(self.page_settings)
         self.label_creditos = QLabel(self.right_panel)
         self.label_creditos.setObjectName(u"label_creditos")
@@ -1119,7 +1124,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         self.sair.clicked.connect(MainWindow.close)
 
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(5)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -1137,6 +1142,8 @@ class Ui_MainWindow(object):
         self.settings.setText(QCoreApplication.translate("MainWindow", u"  Configura\u00e7\u00f5es", None))
         self.sair.setText(QCoreApplication.translate("MainWindow", u"  Encerrar", None))
         self.campo_apresentante.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Apresentante", None))
+        self.campo_valor.setInputMask("")
+        self.campo_valor.setText("")
         self.campo_valor.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Valor do t\u00edtulo", None))
         self.txt_id_pix.setText(QCoreApplication.translate("MainWindow", u"ID Pix: ", None))
         self.txt_moeda.setText(QCoreApplication.translate("MainWindow", u"R$", None))
@@ -1273,6 +1280,7 @@ class Ui_MainWindow(object):
         self.combo_filtro_gera_excel.setItemText(1, QCoreApplication.translate("MainWindow", u"Aguardando", None))
         self.combo_filtro_gera_excel.setItemText(2, QCoreApplication.translate("MainWindow", u"Pagos", None))
 
+        self.btn_testa_email.setText(QCoreApplication.translate("MainWindow", u"Testar e-mail", None))
         self.label_creditos.setText(QCoreApplication.translate("MainWindow", u"Sistema de gerenciamento de Pix, desenvolvido por Eduardo Rossini - 2022. Vers\u00e3o 3.0", None))
     # retranslateUi
 

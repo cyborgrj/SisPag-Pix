@@ -855,7 +855,7 @@ background-color: rgb(29, 30, 40);
            <string notr="true"/>
           </property>
           <property name="currentIndex">
-           <number>4</number>
+           <number>5</number>
           </property>
           <widget class="QWidget" name="page_gerar">
            <property name="styleSheet">
@@ -913,8 +913,17 @@ background-color: rgb(29, 30, 40);
             <property name="styleSheet">
              <string notr="true">padding: 5px;</string>
             </property>
+            <property name="inputMask">
+             <string/>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
             <property name="maxLength">
-             <number>20</number>
+             <number>32767</number>
+            </property>
+            <property name="cursorPosition">
+             <number>0</number>
             </property>
             <property name="placeholderText">
              <string>Valor do título</string>
@@ -2999,6 +3008,22 @@ background:transparent</string>
                <string>Pagos</string>
               </property>
              </item>
+            </widget>
+            <widget class="QPushButton" name="btn_testa_email">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>150</y>
+               <width>171</width>
+               <height>37</height>
+              </rect>
+             </property>
+             <property name="styleSheet">
+              <string notr="true"/>
+             </property>
+             <property name="text">
+              <string>Testar e-mail</string>
+             </property>
             </widget>
            </widget>
           </widget>
