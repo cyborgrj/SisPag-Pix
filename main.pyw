@@ -639,6 +639,9 @@ class MainWindow(QMainWindow):
 
 
         # Ações da tela de gerar QrCode
+        self.ui.campo_valor.textEdited.connect(
+            lambda: self.converte_digito(self.ui.campo_valor.text())
+        )
         self.ui.campo_cpf_apresentante.returnPressed.connect(
             lambda: self.busca_solicitante(self.ui.campo_cpf_apresentante.text()))
         self.ui.btn_cadastrar_solicitante.clicked.connect(
@@ -743,6 +746,18 @@ class MainWindow(QMainWindow):
         sys.exit('Encerrado por inatividade.')
 
 
+    def converte_digito(self, digitos: str):
+        if digitos != '':
+            digitos = digitos.replace('.','')
+            digitos = digitos.replace(',','')
+            digitos = digitos.replace('R$ ', '')
+            # Remover separadores de decimal, "R$" e ',' para conversão em inteiro e posterios divisão por 100
+            int_digito = Decimal(int(digitos)/100)
+            str_digito = self.converter_float_reais(int_digito)
+            valor_exibido = str_digito.replace("R$ ", "")
+            self.ui.campo_valor.setText(valor_exibido)
+
+
     def envia_email_solicitante(self, nome_solicitante, email_solicitante):
         if nome_solicitante == '' or email_solicitante == '':
             msg_solicitante = QMessageBox()
@@ -813,6 +828,8 @@ class MainWindow(QMainWindow):
                     msg_solicitante.setIcon(QMessageBox.Warning)
                     msg_solicitante.setWindowTitle('Inserido com sucesso!')
                     msg_solicitante.setText('O cadastro foi efetuado com sucesso.')
+                    self.ui.campo_valor.setText('')
+                    self.ui.campo_valor.setFocus()
                     msg_solicitante.exec_()
                 elif resultado == 'existente':
                     solicitante = self.db_pix.busca_solicitante(cpf_cnpj_formatado)
@@ -861,6 +878,8 @@ class MainWindow(QMainWindow):
                     msg_solicitante.setIcon(QMessageBox.Warning)
                     msg_solicitante.setWindowTitle('Solicitante não encontrado!')
                     msg_solicitante.setText(f'Informe o nome e clique no botão cadastrar')
+                    self.ui.campo_apresentante.setText('')
+                    self.ui.campo_apresentante.setFocus()
                     msg_solicitante.exec_()
                 
             else:
@@ -2365,14 +2384,14 @@ class MainWindow(QMainWindow):
 
 
     def gera_qr_code(self, apresentante, valor, cpf_cnpj):
-        cpf_cnpj_formatado = formata_cpf_cnpj(cpf_cnpj)
+        erro_cpf_cnpj, cpf_cnpj_formatado = formata_cpf_cnpj(cpf_cnpj)
         solicitante = self.db_pix.busca_solicitante(cpf_cnpj_formatado)
 
         # Verifica se a conexão do banco foi encerrada por inatividade.
         if solicitante == 'conexão encerrada':
             self.encerra_sistema()
 
-        if solicitante == None or solicitante == 'erro':
+        if solicitante == None or solicitante == 'erro' or erro_cpf_cnpj:
             msg_erro = QMessageBox()
             msg_erro.setIcon(QMessageBox.Warning)
             msg_erro.setWindowTitle('Erro!')
