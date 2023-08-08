@@ -477,7 +477,11 @@ class InsereProtocolo(QDialog):
             int_ano = 0
         else:
             try:
-                int_ano = int(ano)
+                if len(ano) > 2:
+                    num_ano = int(ano)
+                    int_ano = num_ano - 2000
+                else:
+                    int_ano = int(ano)
             except:
                 int_ano = 99
                 print('Número inválido')
