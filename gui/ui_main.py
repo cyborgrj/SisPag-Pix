@@ -1132,7 +1132,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
-        self.label_titulo.setText(QCoreApplication.translate("MainWindow", u"SisPag PIX - 2\u00ba Cart\u00f3rio de Registro de Im\u00f3veis do Rio de Janeiro", None))
+        self.label_titulo.setText(QCoreApplication.translate("MainWindow", u"SisPag Pix - 2\u00ba Cart\u00f3rio de Registro de Im\u00f3veis do Rio de Janeiro", None))
         self.menu.setText(QCoreApplication.translate("MainWindow", u"  Recolher o menu", None))
         self.gerar_qr_code.setText(QCoreApplication.translate("MainWindow", u"  Gerar QrCode", None))
         self.imprimir.setText(QCoreApplication.translate("MainWindow", u"  Imprimir o QrCode", None))
@@ -1281,6 +1281,6 @@ class Ui_MainWindow(object):
         self.combo_filtro_gera_excel.setItemText(2, QCoreApplication.translate("MainWindow", u"Pagos", None))
 
         self.btn_testa_email.setText(QCoreApplication.translate("MainWindow", u"Testar e-mail", None))
-        self.label_creditos.setText(QCoreApplication.translate("MainWindow", u"Sistema de gerenciamento de Pix, desenvolvido por Eduardo Rossini - 2022. Vers\u00e3o 3.0", None))
+        self.label_creditos.setText(QCoreApplication.translate("MainWindow", u"Sistema de gerenciamento de Pix. Eduardo Rossini - 2023 (Vers\u00e3o 3.4)", None))
     # retranslateUi
 

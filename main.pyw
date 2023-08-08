@@ -539,6 +539,7 @@ class LoginWindow(QWidget):
         self.setWindowFlags(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
         self.show()
+        self.ui.campo_usuario.returnPressed.connect(lambda: self.ui.campo_senha.setFocus())
         self.ui.campo_senha.returnPressed.connect(lambda: self.efetuar_login())
         self.ui.sair.clicked.connect(lambda: self.sair_login())
         self.ui.btn_login.clicked.connect(lambda: self.efetuar_login())
@@ -902,6 +903,7 @@ class MainWindow(QMainWindow):
 
                 if solicitante != None:
                     self.ui.campo_apresentante.setText(solicitante[1].title())
+                    self.ui.campo_valor.setFocus()
                     print(solicitante[1])
                 else:
                     msg_solicitante = QMessageBox()
@@ -1227,10 +1229,10 @@ class MainWindow(QMainWindow):
             self.tela_cadastrar_usuario()
             self.ui.btn_testa_email.setVisible(True)
             # Na fase de desenvolvimento o usuário administrador terá acesso à todas as telas
-            self.ui.autorizar_pix.setVisible(False)
-            self.ui.gerar_qr_code.setVisible(False)
-            self.ui.consulta_pgto.setVisible(False)
-            self.ui.imprimir.setVisible(False)
+            # self.ui.autorizar_pix.setVisible(False)
+            # self.ui.gerar_qr_code.setVisible(False)
+            # self.ui.consulta_pgto.setVisible(False)
+            # self.ui.imprimir.setVisible(False)
 
         elif self.acesso.lower() == 'contabilidade':
             # Inicializar a MainWindow do App na tela de autorizar pix.
