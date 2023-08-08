@@ -1229,10 +1229,10 @@ class MainWindow(QMainWindow):
             self.tela_cadastrar_usuario()
             self.ui.btn_testa_email.setVisible(True)
             # Na fase de desenvolvimento o usuário administrador terá acesso à todas as telas
-            # self.ui.autorizar_pix.setVisible(False)
-            # self.ui.gerar_qr_code.setVisible(False)
-            # self.ui.consulta_pgto.setVisible(False)
-            # self.ui.imprimir.setVisible(False)
+            self.ui.autorizar_pix.setVisible(False)
+            self.ui.gerar_qr_code.setVisible(False)
+            self.ui.consulta_pgto.setVisible(False)
+            self.ui.imprimir.setVisible(False)
 
         elif self.acesso.lower() == 'contabilidade':
             # Inicializar a MainWindow do App na tela de autorizar pix.
