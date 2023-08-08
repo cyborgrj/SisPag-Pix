@@ -781,10 +781,12 @@ class MainWindow(QMainWindow):
             digitos = digitos.replace('.','')
             digitos = digitos.replace(',','')
             digitos = digitos.replace('R$ ', '')
+            digitos = digitos.replace('R$', '')
             # Remover separadores de decimal, "R$" e ',' para conversão em inteiro e posterior divisão por 100
             int_digito = Decimal(int(digitos)/100)
             str_digito = self.converter_float_reais(int_digito)
             valor_exibido = str_digito.replace("R$ ", "")
+            valor_exibido = str_digito.replace("R$", "")
             self.ui.campo_valor.setText(valor_exibido)
 
 
