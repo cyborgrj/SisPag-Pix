@@ -15,7 +15,7 @@ barra de status do sistema.
 
 Versão 3.3
 - Corrigidos os acessos do grupo de usuários administradores para somente terem opções de configurações
-e testes de relatórios e teste de envio de e-mail, opções de criar pagamento, consultar etc. não
+e testes de relatórios e envio de e-mail, opções de criar pagamento, consultar etc. não
 estão mais disponíveis para esse grupo de usuário, pois já se passou a fase de testes.
 - Corrigido um erro onde a sigla do usuário dependendo da digitação inicial podia ser repassada
 com letras em maíusculas.
