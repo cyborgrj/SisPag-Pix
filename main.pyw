@@ -602,7 +602,7 @@ class MainWindow(QMainWindow):
         finally:
             dia.setDate(aa, mm, dd)
             self.data_pix_padrão = str(dd)+'/'+str(mm)+'/'+str(aa)
-        
+
         # Desabilitar botão de enviar e-mail para que só esteja disponível após gerar o QrCode
         self.ui.btn_enviar_email.setEnabled(False)
 
@@ -719,6 +719,7 @@ class MainWindow(QMainWindow):
 
 
         # Ações de configurações do sistema (settings)
+        # Definir como padrão a opção de pagos no relatório de pagamentos
         self.ui.combo_tema.activated.connect(lambda: 
                 self.tema_atual.escolher_tema(self.ui.combo_tema.currentText()))
         self.ui.btn_aplicar_tema.clicked.connect(lambda: self.aplica_tema(self.tema_atual))
@@ -954,10 +955,11 @@ class MainWindow(QMainWindow):
 
 
     def gravar_planilha_excel(self):
+        ids_somados = []
         botao = {'SIM' : 0, 'NÃO' : 1}
-        if self.ui.combo_filtro_gera_excel.currentIndex() == 0:
+        if self.ui.combo_filtro_gera_excel.currentIndex() == 1:
             estado_gera_excel = ''
-        elif self.ui.combo_filtro_gera_excel.currentIndex() == 1:
+        elif self.ui.combo_filtro_gera_excel.currentIndex() == 2:
             estado_gera_excel = 'aguardando'
         else:
             estado_gera_excel = 'pago'
@@ -972,7 +974,7 @@ class MainWindow(QMainWindow):
         if relatorio == 'conexão encerrada':
             self.encerra_sistema()
 
-        colunas = ['PixID', 'Nome', 'Valor', 'Caixa', 'Situação', 'Liberado', 'Ano', 'NumCert', 'NumProt']
+        colunas = ['PixID', 'Data', 'Nome', 'Valor', 'Caixa', 'Situação', 'Liberado', 'Ano', 'NumCert', 'NumProt']
         self.planilha = xlsx.Planilha(nomeplanilha='relatorio.xlsx', linhas=(len(relatorio)+2))
         self.planilha.criar_cabecalho(colunas)
         
@@ -986,15 +988,17 @@ class MainWindow(QMainWindow):
         linha_atual = 4
         soma_taxas = Decimal(0)
         for pgto in relatorio:
+            dia_pgto = self.converter_dia(pgto[4])
             self.planilha.escrever(f'A{linha_atual}', pgto[0], False, False)
-            self.planilha.escrever(f'B{linha_atual}', pgto[1], False, False)
-            self.planilha.escrever(f'C{linha_atual}', pgto[2], False, valor=True)
-            self.planilha.escrever(f'D{linha_atual}', pgto[3], False, False)
-            self.planilha.escrever(f'E{linha_atual}', pgto[5], False, False)
-            self.planilha.escrever(f'F{linha_atual}', pgto[6], False, False)
-            self.planilha.escrever(f'G{linha_atual}', pgto[7], False, False)
-            self.planilha.escrever(f'H{linha_atual}', pgto[8], False, False)
-            self.planilha.escrever(f'I{linha_atual}', pgto[9], False, False)
+            self.planilha.escrever(f'B{linha_atual}', dia_pgto, False, False)
+            self.planilha.escrever(f'C{linha_atual}', pgto[1], False, False)
+            self.planilha.escrever(f'D{linha_atual}', pgto[2], False, valor=True)
+            self.planilha.escrever(f'E{linha_atual}', pgto[3], False, False)
+            self.planilha.escrever(f'F{linha_atual}', pgto[5], False, False)
+            self.planilha.escrever(f'G{linha_atual}', pgto[6], False, False)
+            self.planilha.escrever(f'H{linha_atual}', pgto[7], False, False)
+            self.planilha.escrever(f'I{linha_atual}', pgto[8], False, False)
+            self.planilha.escrever(f'J{linha_atual}', pgto[9], False, False)
             if pgto[5] == 'pago':
                 valor = Decimal(pgto[2])
                 percentual = Decimal(PERCENTUAL)
@@ -1008,7 +1012,9 @@ class MainWindow(QMainWindow):
                 else:
                     # se o valor estiver entre as taxas mínimas e máxima, não fazer nada.
                     pass 
-                soma_taxas = soma_taxas + taxa
+                if pgto[0] not in ids_somados:
+                    soma_taxas = soma_taxas + taxa
+                    ids_somados.append(pgto[0])
             linha_atual += 1
         self.planilha.escrever(f'B{linha_atual+1}', 'Total das taxas de serviço PIX', negrito=True, valor=False)
         self.planilha.escrever(f'C{linha_atual+1}', soma_taxas, negrito=True, valor=True)
@@ -1931,10 +1937,13 @@ class MainWindow(QMainWindow):
         return str(valor_formatado)
 
 
-    def converterDiaHora(self, diaHora) -> str:
+    def converter_dia_hora(self, diaHora) -> str:
         hora_formatada = diaHora.strftime("%d-%m-%Y %H:%M")
         return hora_formatada
 
+    def converter_dia(self, diaHora) -> str:
+        dia_formatado = diaHora.strftime("%d/%m/%Y")
+        return dia_formatado
 
     def muda_fonte_tabela_pix(self):
         ok, self.fontTable = QFontDialog.getFont(self.ui.table_busca_e_autoriza_pix)
@@ -2043,7 +2052,7 @@ class MainWindow(QMainWindow):
             if idPix  == '':
                 for pagamento in pagamentos:
                     reais = self.converter_float_reais(pagamento[2])
-                    diaHora = self.converterDiaHora(pagamento[4])
+                    diaHora = self.converter_dia_hora(pagamento[4])
                     for coluna in range(0,9,1):
                         if coluna == 0 or coluna == 1 or coluna == 3:
                             item_atual = QTableWidgetItem(str(pagamento[coluna]))
@@ -2087,7 +2096,7 @@ class MainWindow(QMainWindow):
                     self.ui.table_busca_e_autoriza_pix.resizeRowsToContents()
             else:
                 reais = self.converter_float_reais(pagamentos[2])
-                diaHora = self.converterDiaHora(pagamentos[4])
+                diaHora = self.converter_dia_hora(pagamentos[4])
                 for coluna in range(0,9,1):
                     if coluna == 0 or coluna == 1 or coluna == 3:
                         item_atual = QTableWidgetItem(str(pagamentos[coluna]))
@@ -2213,7 +2222,7 @@ class MainWindow(QMainWindow):
                 self.ui.table_consulta_pix.setRowCount(len(pagamentos))
                 for pagamento in pagamentos:
                     reais = self.converter_float_reais(pagamento[2])
-                    diaHora = self.converterDiaHora(pagamento[3])
+                    diaHora = self.converter_dia_hora(pagamento[3])
                     for coluna in range(0,9,1):
                         if coluna == 0 or coluna == 1:
                             item_atual = QTableWidgetItem(str(pagamento[coluna]))
@@ -2260,7 +2269,7 @@ class MainWindow(QMainWindow):
             else:
                 self.ui.table_consulta_pix.setRowCount(1)
                 reais = self.converter_float_reais(pagamentos[2])
-                diaHora = self.converterDiaHora(pagamentos[3])
+                diaHora = self.converter_dia_hora(pagamentos[3])
                 for coluna in range(0,9,1):
                     if coluna == 0 or coluna == 1:
                         item_atual = QTableWidgetItem(str(pagamentos[coluna]))

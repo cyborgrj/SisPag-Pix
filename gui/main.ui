@@ -2995,17 +2995,17 @@ background:transparent</string>
              </property>
              <item>
               <property name="text">
+               <string>Pagos</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>Todos</string>
               </property>
              </item>
              <item>
               <property name="text">
                <string>Aguardando</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>Pagos</string>
               </property>
              </item>
             </widget>
@@ -3046,7 +3046,7 @@ background:transparent</string>
            <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
           </property>
           <property name="text">
-           <string>Sistema de gerenciamento de Pix. Eduardo Rossini - 2023 (Versão 3.4)</string>
+           <string>Sistema de gerenciamento de Pix. Eduardo Rossini - 2023 (Versão 3.5)</string>
           </property>
          </widget>
         </widget>

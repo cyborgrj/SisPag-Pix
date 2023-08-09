@@ -1276,11 +1276,11 @@ class Ui_MainWindow(object):
         self.label_status.setText(QCoreApplication.translate("MainWindow", u"Status", None))
         self.label_configuracoes.setText(QCoreApplication.translate("MainWindow", u"Relat\u00f3rio em Excel", None))
         self.btn_gera_excel.setText(QCoreApplication.translate("MainWindow", u"Gerar Excel", None))
-        self.combo_filtro_gera_excel.setItemText(0, QCoreApplication.translate("MainWindow", u"Todos", None))
-        self.combo_filtro_gera_excel.setItemText(1, QCoreApplication.translate("MainWindow", u"Aguardando", None))
-        self.combo_filtro_gera_excel.setItemText(2, QCoreApplication.translate("MainWindow", u"Pagos", None))
+        self.combo_filtro_gera_excel.setItemText(0, QCoreApplication.translate("MainWindow", u"Pagos", None))
+        self.combo_filtro_gera_excel.setItemText(1, QCoreApplication.translate("MainWindow", u"Todos", None))
+        self.combo_filtro_gera_excel.setItemText(2, QCoreApplication.translate("MainWindow", u"Aguardando", None))
 
         self.btn_testa_email.setText(QCoreApplication.translate("MainWindow", u"Testar e-mail", None))
-        self.label_creditos.setText(QCoreApplication.translate("MainWindow", u"Sistema de gerenciamento de Pix. Eduardo Rossini - 2023 (Vers\u00e3o 3.4)", None))
+        self.label_creditos.setText(QCoreApplication.translate("MainWindow", u"Sistema de gerenciamento de Pix. Eduardo Rossini - 2023 (Vers\u00e3o 3.5)", None))
     # retranslateUi
 

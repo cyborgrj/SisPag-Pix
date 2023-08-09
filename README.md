@@ -2,6 +2,13 @@
 
 ## Programa para geração de pagamentos Pix para o cartório onde trabalho, como desenvolvedor em Python.
 
+Versão 3.5
+- Na tela de gerar relatório Excel, agora está selecionado sempre por padrão a opção de pagos
+- Inserido no relatório excel uma coluna para data dos pagamentos pix gerados.
+- Corrigido erro no relatório de pagamentos onde o pix aparecendo mais de uma vez (devido a ter mais
+de um protocolo ou certidão lançados para o mesmo pagamento) contava a taxa também mais de uma vez.
+Agora só contabiliza apenas uma taxa por cada ID pix único no relatório.
+
 Versão 3.4
 - Na criação de um novo solicitante, se o usuário digitar o nome todas em maiúsculas o nome sempre
 será repassado para somente primeiras em maiúsculas com a função title(), assim tendo uma visão
