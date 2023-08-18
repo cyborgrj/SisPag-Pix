@@ -2,6 +2,10 @@
 
 ## Programa para geração de pagamentos Pix para o cartório onde trabalho, como desenvolvedor em Python.
 
+Versão 3.5.1
+- Não é mais possível que os caixas insiram novamente um protocolo ou certidão que esqueceram de inserir no pagamento. Caso o caixa esqueça de inserir algo, inicialmente será solicitada a alteração para o setor de TI.
+- Entrará em desenvolvimento uma tela para alteração e inserção de protocolos em breve, para o setor de contabilidade.
+
 Versão 3.5
 - Na tela de gerar relatório Excel, agora está selecionado sempre por padrão a opção de pagos
 - Inserido no relatório excel uma coluna para data dos pagamentos pix gerados.

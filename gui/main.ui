@@ -3046,7 +3046,7 @@ background:transparent</string>
            <string notr="true">font: 10pt &quot;MS Shell Dlg 2&quot;;</string>
           </property>
           <property name="text">
-           <string>Sistema de gerenciamento de Pix. Eduardo Rossini - 2023 (Versão 3.5)</string>
+           <string>Sistema de gerenciamento de Pix. Eduardo Rossini - 2023 (Versão 3.5.2)</string>
           </property>
          </widget>
         </widget>

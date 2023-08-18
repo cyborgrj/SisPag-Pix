@@ -1281,6 +1281,6 @@ class Ui_MainWindow(object):
         self.combo_filtro_gera_excel.setItemText(2, QCoreApplication.translate("MainWindow", u"Aguardando", None))
 
         self.btn_testa_email.setText(QCoreApplication.translate("MainWindow", u"Testar e-mail", None))
-        self.label_creditos.setText(QCoreApplication.translate("MainWindow", u"Sistema de gerenciamento de Pix. Eduardo Rossini - 2023 (Vers\u00e3o 3.5)", None))
+        self.label_creditos.setText(QCoreApplication.translate("MainWindow", u"Sistema de gerenciamento de Pix. Eduardo Rossini - 2023 (Vers\u00e3o 3.5.2)", None))
     # retranslateUi
 

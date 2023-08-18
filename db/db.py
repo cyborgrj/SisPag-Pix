@@ -239,7 +239,7 @@ class DataBasePix():
         # aceitando palavras, espaços etc. tanto antes quanto após o nome pesquisado.
         if apresentante != '' and filtro != '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
-                        status, updatedby, C.ano, C.num, PR.num
+                        status, updatedby, C.ano, C.num, PR.num, horapagamento
                         FROM {tabela1} AS P
                         FULL outer JOIN {tabela4} AS C ON C.idpix = P.idpix
                         FULL outer JOIN {tabela3} AS PR ON PR.idpix = P.idpix
@@ -251,7 +251,7 @@ class DataBasePix():
                         ORDER BY createdat DESC LIMIT {limite}"""
         elif apresentante != '' and filtro == '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
-                        status, updatedby, C.ano, C.num, PR.num
+                        status, updatedby, C.ano, C.num, PR.num, horapagamento
                         FROM {tabela1} AS P
                         FULL outer JOIN {tabela4} AS C ON C.idpix = P.idpix
                         FULL outer JOIN {tabela3} AS PR ON PR.idpix = P.idpix
@@ -262,7 +262,7 @@ class DataBasePix():
                         ORDER BY createdat DESC LIMIT {limite}"""
         elif apresentante == '' and filtro != '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
-                        status, updatedby, C.ano, C.num, PR.num
+                        status, updatedby, C.ano, C.num, PR.num, horapagamento
                         FROM {tabela1} AS P
                         FULL outer JOIN {tabela4} AS C ON C.idpix = P.idpix
                         FULL outer JOIN {tabela3} AS PR ON PR.idpix = P.idpix
@@ -273,7 +273,7 @@ class DataBasePix():
                         ORDER BY createdat DESC LIMIT {limite}"""
         elif apresentante == '' and filtro == '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
-                        status, updatedby, C.ano, C.num, PR.num
+                        status, updatedby, C.ano, C.num, PR.num, horapagamento
                         FROM {tabela1} AS P
                         FULL outer JOIN {tabela4} AS C ON C.idpix = P.idpix
                         FULL outer JOIN {tabela3} AS PR ON PR.idpix = P.idpix
@@ -284,7 +284,7 @@ class DataBasePix():
         # Filtro de data desligado:                
         elif apresentante != '' and filtro != '' and filtro_data == '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
-                        status, updatedby, C.ano, C.num, PR.num
+                        status, updatedby, C.ano, C.num, PR.num, horapagamento
                         FROM {tabela1} AS P
                         FULL outer JOIN {tabela4} AS C ON C.idpix = P.idpix
                         FULL outer JOIN {tabela3} AS PR ON PR.idpix = P.idpix
@@ -294,7 +294,7 @@ class DataBasePix():
                         ORDER BY createdat DESC LIMIT {limite}"""
         elif apresentante != '' and filtro == '' and filtro_data == '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
-                        status, updatedby, C.ano, C.num, PR.num
+                        status, updatedby, C.ano, C.num, PR.num, horapagamento
                         FROM {tabela1} AS P
                         FULL outer JOIN {tabela4} AS C ON C.idpix = P.idpix
                         FULL outer JOIN {tabela3} AS PR ON PR.idpix = P.idpix
@@ -303,7 +303,7 @@ class DataBasePix():
                         ORDER BY createdat DESC LIMIT {limite}"""
         elif apresentante == '' and filtro != '' and filtro_data == '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
-                        status, updatedby, C.ano, C.num, PR.num
+                        status, updatedby, C.ano, C.num, PR.num, horapagamento
                         FROM {tabela1} AS P
                         FULL outer JOIN {tabela4} AS C ON C.idpix = P.idpix
                         FULL outer JOIN {tabela3} AS PR ON PR.idpix = P.idpix

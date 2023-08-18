@@ -478,13 +478,21 @@ class InsereProtocolo(QDialog):
         else:
             try:
                 if len(ano) > 2:
-                    num_ano = int(ano)
-                    int_ano = num_ano - 2000
+                    msg_solicitante = QMessageBox()
+                    msg_solicitante.setIcon(QMessageBox.Warning)
+                    msg_solicitante.setWindowTitle('Ano inválido informado')
+                    msg_solicitante.setText(f'Digite somente os últimos 2 dígitos do ano. Ex.: "23"')
+                    msg_solicitante.exec_()
+                    return
                 else:
                     int_ano = int(ano)
             except:
-                int_ano = 99
-                print('Número inválido')
+                msg_solicitante = QMessageBox()
+                msg_solicitante.setIcon(QMessageBox.Warning)
+                msg_solicitante.setWindowTitle('Ano inválido informado')
+                msg_solicitante.setText(f'Digite somente os últimos 2 dígitos do ano. Ex.: "23"')
+                msg_solicitante.exec_()
+                return
         
         try:
             self.db_pix.insert_pix_num_interno(pix_id, int_ano, numcert, numprot)
@@ -988,7 +996,10 @@ class MainWindow(QMainWindow):
         linha_atual = 4
         soma_taxas = Decimal(0)
         for pgto in relatorio:
-            dia_pgto = self.converter_dia(pgto[4])
+            if pgto[10]:
+                dia_pgto = self.converter_dia(pgto[10])
+            else:
+                dia_pgto = '01/01/1999'
             self.planilha.escrever(f'A{linha_atual}', pgto[0], False, False)
             self.planilha.escrever(f'B{linha_atual}', dia_pgto, False, False)
             self.planilha.escrever(f'C{linha_atual}', pgto[1], False, False)
@@ -1160,8 +1171,9 @@ class MainWindow(QMainWindow):
         if self.verifica_prot_cert_pix(pix_selecionado):
             msg_pix = QMessageBox()
             msg_pix.setWindowTitle(f'Protocolo/Certidão já informado: {pix_selecionado[0]}')
-            msg_pix.setText(f'Atenção o Pix já tem nº de certidão e/ou protocolo informados, confirmar o pix selecionado!')
+            msg_pix.setText(f'Atenção o Pix já tem nº interno informado, para alteração somente com o setor de TI !')
             msg_pix.exec_()
+            return
 
         if status == 'pago':
             self.dialog = InsereProtocolo(pix_id=id, nome=apresentante, valor=valor, caixa=self.sigla)
