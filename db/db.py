@@ -212,31 +212,6 @@ class DataBasePix():
         tabela3 = "protocolo"
         tabela4 = "certidao"
         
-        # Query full outer join
-        # SELECT
-        #     p.idpix,
-        #     nome,
-        #     valor,
-        #     createdat,
-        #     status,
-        #     C.ano,
-        #     C.num,
-        #     PR.num
-        # FROM
-        #     pagamento AS P
-        #     FULL outer JOIN certidao AS C ON C.idpix = P.idpix
-        #     FULL outer JOIN protocolo AS PR ON PR.idpix = P.idpix
-        #     INNER JOIN solicitante as S on S.cpf_cnpj = P.cpf_cnpj
-        # WHERE
-        # 	createdby = 'adm'
-        # ORDER BY
-        #     createdat DESC
-        # LIMIT
-        #     10;
-
-        # Search query com nome do apresentante, filtro de status e/ou data
-        # Search query com regex iniciando com case insensitive (*) e 
-        # aceitando palavras, espaços etc. tanto antes quanto após o nome pesquisado.
         if apresentante != '' and filtro != '' and filtro_data != '':
             search_query = f"""SELECT P.idpix, nome, valor, createdby, createdat,
                         status, updatedby, C.ano, C.num, PR.num, horapagamento
