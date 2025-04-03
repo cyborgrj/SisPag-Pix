@@ -796,7 +796,7 @@ if __name__ == "__main__":
     hostname = 'localhost'
     database = 'syspagpix'
     user_name = 'postgres'
-    pwd = '3m193mRJA@'
+    pwd = '123456'
     port_id = '5432'
     
     #  Informações para teste de gravação no banco
