@@ -27,7 +27,7 @@ found = cursor.fetchone()
 storedPwd = found[1]
 storedAcesso = found[2]
 
-newPwd = '3m193mRJA@'
+newPwd = '123456'
 listaAcessos = ['administrador', 'caixa', 'contabil']
 typedPwd = newPwd.encode('utf-8')
 
